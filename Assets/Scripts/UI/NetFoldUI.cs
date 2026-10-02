@@ -35,7 +35,7 @@ public class NetFoldUI : MonoBehaviour
         bool guided = mode == GameMode.Learn;
         var bottom = UiFactory.Panel(root, "Guide", new Vector2(0f, 0f), new Vector2(1f, 0f), guided ? new Vector2(24, 16) : new Vector2(250, 18), guided ? new Vector2(-330, 250) : new Vector2(-250, 150), NetFoldTheme.Glass);
         string guideTitle = mode == GameMode.Free ? "自由实验" : GameModeController.StepTitle(LearnStep.Recognize);
-        string guideBody = mode == GameMode.Free ? "点选几何体，可以展开、折叠、看三视图，或拖动截面。" : GameModeController.StepHint(LearnStep.Recognize);
+        string guideBody = mode == GameMode.Free ? "点选正方体，可以展开、折叠、看三视图，或拖动截面。" : GameModeController.StepHint(LearnStep.Recognize);
         GuideTitle = UiFactory.Label(bottom.transform, "Step", guideTitle, 26, TextAlignmentOptions.Left, new Vector2(0f, guided ? 0.78f : 0.55f), new Vector2(0.72f, 1f), new Vector2(20, 0), new Vector2(-10, -8));
         GuideBody = UiFactory.Label(bottom.transform, "Body", guideBody, 20, TextAlignmentOptions.TopLeft, new Vector2(0f, guided ? 0.08f : 0f), new Vector2(0.72f, guided ? 0.76f : 0.58f), new Vector2(20, 10), new Vector2(-10, 0));
         ChallengeLabel = UiFactory.Label(bottom.transform, "ChallengeMsg", "", 20, TextAlignmentOptions.MidlineLeft, new Vector2(0f, 0f), new Vector2(0.72f, 0.55f), new Vector2(20, 8), new Vector2(-10, 0));

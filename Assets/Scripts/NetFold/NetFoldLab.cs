@@ -226,7 +226,7 @@ public class NetFoldLab : MonoBehaviour
         switch (step)
         {
             case LearnStep.Recognize:
-                SpawnRecognize();
+                SpawnSingle(ShapeType.Cube);
                 Projection.SetActive(false);
                 Section.SetActive(false);
                 break;
@@ -234,12 +234,16 @@ public class NetFoldLab : MonoBehaviour
                 SpawnSingle(ShapeType.Cube);
                 Projection.SetActive(false);
                 Section.SetActive(false);
+                Unfolding.Unfold();
                 break;
             case LearnStep.Projection:
                 SpawnSingle(ShapeType.Cube);
                 Section.SetActive(false);
+                Projection.SetRay(0, true);
+                Projection.SetRay(1, true);
+                Projection.SetRay(2, true);
                 Projection.SetActive(true);
-                UI.DataPanel.SetProjection(Projection.FrontRays, Projection.TopRays, Projection.SideRays);
+                UI.DataPanel.SetProjection(true, true, true);
                 break;
             case LearnStep.Section:
                 SpawnSingle(ShapeType.Cube);
@@ -258,19 +262,6 @@ public class NetFoldLab : MonoBehaviour
         {
             _demo = StartCoroutine(PresentStep(step));
         }
-    }
-
-    void SpawnRecognize()
-    {
-        ClearLearnShapes();
-        _learnShapes.Add(GeometryFactory.Create(ShapeType.Cube, Stage, new Vector3(-0.48f, 0f, 0f)));
-        _learnShapes.Add(GeometryFactory.Create(ShapeType.Cylinder, Stage, new Vector3(-0.16f, 0f, 0f)));
-        _learnShapes.Add(GeometryFactory.Create(ShapeType.Cone, Stage, new Vector3(0.16f, 0f, 0f)));
-        _learnShapes.Add(GeometryFactory.Create(ShapeType.TriangularPrism, Stage, new Vector3(0.48f, 0f, 0f)));
-        _hero = _learnShapes[0];
-        BindCurrent(_hero);
-        Input.Select(_hero);
-        LockLearnShapes();
     }
 
     void SpawnSingle(ShapeType type)
@@ -576,83 +567,14 @@ public class NetFoldLab : MonoBehaviour
 
     IEnumerator PresentStep(LearnStep step)
     {
-        if (UI == null || UI.GuideBody == null)
+        if (step != LearnStep.Section || Section == null)
         {
             yield break;
         }
 
-        if (step == LearnStep.Recognize)
+        while (true)
         {
-            string[] lines =
-            {
-                "正方体有 6 个全等的正方形面、12 条棱、8 个顶点。相对的面互相平行，相邻的棱互相垂直。",
-                "圆柱有 2 个互相平行且全等的圆形底面，侧面是一个曲面。把侧面展开，得到一个长方形。",
-                "圆锥有 1 个圆形底面和 1 个曲面侧面。顶点到底面圆心的距离是高。侧面展开后是一个扇形。",
-                "三棱柱有 2 个平行的三角形底面和 3 个长方形侧面，一共 5 个面、9 条棱、6 个顶点。"
-            };
-            for (int i = 0; i < _learnShapes.Count && i < lines.Length; i++)
-            {
-                Input.Select(_learnShapes[i]);
-                UI.GuideBody.text = lines[i];
-                yield return new WaitForSeconds(2.6f);
-            }
-
-            UI.GuideBody.text = "面、棱、顶点是描述立体图形的三个基本量。记住每种图形有几个面、几条棱、几个顶点，后面的展开和三视图都会用到。";
-            yield break;
-        }
-
-        if (step == LearnStep.Unfold)
-        {
-            UI.GuideBody.text = "沿着某些棱把立体剪开、铺平，得到的平面图形叫展开图。动画里正方体正在展开。展开图必须能折回去，重新围成原来的立体。";
-            yield return new WaitForSeconds(0.6f);
-            Unfolding.Unfold();
-            yield return new WaitForSeconds(2.4f);
-            UI.GuideBody.text = "正方体一共有 11 种展开图。判断时看这些正方形能不能折成封闭的盒子，面不能重叠，也不能缺一个面。现在它再折回去。";
-            Unfolding.Fold();
-            yield return new WaitForSeconds(2f);
-            yield break;
-        }
-
-        if (step == LearnStep.Projection)
-        {
-            UI.GuideBody.text = "三视图是从三个方向看同一个立体：正面是主视图，上面是俯视图，左面是左视图。蓝色是主视方向，绿色是俯视方向，紫色是左视方向。";
-            Projection.SetRay(0, true);
-            Projection.SetRay(1, false);
-            Projection.SetRay(2, false);
-            UI.DataPanel.SetProjection(true, false, false);
-            yield return new WaitForSeconds(2.2f);
-            UI.GuideBody.text = "主视图和俯视图一样长，叫长对正。主视图和左视图一样高，叫高平齐。俯视图和左视图一样宽，叫宽相等。";
-            Projection.SetRay(0, false);
-            Projection.SetRay(1, true);
-            UI.DataPanel.SetProjection(false, true, false);
-            yield return new WaitForSeconds(2.2f);
-            Projection.SetRay(1, false);
-            Projection.SetRay(2, true);
-            UI.DataPanel.SetProjection(false, false, true);
-            yield return new WaitForSeconds(2f);
-            Projection.SetRay(0, true);
-            Projection.SetRay(1, true);
-            Projection.SetRay(2, true);
-            UI.DataPanel.SetProjection(true, true, true);
-            UI.GuideBody.text = "三条投影线一起看：长对正，高平齐，宽相等。画三视图时，三个图的位置和尺寸都要符合这三句话。";
-            yield break;
-        }
-
-        UI.GuideBody.text = "用一个平面去截立体图形，平面和表面相交围成的图形叫截面。正方体的截面不一定是正方形。";
-        float t = 0f;
-        while (t < 2.2f)
-        {
-            t += Time.deltaTime;
-            Section.Rotate(new Vector2(22f, 10f) * Time.deltaTime);
-            yield return null;
-        }
-
-        UI.GuideBody.text = "平面切得越斜，截面的边数可以变多。正方体的截面可以是三角形、四边形、五边形，最多是六边形。右侧的截面边数会跟着切割角度变化。";
-        t = 0f;
-        while (t < 2.4f)
-        {
-            t += Time.deltaTime;
-            Section.Rotate(new Vector2(-16f, 24f) * Time.deltaTime);
+            Section.Rotate(new Vector2(12f, 8f) * Time.deltaTime);
             yield return null;
         }
     }
@@ -660,7 +582,7 @@ public class NetFoldLab : MonoBehaviour
     void BeginFree()
     {
         StopDemo();
-        SpawnRecognize();
+        SpawnSingle(ShapeType.Cube);
         Projection.SetActive(false);
         Section.SetActive(false);
         if (UI.Toolbar != null)
@@ -675,7 +597,7 @@ public class NetFoldLab : MonoBehaviour
 
         if (UI.GuideBody != null)
         {
-            UI.GuideBody.text = "点选几何体，可以展开、折叠、看三视图，或拖动截面。";
+            UI.GuideBody.text = "点选正方体，可以展开、折叠、看三视图，或拖动截面。";
         }
 
         if (UI.ModeLabel != null)

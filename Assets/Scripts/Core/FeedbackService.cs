@@ -99,6 +99,7 @@ public class FeedbackService : MonoBehaviour
     {
         var go = new GameObject("FeedbackBurst");
         var ps = go.AddComponent<ParticleSystem>();
+        ps.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
         var main = ps.main;
         main.loop = false;
         main.playOnAwake = false;

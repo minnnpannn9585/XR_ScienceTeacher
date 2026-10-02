@@ -56,5 +56,5 @@
         "temp/": true,
         "Temp/": true
     },
-    "dotnet.defaultSolution": "AR_Science.sln"
+    "dotnet.defaultSolution": "XR_ScienceTeacher.sln"
 }

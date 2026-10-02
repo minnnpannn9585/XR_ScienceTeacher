@@ -46,6 +46,7 @@ public class MolecularMotionController : MonoBehaviour
         var host = new GameObject("Molecules");
         host.transform.SetParent(transform, false);
         _ps = host.AddComponent<ParticleSystem>();
+        _ps.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
         var main = _ps.main;
         main.loop = true;
         main.playOnAwake = false;
