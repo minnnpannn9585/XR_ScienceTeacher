@@ -1,3 +1,4 @@
+using System;
 using TMPro;
 using UnityEngine;
 
@@ -11,8 +12,20 @@ public class NetFoldUI : MonoBehaviour
     public TMP_Text ChallengeLabel;
     public ToolbarController Toolbar { get; private set; }
 
+    ChallengeScreenQuiz _quiz;
+
     public void Build(NetFoldLab lab, GameMode mode)
     {
+        if (mode == GameMode.Challenge)
+        {
+            var quizCanvas = UiFactory.CreateOverlay("NetFoldHUD", transform);
+            _quiz = gameObject.AddComponent<ChallengeScreenQuiz>();
+            _quiz.Build(quizCanvas.transform);
+            GuideTitle = _quiz.TitleText;
+            GuideBody = _quiz.BodyText;
+            return;
+        }
+
         var canvas = UiFactory.CreateOverlay("NetFoldHUD", transform);
         var root = canvas.transform;
 
@@ -65,8 +78,38 @@ public class NetFoldUI : MonoBehaviour
 
     public void SetChallengeGuide(string title, string body)
     {
+        if (_quiz != null)
+        {
+            _quiz.SetQuestion(title, body);
+            return;
+        }
+
         if (GuideTitle != null) GuideTitle.text = title;
         if (GuideBody != null) GuideBody.text = body;
         if (ModeLabel != null) ModeLabel.text = "挑战模式";
+    }
+
+    public void ShowChoices(string[] labels, Action<int> picked)
+    {
+        if (_quiz != null)
+        {
+            _quiz.ShowChoices(labels, picked, new Color(0.12f, 0.32f, 0.55f, 0.96f));
+        }
+    }
+
+    public void MarkChoice(int index)
+    {
+        if (_quiz != null)
+        {
+            _quiz.MarkChoice(index);
+        }
+    }
+
+    public void ClearChoices()
+    {
+        if (_quiz != null)
+        {
+            _quiz.ClearChoices();
+        }
     }
 }

@@ -21,10 +21,21 @@ public class ParticleDriftUI : MonoBehaviour
     Slider _volumeSlider;
     GameObject _curveGo;
     Transform _choices;
+    ChallengeScreenQuiz _quiz;
     bool _mute;
 
     public void Build(ExperimentController lab, Texture curve, GameMode mode)
     {
+        if (mode == GameMode.Challenge)
+        {
+            var quizCanvas = UiFactory.CreateOverlay("ParticleDriftHUD", transform);
+            _quiz = gameObject.AddComponent<ChallengeScreenQuiz>();
+            _quiz.Build(quizCanvas.transform);
+            GuideTitle = _quiz.TitleText;
+            GuideBody = _quiz.BodyText;
+            return;
+        }
+
         var canvas = UiFactory.CreateOverlay("ParticleDriftHUD", transform);
         var root = canvas.transform;
 
@@ -168,6 +179,12 @@ public class ParticleDriftUI : MonoBehaviour
     public void SetChallengeGuide(string title, string body)
     {
         SetMode("挑战模式");
+        if (_quiz != null)
+        {
+            _quiz.SetQuestion(title, body);
+            return;
+        }
+
         if (GuideTitle != null)
         {
             GuideTitle.text = title;
@@ -181,6 +198,12 @@ public class ParticleDriftUI : MonoBehaviour
 
     public void ShowChoices(string[] labels, Action<int> picked)
     {
+        if (_quiz != null)
+        {
+            _quiz.ShowChoices(labels, picked, new Color(0.42f, 0.12f, 0.28f, 0.96f));
+            return;
+        }
+
         ClearChoices();
         float width = 0.22f;
         for (int i = 0; i < labels.Length; i++)
@@ -193,6 +216,12 @@ public class ParticleDriftUI : MonoBehaviour
 
     public void ClearChoices()
     {
+        if (_quiz != null)
+        {
+            _quiz.ClearChoices();
+            return;
+        }
+
         if (_choices == null)
         {
             return;

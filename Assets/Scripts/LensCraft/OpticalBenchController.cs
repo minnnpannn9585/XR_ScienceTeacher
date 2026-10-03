@@ -57,6 +57,7 @@ public class OpticalBenchController : MonoBehaviour
 
     public void Bootstrap(GameMode startMode)
     {
+        LabFactory.UseWorldLabels = startMode != GameMode.Challenge;
         _launch = startMode;
         DOTween.Init();
         EnsureSystems();

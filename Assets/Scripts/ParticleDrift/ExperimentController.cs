@@ -77,6 +77,7 @@ public class ExperimentController : MonoBehaviour
 
     public void Bootstrap(GameMode startMode)
     {
+        LabFactory.UseWorldLabels = startMode != GameMode.Challenge;
         _launchMode = startMode;
         DOTween.Init();
         EnsureSystems();
@@ -861,7 +862,14 @@ public class ExperimentController : MonoBehaviour
     {
         UI.ClearChoices();
         _state = "挑战完成";
-        UI.Result.Show(stars, reason);
+        if (UI.Result != null)
+        {
+            UI.Result.Show(stars, reason);
+        }
+        else
+        {
+            UI.SetChallengeGuide("挑战完成", reason);
+        }
     }
 
     void AnswerQ1(BeakerController picked)

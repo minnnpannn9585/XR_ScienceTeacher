@@ -221,6 +221,13 @@ public class LensQuizController : MonoBehaviour
         _bench.UI.ClearChoices();
         _bench.UI.SetAnswerVisible(false);
         _stars.RegisterSuccess();
-        _bench.UI.Result.Show(_stars.EvaluateStars(), _stars.EvaluateReason());
+        if (_bench.UI.Result != null)
+        {
+            _bench.UI.Result.Show(_stars.EvaluateStars(), _stars.EvaluateReason());
+        }
+        else
+        {
+            _bench.UI.SetChallenge("挑战完成", _stars.EvaluateReason());
+        }
     }
 }

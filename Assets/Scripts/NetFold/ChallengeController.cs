@@ -9,9 +9,10 @@ public class ChallengeController : MonoBehaviour
     public bool IsRunning { get; private set; }
     public StarRatingController Stars { get; private set; }
 
-    public event Action<int, string> QuestionChanged;
+    public event Action<string, string, string[]> Presented;
     public event Action<bool, string> Answered;
     public event Action<int, string> Completed;
+    public int LastPick { get; private set; }
 
     Transform _stage;
     readonly List<GameObject> _spawned = new List<GameObject>();
@@ -75,6 +76,7 @@ public class ChallengeController : MonoBehaviour
             return;
         }
 
+        LastPick = index;
         bool ok = false;
         switch (QuestionIndex)
         {
@@ -128,16 +130,21 @@ public class ChallengeController : MonoBehaviour
         switch (index)
         {
             case 0:
-                QuestionChanged?.Invoke(1, "第 1 题  根据三视图选择几何体");
                 BuildQuestion1();
+                Presented?.Invoke("第 1 题  根据三视图选择几何体", "根据台上的三个视图，选择对应的几何体。", new[]
+                {
+                    ShapeCatalog.DisplayName(ShapeType.Cube),
+                    ShapeCatalog.DisplayName(ShapeType.Cylinder),
+                    ShapeCatalog.DisplayName(ShapeType.Cone)
+                });
                 break;
             case 1:
-                QuestionChanged?.Invoke(2, "第 2 题  根据几何体选择三视图");
                 BuildQuestion2();
+                Presented?.Invoke("第 2 题  根据几何体选择三视图", "台上的几何体对应哪一组三视图？从左到右是 A、B、C。", new[] { "A", "B", "C" });
                 break;
             default:
-                QuestionChanged?.Invoke(3, "第 3 题  判断截面形状");
                 BuildQuestion3();
+                Presented?.Invoke("第 3 题  判断截面形状", "斜切正方体得到的截面是哪一种？从左到右对应四个选项。", new[] { "三角形", "矩形", "五边形", "六边形" });
                 break;
         }
     }
@@ -157,7 +164,6 @@ public class ChallengeController : MonoBehaviour
         var shape = GeometryFactory.Create(ShapeType.TriangularPrism, _stage, new Vector3(0f, 0f, -0.16f), 0.34f, false);
         shape.AllowIdleSpin = true;
         _spawned.Add(shape.gameObject);
-        AddCaption(shape.transform, "题目几何体", new Vector3(0f, 0.42f, 0f), true);
         CreateViewSet(0, ShapeType.TriangularPrism, "选项 A", new Vector3(-0.42f, 0.2f, 0.3f));
         CreateViewSet(1, ShapeType.Cube, "选项 B", new Vector3(0f, 0.2f, 0.3f));
         CreateViewSet(2, ShapeType.Cylinder, "选项 C", new Vector3(0.42f, 0.2f, 0.3f));
@@ -169,7 +175,6 @@ public class ChallengeController : MonoBehaviour
         cube.AllowIdleSpin = false;
         cube.transform.localRotation = Quaternion.Euler(18f, 30f, 0f);
         _spawned.Add(cube.gameObject);
-        AddCaption(cube.transform, "斜切正方体", new Vector3(0f, 0.48f, 0f), true);
         var plane = GameObject.CreatePrimitive(PrimitiveType.Cube);
         plane.name = "CutPlane";
         plane.transform.SetParent(_stage, false);
@@ -192,7 +197,6 @@ public class ChallengeController : MonoBehaviour
             float x = (i - 1.5f) * 0.3f;
             var card = CreateBoard(labels[i], new Vector3(x, 0.2f, 0.32f), new Vector2(0.26f, 0.34f), true, i);
             AddSilhouette(card.transform, shapes[i], new Vector3(0f, 0.04f, 0.012f), 1.2f, new Color(1f, 0.86f, 0.35f, 1f));
-            AddCaption(card.transform, labels[i], new Vector3(0f, -0.11f, 0.02f), false);
         }
     }
 
@@ -200,7 +204,6 @@ public class ChallengeController : MonoBehaviour
     {
         var card = CreateBoard(caption, pos, new Vector2(0.28f, 0.34f), false, -1);
         AddSilhouette(card.transform, ViewSilhouette.Create(type, kind), new Vector3(0f, 0.04f, 0.012f), 1.15f, ColorOf(kind));
-        AddCaption(card.transform, caption, new Vector3(0f, -0.11f, 0.02f), false);
     }
 
     void CreateViewSet(int index, ShapeType type, string caption, Vector3 pos)
@@ -209,7 +212,6 @@ public class ChallengeController : MonoBehaviour
         AddSilhouette(card.transform, ViewSilhouette.Create(type, ViewKind.Front), new Vector3(-0.11f, 0.04f, 0.012f), 0.62f, NetFoldTheme.FrontView);
         AddSilhouette(card.transform, ViewSilhouette.Create(type, ViewKind.Top), new Vector3(0f, 0.04f, 0.012f), 0.62f, NetFoldTheme.TopView);
         AddSilhouette(card.transform, ViewSilhouette.Create(type, ViewKind.Side), new Vector3(0.11f, 0.04f, 0.012f), 0.62f, NetFoldTheme.SideView);
-        AddCaption(card.transform, caption, new Vector3(0f, -0.11f, 0.02f), false);
     }
 
     GameObject CreateBoard(string name, Vector3 pos, Vector2 size, bool choice, int index)
@@ -253,21 +255,6 @@ public class ChallengeController : MonoBehaviour
         choice.Owner = this;
         choice.HostShape = shape;
         _spawned.Add(shape.gameObject);
-        AddCaption(shape.transform, ShapeCatalog.DisplayName(type), new Vector3(0f, 0.4f, 0f), true);
-    }
-
-    void AddCaption(Transform parent, string text, Vector3 localPos, bool faceCamera)
-    {
-        var canvas = UiFactory.CreateWorld("Caption", parent, parent.TransformPoint(localPos), new Vector2(260f, 72f), Vector3.zero);
-        canvas.transform.localPosition = localPos;
-        canvas.transform.localRotation = Quaternion.identity;
-        canvas.transform.localScale = Vector3.one * 0.00085f;
-        var label = UiFactory.Label(canvas.transform, "Text", text, 40, TMPro.TextAlignmentOptions.Center, Vector2.zero, Vector2.one, Vector2.zero, Vector2.zero);
-        label.color = Color.white;
-        if (faceCamera)
-        {
-            canvas.gameObject.AddComponent<FaceCamera>();
-        }
     }
 
     Quaternion FacePlayer()

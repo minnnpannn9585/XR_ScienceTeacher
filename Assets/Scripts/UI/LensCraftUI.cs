@@ -7,7 +7,7 @@ using UnityEngine.UI;
 public class LensCraftUI : MonoBehaviour
 {
     public ResultPanel Result { get; private set; }
-    public string AnswerText => _answer != null ? _answer.text : string.Empty;
+    public string AnswerText => _quiz != null ? _quiz.AnswerText : _answer != null ? _answer.text : string.Empty;
 
     TMP_Text _mode;
     TMP_Text _guideTitle;
@@ -23,11 +23,23 @@ public class LensCraftUI : MonoBehaviour
     TMP_InputField _answer;
     GameObject _answerRoot;
     Transform _choices;
+    ChallengeScreenQuiz _quiz;
     readonly List<Button> _choiceButtons = new List<Button>();
     bool _mute;
 
     public void Build(OpticalBenchController lab, GameMode mode)
     {
+        if (mode == GameMode.Challenge)
+        {
+            var quizCanvas = UiFactory.CreateOverlay("LensCraftHUD", transform);
+            _quiz = gameObject.AddComponent<ChallengeScreenQuiz>();
+            _quiz.Build(quizCanvas.transform);
+            _quiz.BindSubmit(lab.SubmitAnswer);
+            _guideTitle = _quiz.TitleText;
+            _guideBody = _quiz.BodyText;
+            return;
+        }
+
         var canvas = UiFactory.CreateOverlay("LensCraftHUD", transform);
         var root = canvas.transform;
         var top = UiFactory.Panel(root, "TopBar", new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(16f, -92f), new Vector2(-16f, -12f), NetFoldTheme.Glass);
@@ -127,6 +139,12 @@ public class LensCraftUI : MonoBehaviour
 
     public void SetChallenge(string title, string body)
     {
+        if (_quiz != null)
+        {
+            _quiz.SetQuestion(title, body);
+            return;
+        }
+
         if (_mode != null) _mode.text = "挑战模式";
         if (_guideTitle != null) _guideTitle.text = title;
         if (_guideBody != null) _guideBody.text = body;
@@ -134,6 +152,12 @@ public class LensCraftUI : MonoBehaviour
 
     public void ShowChoices(string[] labels, Action<int> picked)
     {
+        if (_quiz != null)
+        {
+            _quiz.ShowChoices(labels, picked, new Color(0.12f, 0.28f, 0.48f, 0.96f));
+            return;
+        }
+
         ClearChoices();
         for (int i = 0; i < labels.Length; i++)
         {
@@ -147,6 +171,12 @@ public class LensCraftUI : MonoBehaviour
 
     public void MarkChoice(int index)
     {
+        if (_quiz != null)
+        {
+            _quiz.MarkChoice(index);
+            return;
+        }
+
         if (index < 0 || index >= _choiceButtons.Count)
         {
             return;
@@ -161,6 +191,12 @@ public class LensCraftUI : MonoBehaviour
 
     public void ClearChoices()
     {
+        if (_quiz != null)
+        {
+            _quiz.ClearChoices();
+            return;
+        }
+
         for (int i = 0; i < _choiceButtons.Count; i++)
         {
             if (_choiceButtons[i] != null)
@@ -174,6 +210,12 @@ public class LensCraftUI : MonoBehaviour
 
     public void SetAnswerVisible(bool visible)
     {
+        if (_quiz != null)
+        {
+            _quiz.SetAnswerVisible(visible);
+            return;
+        }
+
         if (_answerRoot != null)
         {
             _answerRoot.SetActive(visible);

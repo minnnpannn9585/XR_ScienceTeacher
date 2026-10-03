@@ -3,6 +3,8 @@ using UnityEngine;
 
 public static class LabFactory
 {
+    public static bool UseWorldLabels = true;
+
     public static GameObject Primitive(PrimitiveType type, string name, Transform parent, Vector3 localPos, Vector3 localScale, Material mat, bool keepCollider)
     {
         var go = GameObject.CreatePrimitive(type);
@@ -62,7 +64,7 @@ public static class LabFactory
 
     public static void WorldLabel(Transform parent, string text, Vector3 localPos)
     {
-        if (parent == null || UiFactory.DefaultFont == null)
+        if (!UseWorldLabels || parent == null || UiFactory.DefaultFont == null)
         {
             return;
         }
