@@ -25,6 +25,7 @@ public class NetFoldLab : MonoBehaviour
     ShapeController _hero;
     Coroutine _demo;
     GameMode _launch = GameMode.Learn;
+    bool _suppressPick;
 
     public void Bootstrap(GameMode startMode)
     {
@@ -32,6 +33,9 @@ public class NetFoldLab : MonoBehaviour
         DOTween.Init();
         EnsureSystems();
         BuildDesk();
+        Projection.SetAnchor(Stage);
+        Section.SetAnchor(Stage);
+        Section.AllowDrag = startMode != GameMode.Learn;
         BuildRigs();
         UI = gameObject.AddComponent<NetFoldUI>();
         UI.Build(this, startMode);
@@ -162,6 +166,9 @@ public class NetFoldLab : MonoBehaviour
         var look = new GameObject("LookTarget");
         look.transform.SetParent(DeskAnchor, false);
         orbit.Bind(Input, look.transform);
+        orbit.Yaw = 34f;
+        orbit.Pitch = 32f;
+        orbit.Distance = 2.55f;
 
         var light = new GameObject("KeyLight").AddComponent<Light>();
         light.type = LightType.Directional;
@@ -267,8 +274,21 @@ public class NetFoldLab : MonoBehaviour
         ClearLearnShapes();
         _hero = GeometryFactory.Create(type, Stage, Vector3.zero);
         _learnShapes.Add(_hero);
+        bool learn = _launch == GameMode.Learn;
+        _hero.CanDrag = !learn;
+        _hero.AllowIdleSpin = !learn;
         BindCurrent(_hero);
-        Input.Select(_hero);
+        if (learn)
+        {
+            Input.ClearSelection();
+        }
+        else
+        {
+            _suppressPick = true;
+            Input.Select(_hero);
+            _suppressPick = false;
+        }
+
         LockLearnShapes();
     }
 
@@ -308,7 +328,7 @@ public class NetFoldLab : MonoBehaviour
         {
             _hero = shape;
             BindCurrent(shape);
-            if (_launch == GameMode.Free || (Modes.Mode == GameMode.Learn && Modes.Step == LearnStep.Unfold))
+            if (_launch == GameMode.Free && !_suppressPick)
             {
                 Unfolding.TrySelectFace(Input.Provider.PointerRay);
             }
@@ -355,7 +375,7 @@ public class NetFoldLab : MonoBehaviour
     {
         if (_launch == GameMode.Free)
         {
-            BeginFree();
+            ShowFreeShape(_hero != null ? _hero.Type : ShapeType.Cube);
             return;
         }
 
@@ -565,14 +585,27 @@ public class NetFoldLab : MonoBehaviour
 
     IEnumerator PresentStep(LearnStep step)
     {
+        if (step == LearnStep.Recognize)
+        {
+            float yaw = 0f;
+            while (_hero != null)
+            {
+                yaw += 18f * Time.deltaTime;
+                _hero.transform.localRotation = Quaternion.Euler(0f, yaw, 0f);
+                yield return null;
+            }
+
+            yield break;
+        }
+
         if (step != LearnStep.Section || Section == null)
         {
             yield break;
         }
 
-        while (true)
+        while (Section != null)
         {
-            Section.Rotate(new Vector2(12f, 8f) * Time.deltaTime);
+            Section.Rotate(new Vector2(14f, 8f) * Time.deltaTime);
             yield return null;
         }
     }
@@ -580,22 +613,9 @@ public class NetFoldLab : MonoBehaviour
     void BeginFree()
     {
         StopDemo();
-        SpawnSingle(ShapeType.Cube);
-        Projection.SetActive(false);
-        Section.SetActive(false);
-        if (UI.Toolbar != null)
-        {
-            UI.Toolbar.SetProjectionRays(false);
-        }
-
         if (UI.GuideTitle != null)
         {
             UI.GuideTitle.text = "自由实验";
-        }
-
-        if (UI.GuideBody != null)
-        {
-            UI.GuideBody.text = "点选正方体，可以展开、折叠、看三视图，或拖动截面。";
         }
 
         if (UI.ModeLabel != null)
@@ -603,11 +623,45 @@ public class NetFoldLab : MonoBehaviour
             UI.ModeLabel.text = "自由实验";
         }
 
+        ShowFreeShape(ShapeType.Cube);
+    }
+
+    public void ShowFreeShape(ShapeType type)
+    {
+        if (_launch != GameMode.Free)
+        {
+            return;
+        }
+
+        if (_hero != null && _hero.Type == type)
+        {
+            UI.HighlightShape(type);
+            return;
+        }
+
+        StopDemo();
+        Projection.SetActive(false);
+        Section.SetActive(false);
+        if (UI.Toolbar != null)
+        {
+            UI.Toolbar.SetProjectionRays(false);
+        }
+
+        SpawnSingle(type);
+        UI.HighlightShape(type);
+        if (UI.GuideBody != null)
+        {
+            UI.GuideBody.text = "当前是" + ShapeCatalog.DisplayName(type) + "。可以旋转、缩放、展开、折叠、看三视图，或拖动截面。换一个几何体时，上一个会收起来。";
+        }
+
         UI.DataPanel?.SetView("自由实验");
     }
 
     void ClearLearnShapes()
     {
+        Unfolding.Bind(null);
+        Projection.Bind(null);
+        Section.Bind(null);
         if (Input != null)
         {
             Input.ClearSelection();

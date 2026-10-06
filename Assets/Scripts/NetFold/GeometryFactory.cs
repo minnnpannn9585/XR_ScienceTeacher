@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public static class GeometryFactory
@@ -95,6 +96,17 @@ public static class GeometryFactory
         if (verts.Length == 4)
         {
             return new[] { verts[0], verts[1], verts[2], verts[3] };
+        }
+
+        if (verts.Length > 8 && verts[0].sqrMagnitude < 1e-6f)
+        {
+            var rim = new Vector3[verts.Length - 1];
+            for (int i = 1; i < verts.Length; i++)
+            {
+                rim[i - 1] = verts[i];
+            }
+
+            return rim;
         }
 
         if (verts.Length <= 2)
@@ -214,79 +226,255 @@ public static class GeometryFactory
     static void BuildCube(Transform root, float s, Material face, Material hi, Material edge, bool col)
     {
         Mesh q = Quad(s, s);
-        Quaternion flat = Quaternion.Euler(90f, 0f, 0f);
-        AddFace(root, "底面", 0, q, face, hi, edge, new Vector3(0f, 0.001f, 0f), flat, new Vector3(0f, 0.002f, 0f), flat, col);
-        AddFace(root, "前面", 1, q, face, hi, edge, new Vector3(0f, s * 0.5f, s * 0.5f), Quaternion.identity, new Vector3(0f, 0.002f, s), flat, col);
-        AddFace(root, "后面", 2, q, face, hi, edge, new Vector3(0f, s * 0.5f, -s * 0.5f), Quaternion.Euler(0f, 180f, 0f), new Vector3(0f, 0.002f, -s), flat, col);
-        AddFace(root, "左面", 3, q, face, hi, edge, new Vector3(-s * 0.5f, s * 0.5f, 0f), Quaternion.Euler(0f, -90f, 0f), new Vector3(-s, 0.002f, 0f), flat, col);
-        AddFace(root, "右面", 4, q, face, hi, edge, new Vector3(s * 0.5f, s * 0.5f, 0f), Quaternion.Euler(0f, 90f, 0f), new Vector3(s, 0.002f, 0f), flat, col);
-        AddFace(root, "顶面", 5, q, face, hi, edge, new Vector3(0f, s, 0f), Quaternion.Euler(-90f, 0f, 0f), new Vector3(0f, 0.002f, 2f * s), flat, col);
+        Quaternion up = Quaternion.Euler(-90f, 0f, 0f);
+        AddFace(root, "底面", 0, q, face, hi, edge, new Vector3(0f, 0.001f, 0f), up, new Vector3(0f, 0.001f, 0f), up, col);
+        var front = AddFace(root, "前面", 1, q, face, hi, edge, new Vector3(0f, s * 0.5f, -s * 0.5f), Quaternion.Euler(0f, 180f, 0f), Vector3.zero, Quaternion.identity, col);
+        var back = AddFace(root, "后面", 2, q, face, hi, edge, new Vector3(0f, s * 0.5f, s * 0.5f), Quaternion.identity, Vector3.zero, Quaternion.identity, col);
+        var left = AddFace(root, "左面", 3, q, face, hi, edge, new Vector3(-s * 0.5f, s * 0.5f, 0f), Quaternion.Euler(0f, -90f, 0f), Vector3.zero, Quaternion.identity, col);
+        var right = AddFace(root, "右面", 4, q, face, hi, edge, new Vector3(s * 0.5f, s * 0.5f, 0f), Quaternion.Euler(0f, 90f, 0f), Vector3.zero, Quaternion.identity, col);
+        var top = AddFace(root, "顶面", 5, q, face, hi, edge, new Vector3(0f, s, 0f), up, Vector3.zero, Quaternion.identity, col);
+        HingeFlat(front, new Vector3(0f, 0f, -s * 0.5f), Vector3.right, Vector3.back);
+        HingeFlat(back, new Vector3(0f, 0f, s * 0.5f), Vector3.right, Vector3.forward);
+        HingeFlat(left, new Vector3(-s * 0.5f, 0f, 0f), Vector3.forward, Vector3.left);
+        HingeFlat(right, new Vector3(s * 0.5f, 0f, 0f), Vector3.forward, Vector3.right);
+        Vector3 topHinge = new Vector3(0f, s, -s * 0.5f);
+        Vector3 topAxis = Vector3.right;
+        float topAngle = Vector3.SignedAngle(top.FoldedLocalRot * Vector3.forward, front.FoldedLocalRot * Vector3.forward, topAxis);
+        top.SetHinge(front.FaceIndex, topHinge, topAxis, topAngle, 1);
     }
 
     static void BuildCylinder(Transform root, float s, Material face, Material hi, Material edge, bool col)
     {
         float r = s * 0.42f;
         float h = s;
-        int segs = 12;
-        float chord = 2f * r * Mathf.Sin(Mathf.PI / segs);
-        float arc = 2f * Mathf.PI * r;
-        Mesh panel = Quad(chord, h);
-        Quaternion flat = Quaternion.Euler(90f, 0f, 0f);
-        for (int i = 0; i < segs; i++)
+        const int segs = 12;
+        float delta = Mathf.PI * 2f / segs;
+        const float frontAngle = Mathf.PI;
+        int[] offsets = new int[segs];
+        offsets[0] = 0;
+        for (int k = 1; k <= 5; k++)
         {
-            float a = i / (float)segs * Mathf.PI * 2f;
-            Vector3 pos = new Vector3(Mathf.Sin(a) * r, h * 0.5f, Mathf.Cos(a) * r);
-            Quaternion rot = Quaternion.LookRotation(new Vector3(Mathf.Sin(a), 0f, Mathf.Cos(a)), Vector3.up);
-            float x = (i - (segs - 1) * 0.5f) * (arc / segs);
-            AddFace(root, "侧面" + (i + 1), i, panel, face, hi, edge, pos, rot, new Vector3(x, 0.002f, 0f), flat, col);
+            offsets[k] = k;
+            offsets[5 + k] = -k;
         }
 
-        Mesh circle = Circle(r, 28);
-        AddFace(root, "底面", segs, circle, face, hi, edge, new Vector3(0f, 0.001f, 0f), Quaternion.Euler(90f, 0f, 0f), new Vector3(0f, 0.002f, -r * 2.15f), flat, col);
-        AddFace(root, "顶面", segs + 1, circle, face, hi, edge, new Vector3(0f, h, 0f), Quaternion.Euler(-90f, 0f, 0f), new Vector3(0f, 0.002f, r * 2.15f), flat, col);
+        offsets[11] = 6;
+        var panels = new ShapeFace[segs];
+        for (int i = 0; i < segs; i++)
+        {
+            int k = offsets[i];
+            float a0 = frontAngle + (k - 0.5f) * delta;
+            float a1 = frontAngle + (k + 0.5f) * delta;
+            Vector3 b0 = Ring(a0, 0f, r);
+            Vector3 b1 = Ring(a1, 0f, r);
+            Vector3 t1 = b1 + Vector3.up * h;
+            Vector3 t0 = b0 + Vector3.up * h;
+            panels[i] = AddPolygonFace(root, "侧面" + (i + 1), i, new[] { b0, b1, t1, t0 }, face, hi, edge, col, RadialOut(b0, b1));
+            if (k == 0)
+            {
+                Vector3 hinge = (b0 + b1) * 0.5f;
+                Vector3 axis = (b1 - b0).normalized;
+                HingeFlat(panels[i], hinge, axis, Ring(frontAngle, 0f, 1f));
+            }
+            else
+            {
+                int parentOffset = k == 6 ? 5 : k > 0 ? k - 1 : k + 1;
+                int parentIndex = System.Array.IndexOf(offsets, parentOffset);
+                bool sharedAtStart = k > 0;
+                Vector3 e0 = sharedAtStart ? b0 : b1;
+                Vector3 e1 = sharedAtStart ? t0 : t1;
+                HingeToParent(panels[i], panels[parentIndex], (e0 + e1) * 0.5f, e1 - e0);
+            }
+        }
+
+        Quaternion up = Quaternion.Euler(-90f, 0f, 0f);
+        AddFace(root, "底面", segs, Circle(r, 28), face, hi, edge, new Vector3(0f, 0.001f, 0f), up, new Vector3(0f, 0.001f, 0f), up, col);
+        var top = AddFace(root, "顶面", segs + 1, Circle(r, 28), face, hi, edge, new Vector3(0f, h, 0f), up, Vector3.zero, Quaternion.identity, col);
+        Vector3 tb0 = Ring(frontAngle - delta * 0.5f, h, r);
+        Vector3 tb1 = Ring(frontAngle + delta * 0.5f, h, r);
+        HingeToParent(top, panels[0], (tb0 + tb1) * 0.5f, tb1 - tb0);
     }
 
     static void BuildCone(Transform root, float s, Material face, Material hi, Material edge, bool col)
     {
         float r = s * 0.46f;
         float h = s;
-        int segs = 14;
-        float slant = Mathf.Sqrt(r * r + h * h);
-        float theta = Mathf.PI * 2f * r / slant;
-        Quaternion flat = Quaternion.Euler(90f, 0f, 0f);
-        Mesh wedge = Triangle(2f * r * Mathf.Sin(Mathf.PI / segs), slant);
-        for (int i = 0; i < segs; i++)
+        const int segs = 12;
+        float delta = Mathf.PI * 2f / segs;
+        const float frontAngle = Mathf.PI;
+        int[] offsets = new int[segs];
+        offsets[0] = 0;
+        for (int k = 1; k <= 5; k++)
         {
-            float a = i / (float)segs * Mathf.PI * 2f;
-            Vector3 baseP = new Vector3(Mathf.Sin(a) * r, 0f, Mathf.Cos(a) * r);
-            Vector3 tip = new Vector3(0f, h, 0f);
-            Vector3 mid = (baseP + tip) * 0.5f;
-            Vector3 outward = new Vector3(baseP.x, r * r / h, baseP.z);
-            Quaternion rot = Quaternion.LookRotation(outward.normalized, (tip - baseP).normalized);
-            float ang = -theta * 0.5f + (i + 0.5f) / segs * theta;
-            Vector3 u = new Vector3(Mathf.Sin(ang) * slant * 0.45f, 0.002f, Mathf.Cos(ang) * slant * 0.45f);
-            AddFace(root, "侧面" + (i + 1), i, wedge, face, hi, edge, mid, rot, u, flat, col);
+            offsets[k] = k;
+            offsets[5 + k] = -k;
         }
 
-        AddFace(root, "底面", segs, Circle(r, 28), face, hi, edge, new Vector3(0f, 0.001f, 0f), Quaternion.Euler(90f, 0f, 0f), new Vector3(0f, 0.002f, -r * 2.3f), flat, col);
+        offsets[11] = 6;
+        Vector3 apex = new Vector3(0f, h, 0f);
+        var panels = new ShapeFace[segs];
+        for (int i = 0; i < segs; i++)
+        {
+            int k = offsets[i];
+            float a0 = frontAngle + (k - 0.5f) * delta;
+            float a1 = frontAngle + (k + 0.5f) * delta;
+            Vector3 b0 = Ring(a0, 0f, r);
+            Vector3 b1 = Ring(a1, 0f, r);
+            panels[i] = AddPolygonFace(root, "侧面" + (i + 1), i, new[] { b0, b1, apex }, face, hi, edge, col, RadialOut(b0, b1));
+            if (k == 0)
+            {
+                HingeFlat(panels[i], (b0 + b1) * 0.5f, b1 - b0, Ring(frontAngle, 0f, 1f));
+            }
+            else
+            {
+                int parentOffset = k == 6 ? 5 : k > 0 ? k - 1 : k + 1;
+                int parentIndex = System.Array.IndexOf(offsets, parentOffset);
+                bool sharedAtStart = k > 0;
+                Vector3 foot = sharedAtStart ? b0 : b1;
+                HingeToParent(panels[i], panels[parentIndex], (foot + apex) * 0.5f, apex - foot);
+            }
+        }
+
+        Quaternion up = Quaternion.Euler(-90f, 0f, 0f);
+        AddFace(root, "底面", segs, Circle(r, 28), face, hi, edge, new Vector3(0f, 0.001f, 0f), up, new Vector3(0f, 0.001f, 0f), up, col);
     }
 
     static void BuildPrism(Transform root, float s, Material face, Material hi, Material edge, bool col)
     {
-        float w = s;
-        float h = s;
-        float d = s * 0.86f;
-        Quaternion flat = Quaternion.Euler(90f, 0f, 0f);
-        Mesh rectA = Quad(w, h);
-        Mesh rectB = Quad(d, h);
-        Mesh rectC = Quad(w, h);
-        Mesh tri = Triangle(w, d);
-        AddFace(root, "前面", 0, rectA, face, hi, edge, new Vector3(0f, h * 0.5f, d * 0.5f), Quaternion.identity, new Vector3(0f, 0.002f, d), flat, col);
-        AddFace(root, "后面", 1, rectC, face, hi, edge, new Vector3(0f, h * 0.5f, -d * 0.5f), Quaternion.Euler(0f, 180f, 0f), new Vector3(0f, 0.002f, -d), flat, col);
-        AddFace(root, "底面", 2, Quad(w, d), face, hi, edge, new Vector3(0f, 0.001f, 0f), flat, new Vector3(0f, 0.002f, 0f), flat, col);
-        AddFace(root, "左斜面", 3, rectB, face, hi, edge, new Vector3(-w * 0.28f, h * 0.5f, 0f), Quaternion.Euler(0f, -55f, 0f), new Vector3(-w, 0.002f, 0f), flat, col);
-        AddFace(root, "右斜面", 4, rectB, face, hi, edge, new Vector3(w * 0.28f, h * 0.5f, 0f), Quaternion.Euler(0f, 55f, 0f), new Vector3(w, 0.002f, 0f), flat, col);
-        AddFace(root, "左底三角", 5, tri, face, hi, edge, new Vector3(-w * 0.5f, h * 0.5f, 0f), Quaternion.Euler(0f, -90f, 0f), new Vector3(-w * 1.7f, 0.002f, 0f), flat, col);
-        AddFace(root, "右底三角", 6, tri, face, hi, edge, new Vector3(w * 0.5f, h * 0.5f, 0f), Quaternion.Euler(0f, 90f, 0f), new Vector3(w * 1.7f, 0.002f, 0f), flat, col);
+        float w = s * 0.9f;
+        float depth = s * 0.72f;
+        float h = s * 0.7f;
+        Vector3 p0 = new Vector3(-w * 0.5f, 0f, -depth * 0.42f);
+        Vector3 p1 = new Vector3(w * 0.5f, 0f, -depth * 0.42f);
+        Vector3 p2 = new Vector3(0f, 0f, depth * 0.55f);
+        Vector3 up = Vector3.up * h;
+        Vector3 centroid = (p0 + p1 + p2) / 3f;
+        AddPolygonFace(root, "底面", 0, new[] { p0, p1, p2 }, face, hi, edge, col, Vector3.down);
+        var front = AddPolygonFace(root, "前面", 1, new[] { p0, p1, p1 + up, p0 + up }, face, hi, edge, col, HorizontalOut(p0, p1, centroid));
+        var left = AddPolygonFace(root, "左面", 2, new[] { p2, p0, p0 + up, p2 + up }, face, hi, edge, col, HorizontalOut(p2, p0, centroid));
+        var right = AddPolygonFace(root, "右面", 3, new[] { p1, p2, p2 + up, p1 + up }, face, hi, edge, col, HorizontalOut(p1, p2, centroid));
+        var top = AddPolygonFace(root, "顶面", 4, new[] { p0 + up, p1 + up, p2 + up }, face, hi, edge, col, Vector3.up);
+        HingeFlat(front, (p0 + p1) * 0.5f, p1 - p0, HorizontalOut(p0, p1, centroid));
+        HingeFlat(left, (p2 + p0) * 0.5f, p0 - p2, HorizontalOut(p2, p0, centroid));
+        HingeFlat(right, (p1 + p2) * 0.5f, p2 - p1, HorizontalOut(p1, p2, centroid));
+        HingeToParent(top, front, (p0 + p1) * 0.5f + up, p1 - p0);
+    }
+
+    static Vector3 Ring(float angle, float y, float radius)
+    {
+        return new Vector3(Mathf.Sin(angle) * radius, y, Mathf.Cos(angle) * radius);
+    }
+
+    static Vector3 RadialOut(Vector3 a, Vector3 b)
+    {
+        Vector3 mid = (a + b) * 0.5f;
+        mid.y = 0f;
+        return mid.sqrMagnitude < 1e-6f ? Vector3.back : mid.normalized;
+    }
+
+    static Vector3 HorizontalOut(Vector3 a, Vector3 b, Vector3 centroid)
+    {
+        Vector3 mid = (a + b) * 0.5f;
+        Vector3 outward = mid - centroid;
+        outward.y = 0f;
+        return outward.sqrMagnitude < 1e-6f ? Vector3.back : outward.normalized;
+    }
+
+    static void HingeFlat(ShapeFace face, Vector3 hinge, Vector3 axis, Vector3 outward)
+    {
+        face.SetHinge(-1, hinge, axis, BestFlatAngle(hinge, axis, face.FoldedLocalPos, outward), 0);
+    }
+
+    static void HingeToParent(ShapeFace face, ShapeFace parent, Vector3 hinge, Vector3 axis)
+    {
+        Vector3 nChild = face.FoldedLocalRot * Vector3.forward;
+        Vector3 nParent = parent.FoldedLocalRot * Vector3.forward;
+        Vector3 dir = axis.sqrMagnitude < 1e-8f ? Vector3.up : axis.normalized;
+        float angle = Vector3.SignedAngle(nChild, nParent, dir);
+        face.SetHinge(parent.FaceIndex, hinge, dir, angle, parent.Depth + 1);
+    }
+
+    static float BestFlatAngle(Vector3 hinge, Vector3 axis, Vector3 point, Vector3 outward)
+    {
+        if (axis.sqrMagnitude < 1e-8f)
+        {
+            return 0f;
+        }
+
+        Vector3 offset = point - hinge;
+        Vector3 hint = outward.sqrMagnitude < 1e-8f ? Vector3.back : outward.normalized;
+        float best = 0f;
+        float bestScore = float.NegativeInfinity;
+        for (int i = 0; i < 360; i++)
+        {
+            float angle = i - 180f;
+            Vector3 moved = Quaternion.AngleAxis(angle, axis) * offset;
+            float score = Vector3.Dot(new Vector3(moved.x, 0f, moved.z), hint) - Mathf.Abs(moved.y) * 3f;
+            if (score > bestScore)
+            {
+                bestScore = score;
+                best = angle;
+            }
+        }
+
+        return best;
+    }
+
+    static ShapeFace AddPolygonFace(Transform parent, string name, int index, Vector3[] verts, Material faceMat, Material hiMat, Material edgeMat, bool withCollider, Vector3 desiredOut)
+    {
+        Vector3 centroid = Vector3.zero;
+        for (int i = 0; i < verts.Length; i++)
+        {
+            centroid += verts[i];
+        }
+
+        centroid /= verts.Length;
+        Vector3 right = (verts[1] - verts[0]).normalized;
+        Vector3 upGuess = verts.Length == 4
+            ? (verts[2] + verts[3]) * 0.5f - (verts[0] + verts[1]) * 0.5f
+            : verts[verts.Length - 1] - (verts[0] + verts[1]) * 0.5f;
+        upGuess -= right * Vector3.Dot(upGuess, right);
+        if (upGuess.sqrMagnitude < 1e-8f)
+        {
+            upGuess = Vector3.up;
+        }
+
+        upGuess.Normalize();
+        Vector3 normal = Vector3.Cross(right, upGuess).normalized;
+        if (desiredOut.sqrMagnitude > 1e-8f && Vector3.Dot(normal, desiredOut) < 0f)
+        {
+            normal = -normal;
+        }
+
+        Quaternion rot = Quaternion.LookRotation(normal, upGuess);
+        Quaternion inv = Quaternion.Inverse(rot);
+        var local = new Vector3[verts.Length];
+        for (int i = 0; i < verts.Length; i++)
+        {
+            local[i] = inv * (verts[i] - centroid);
+        }
+
+        return AddFace(parent, name, index, BuildPoly(local), faceMat, hiMat, edgeMat, centroid, rot, centroid, rot, withCollider);
+    }
+
+    static Mesh BuildPoly(Vector3[] local)
+    {
+        var mesh = new Mesh { name = "Poly" };
+        mesh.vertices = local;
+        var tris = new List<int>();
+        for (int i = 1; i < local.Length - 1; i++)
+        {
+            tris.Add(0);
+            tris.Add(i);
+            tris.Add(i + 1);
+            tris.Add(0);
+            tris.Add(i + 1);
+            tris.Add(i);
+        }
+
+        mesh.triangles = tris.ToArray();
+        mesh.RecalculateNormals();
+        mesh.RecalculateBounds();
+        return mesh;
     }
 }

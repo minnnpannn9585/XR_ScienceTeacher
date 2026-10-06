@@ -10,6 +10,7 @@ public class ProjectionController : MonoBehaviour
     public bool SideRays = true;
 
     ShapeController _target;
+    Transform _anchor;
     Transform _root;
     ProjectionCard _front;
     ProjectionCard _top;
@@ -17,6 +18,15 @@ public class ProjectionController : MonoBehaviour
     readonly List<LineRenderer> _frontLines = new List<LineRenderer>();
     readonly List<LineRenderer> _topLines = new List<LineRenderer>();
     readonly List<LineRenderer> _sideLines = new List<LineRenderer>();
+
+    public void SetAnchor(Transform anchor)
+    {
+        _anchor = anchor;
+        if (_root != null && _anchor != null)
+        {
+            _root.SetParent(_anchor, false);
+        }
+    }
 
     public void Bind(ShapeController shape)
     {
@@ -70,23 +80,23 @@ public class ProjectionController : MonoBehaviour
     void Build()
     {
         _root = new GameObject("ProjectionRig").transform;
-        _root.SetParent(transform, false);
-        _front = CreateCard("主视图", new Vector3(0f, 0.02f, 0.55f), NetFoldTheme.FrontView);
-        _top = CreateCard("俯视图", new Vector3(-0.55f, 0.02f, 0.18f), NetFoldTheme.TopView);
-        _side = CreateCard("左视图", new Vector3(0.55f, 0.02f, 0.18f), NetFoldTheme.SideView);
+        _root.SetParent(_anchor != null ? _anchor : transform, false);
+        _front = CreateCard("主视图", new Vector3(0f, 0.22f, -0.5f), Quaternion.LookRotation(Vector3.back, Vector3.up), NetFoldTheme.FrontView, true);
+        _top = CreateCard("俯视图", new Vector3(0f, 0.72f, 0f), Quaternion.Euler(-90f, 0f, 0f), NetFoldTheme.TopView, false);
+        _side = CreateCard("左视图", new Vector3(-0.5f, 0.22f, 0f), Quaternion.LookRotation(Vector3.left, Vector3.up), NetFoldTheme.SideView, true);
         CreateRayPool(_frontLines, NetFoldTheme.FrontView, 8);
         CreateRayPool(_topLines, NetFoldTheme.TopView, 8);
         CreateRayPool(_sideLines, NetFoldTheme.SideView, 8);
     }
 
-    ProjectionCard CreateCard(string title, Vector3 pos, Color color)
+    ProjectionCard CreateCard(string title, Vector3 pos, Quaternion rotation, Color color, bool flipX)
     {
         var go = new GameObject(title);
         go.transform.SetParent(_root, false);
         go.transform.localPosition = pos;
-        go.transform.localRotation = Quaternion.Euler(90f, 0f, 0f);
+        go.transform.localRotation = rotation;
         var card = go.AddComponent<ProjectionCard>();
-        card.Build(title, color);
+        card.Build(title, color, flipX);
         return card;
     }
 
@@ -121,39 +131,53 @@ public class ProjectionController : MonoBehaviour
 
     void UpdateRays()
     {
-        Bounds b = GetBounds(_target.transform);
-        DrawBundle(_frontLines, b, Vector3.back, _front.transform.position, FrontRays);
-        DrawBundle(_topLines, b, Vector3.down, _top.transform.position, TopRays);
-        DrawBundle(_sideLines, b, Vector3.left, _side.transform.position, SideRays);
+        Vector3[] corners = BoundCorners(GetBounds(_target.transform));
+        DrawToPlane(_frontLines, corners, _front.transform, FrontRays);
+        DrawToPlane(_topLines, corners, _top.transform, TopRays);
+        DrawToPlane(_sideLines, corners, _side.transform, SideRays);
     }
 
-    void DrawBundle(List<LineRenderer> lines, Bounds b, Vector3 dir, Vector3 cardPos, bool visible)
+    static void DrawToPlane(List<LineRenderer> lines, Vector3[] corners, Transform card, bool visible)
     {
-        Vector3[] starts =
+        Vector3 normal = card.forward;
+        if (normal.sqrMagnitude < 1e-6f)
         {
-            b.center,
-            b.center + new Vector3(b.extents.x, b.extents.y, b.extents.z) * 0.55f,
-            b.center + new Vector3(-b.extents.x, b.extents.y, b.extents.z) * 0.55f,
-            b.center + new Vector3(b.extents.x, -b.extents.y, -b.extents.z) * 0.55f,
-            b.center + new Vector3(-b.extents.x, b.extents.y, -b.extents.z) * 0.55f,
-            b.center + new Vector3(b.extents.x, -b.extents.y, b.extents.z) * 0.55f,
-            b.center + new Vector3(-b.extents.x, -b.extents.y, b.extents.z) * 0.55f,
-            b.center + new Vector3(0f, b.extents.y, 0f)
-        };
+            normal = Vector3.up;
+        }
 
+        normal.Normalize();
+        Vector3 planePoint = card.position;
         for (int i = 0; i < lines.Count; i++)
         {
-            lines[i].enabled = visible;
-            if (!visible)
+            bool on = visible && i < corners.Length;
+            lines[i].enabled = on;
+            if (!on)
             {
                 continue;
             }
 
-            Vector3 start = starts[i];
-            Vector3 end = cardPos + Vector3.ProjectOnPlane(start - cardPos, dir) * 0.15f;
+            Vector3 start = corners[i];
+            float dist = Vector3.Dot(planePoint - start, normal);
             lines[i].SetPosition(0, start);
-            lines[i].SetPosition(1, Vector3.Lerp(start, cardPos, 0.92f));
+            lines[i].SetPosition(1, start + normal * dist);
         }
+    }
+
+    static Vector3[] BoundCorners(Bounds b)
+    {
+        Vector3 c = b.center;
+        Vector3 e = b.extents;
+        return new[]
+        {
+            c + new Vector3(e.x, e.y, e.z),
+            c + new Vector3(e.x, e.y, -e.z),
+            c + new Vector3(e.x, -e.y, e.z),
+            c + new Vector3(e.x, -e.y, -e.z),
+            c + new Vector3(-e.x, e.y, e.z),
+            c + new Vector3(-e.x, e.y, -e.z),
+            c + new Vector3(-e.x, -e.y, e.z),
+            c + new Vector3(-e.x, -e.y, -e.z)
+        };
     }
 
     void RefreshRayVisibility()
@@ -166,15 +190,24 @@ public class ProjectionController : MonoBehaviour
     static Bounds GetBounds(Transform t)
     {
         var rends = t.GetComponentsInChildren<Renderer>();
-        if (rends.Length == 0)
+        Bounds b = new Bounds(t.position, Vector3.one * 0.3f);
+        bool any = false;
+        for (int i = 0; i < rends.Length; i++)
         {
-            return new Bounds(t.position, Vector3.one * 0.3f);
-        }
+            if (rends[i] is LineRenderer)
+            {
+                continue;
+            }
 
-        Bounds b = rends[0].bounds;
-        for (int i = 1; i < rends.Length; i++)
-        {
-            b.Encapsulate(rends[i].bounds);
+            if (!any)
+            {
+                b = rends[i].bounds;
+                any = true;
+            }
+            else
+            {
+                b.Encapsulate(rends[i].bounds);
+            }
         }
 
         return b;
@@ -190,26 +223,24 @@ public enum ViewKind
 
 public class ProjectionCard : MonoBehaviour, IDraggable, ISelectable
 {
-    public bool CanDrag => true;
+    public bool CanDrag => false;
     public bool IsSelected { get; private set; }
     MeshFilter _silhouette;
-    Vector3 _grabOffset;
-    Plane _desk = new Plane(Vector3.up, Vector3.zero);
 
-    public void Build(string title, Color color)
+    public void Build(string title, Color color, bool flipX)
     {
         var plate = GameObject.CreatePrimitive(PrimitiveType.Quad);
         plate.name = "Plate";
         plate.transform.SetParent(transform, false);
-        plate.transform.localScale = new Vector3(0.32f, 0.32f, 1f);
-        UnityEngine.Object.Destroy(plate.GetComponent<MeshCollider>());
-        plate.AddComponent<BoxCollider>().size = new Vector3(1f, 1f, 0.02f);
-        var mat = UrpMaterialUtil.CreateLit(new Color(color.r, color.g, color.b, 0.22f), true, 0f, 0.3f);
+        plate.transform.localScale = new Vector3(0.34f, 0.34f, 1f);
+        UnityEngine.Object.Destroy(plate.GetComponent<Collider>());
+        var mat = UrpMaterialUtil.CreateLit(new Color(color.r, color.g, color.b, 0.16f), true, 0f, 0.3f);
         plate.GetComponent<MeshRenderer>().sharedMaterial = mat;
 
         var sil = new GameObject("Silhouette");
         sil.transform.SetParent(transform, false);
-        sil.transform.localPosition = new Vector3(0f, 0f, -0.01f);
+        sil.transform.localPosition = new Vector3(0f, 0f, 0.012f);
+        sil.transform.localScale = new Vector3(flipX ? -1f : 1f, 1f, 1f);
         _silhouette = sil.AddComponent<MeshFilter>();
         var rend = sil.AddComponent<MeshRenderer>();
         rend.sharedMaterial = UrpMaterialUtil.CreateLit(color, true, 0f, 0.15f, true, color);
@@ -228,27 +259,9 @@ public class ProjectionCard : MonoBehaviour, IDraggable, ISelectable
 
     public void OnSelect() => IsSelected = true;
     public void OnDeselect() => IsSelected = false;
-
-    public void OnDragStart(Vector3 worldPoint, Ray pointerRay)
-    {
-        _desk = new Plane(Vector3.up, transform.position);
-        _desk.Raycast(pointerRay, out float enter);
-        _grabOffset = transform.position - pointerRay.GetPoint(enter);
-    }
-
-    public void OnDrag(Vector3 worldPoint, Ray pointerRay)
-    {
-        if (_desk.Raycast(pointerRay, out float enter))
-        {
-            Vector3 p = pointerRay.GetPoint(enter) + _grabOffset;
-            p.y = transform.position.y;
-            transform.position = p;
-        }
-    }
-
-    public void OnDragEnd()
-    {
-    }
+    public void OnDragStart(Vector3 worldPoint, Ray pointerRay) { }
+    public void OnDrag(Vector3 worldPoint, Ray pointerRay) { }
+    public void OnDragEnd() { }
 }
 
 public static class ViewSilhouette

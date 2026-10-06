@@ -125,7 +125,7 @@ public class InputAdapter : MonoBehaviour
             BackPressed?.Invoke();
         }
 
-        if (Current != null)
+        if (AllowWorldManipulate && Current != null)
         {
             if (Provider.TwoHandActive)
             {

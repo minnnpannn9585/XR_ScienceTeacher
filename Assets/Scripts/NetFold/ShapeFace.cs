@@ -8,9 +8,25 @@ public class ShapeFace : MonoBehaviour, ISelectable
     public Quaternion FoldedLocalRot;
     public Vector3 UnfoldedLocalPos;
     public Quaternion UnfoldedLocalRot;
+    public bool HasHinge;
+    public int HingeParent = -1;
+    public Vector3 HingePoint;
+    public Vector3 HingeAxis = Vector3.right;
+    public float UnfoldAngle;
+    public int Depth;
     public MeshRenderer MeshRenderer;
     public MeshFilter MeshFilter;
     public bool IsSelected { get; private set; }
+
+    public void SetHinge(int parent, Vector3 point, Vector3 axis, float angle, int depth)
+    {
+        HasHinge = true;
+        HingeParent = parent;
+        HingePoint = point;
+        HingeAxis = axis.sqrMagnitude < 1e-8f ? Vector3.right : axis.normalized;
+        UnfoldAngle = angle;
+        Depth = depth;
+    }
 
     Material _base;
     Material _highlight;

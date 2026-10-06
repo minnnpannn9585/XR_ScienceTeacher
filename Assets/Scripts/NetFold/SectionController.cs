@@ -5,11 +5,13 @@ using UnityEngine;
 public class SectionController : MonoBehaviour, IDraggable, ISelectable, IRotatable
 {
     public bool IsActive { get; private set; }
-    public bool CanDrag => IsActive;
+    public bool AllowDrag = true;
+    public bool CanDrag => IsActive && AllowDrag;
     public bool IsSelected { get; private set; }
     public int EdgeCount { get; private set; }
     public event System.Action<int> EdgeCountChanged;
 
+    Transform _anchor;
     Transform _root;
     Transform _planeVis;
     LineRenderer _loop;
@@ -19,11 +21,21 @@ public class SectionController : MonoBehaviour, IDraggable, ISelectable, IRotata
     Vector3 _grab;
     readonly List<Vector3> _points = new List<Vector3>(32);
 
+    public void SetAnchor(Transform anchor)
+    {
+        _anchor = anchor;
+        if (_root != null && _anchor != null)
+        {
+            _root.SetParent(_anchor, true);
+        }
+    }
+
     public void Bind(ShapeController shape)
     {
         _target = shape;
         if (IsActive)
         {
+            Recenter();
             Rebuild();
         }
     }
@@ -39,6 +51,7 @@ public class SectionController : MonoBehaviour, IDraggable, ISelectable, IRotata
         _root.gameObject.SetActive(on);
         if (on)
         {
+            Recenter();
             _root.localScale = Vector3.one * 0.05f;
             _root.DOScale(1f, 0.35f).SetEase(Ease.OutBack);
             Rebuild();
@@ -58,9 +71,9 @@ public class SectionController : MonoBehaviour, IDraggable, ISelectable, IRotata
     void Build()
     {
         _root = new GameObject("SectionRig").transform;
-        _root.SetParent(transform, false);
+        _root.SetParent(_anchor != null ? _anchor : transform, false);
         _root.localPosition = new Vector3(0f, 0.22f, 0f);
-        _root.localRotation = Quaternion.Euler(18f, 28f, -12f);
+        _root.localRotation = Quaternion.LookRotation(new Vector3(1f, 0.85f, 0.7f));
 
         _planeVis = GameObject.CreatePrimitive(PrimitiveType.Quad).transform;
         _planeVis.name = "CutPlane";
@@ -94,6 +107,38 @@ public class SectionController : MonoBehaviour, IDraggable, ISelectable, IRotata
         {
             Rebuild();
         }
+    }
+
+    void Recenter()
+    {
+        if (_root == null || _target == null)
+        {
+            return;
+        }
+
+        Bounds bounds = new Bounds(_target.transform.position + Vector3.up * 0.2f, Vector3.one * 0.2f);
+        var renderers = _target.GetComponentsInChildren<Renderer>();
+        bool any = false;
+        for (int i = 0; i < renderers.Length; i++)
+        {
+            if (renderers[i] is LineRenderer)
+            {
+                continue;
+            }
+
+            if (!any)
+            {
+                bounds = renderers[i].bounds;
+                any = true;
+            }
+            else
+            {
+                bounds.Encapsulate(renderers[i].bounds);
+            }
+        }
+
+        _root.position = bounds.center;
+        _root.rotation = Quaternion.LookRotation(new Vector3(1f, 0.85f, 0.7f));
     }
 
     public void Rebuild()
@@ -168,16 +213,26 @@ public class SectionController : MonoBehaviour, IDraggable, ISelectable, IRotata
         }
 
         Vector3[] verts = mesh.vertices;
-        int[] tris = mesh.triangles;
         Transform tf = filter.transform;
-        for (int i = 0; i < tris.Length; i += 3)
+        if (verts.Length == 3 || verts.Length == 4)
         {
-            Vector3 a = tf.TransformPoint(verts[tris[i]]);
-            Vector3 b = tf.TransformPoint(verts[tris[i + 1]]);
-            Vector3 c = tf.TransformPoint(verts[tris[i + 2]]);
-            TryEdge(plane, a, b, points);
-            TryEdge(plane, b, c, points);
-            TryEdge(plane, c, a, points);
+            for (int i = 0; i < verts.Length; i++)
+            {
+                Vector3 a = tf.TransformPoint(verts[i]);
+                Vector3 b = tf.TransformPoint(verts[(i + 1) % verts.Length]);
+                TryEdge(plane, a, b, points);
+            }
+
+            return;
+        }
+
+        if (verts.Length > 4)
+        {
+            for (int i = 1; i < verts.Length; i++)
+            {
+                int next = i + 1 < verts.Length ? i + 1 : 1;
+                TryEdge(plane, tf.TransformPoint(verts[i]), tf.TransformPoint(verts[next]), points);
+            }
         }
     }
 

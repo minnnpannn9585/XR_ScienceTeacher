@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: simhei SDF
   m_EditorClassIdentifier: 
   hashCode: 0
-  material: {fileID: 8952559396058306827}
+  material: {fileID: 0}
   materialHashCode: 0
   m_Version: 1.1.0
   m_SourceFontFileGUID: 7e36885559c695340a7d70178d42619e

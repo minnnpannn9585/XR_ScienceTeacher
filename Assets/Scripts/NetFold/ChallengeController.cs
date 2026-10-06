@@ -18,7 +18,7 @@ public class ChallengeController : MonoBehaviour
     readonly List<GameObject> _spawned = new List<GameObject>();
     ShapeType _q1Answer = ShapeType.Cube;
     int _q2Answer = 0;
-    int _q3Answer = 3;
+    int _q3Answer = 2;
     bool _waiting;
 
     public void Bind(StarRatingController stars, Transform stage)
@@ -61,7 +61,7 @@ public class ChallengeController : MonoBehaviour
                 HighlightCorrect();
                 break;
             default:
-                hint = "提示：斜切正方体时，截面最多可以是六边形。";
+                hint = "提示：对边平行且相等，但夹角不是直角，所以是平行四边形，不是矩形。";
                 HighlightCorrect();
                 break;
         }
@@ -144,7 +144,7 @@ public class ChallengeController : MonoBehaviour
                 break;
             default:
                 BuildQuestion3();
-                Presented?.Invoke("第 3 题  判断截面形状", "斜切正方体得到的截面是哪一种？从左到右对应四个选项。", new[] { "三角形", "矩形", "五边形", "六边形" });
+                Presented?.Invoke("第 3 题  判断截面形状", "斜切正方体得到的截面是哪一种？从左到右对应四个选项。", new[] { "三角形", "矩形", "平行四边形", "六边形" });
                 break;
         }
     }
@@ -184,12 +184,12 @@ public class ChallengeController : MonoBehaviour
         plane.GetComponent<MeshRenderer>().sharedMaterial = BoardMat(new Color(1f, 0.82f, 0.28f, 0.85f), true);
         UnityEngine.Object.Destroy(plane.GetComponent<Collider>());
         _spawned.Add(plane);
-        string[] labels = { "三角形", "矩形", "五边形", "六边形" };
+        string[] labels = { "三角形", "矩形", "平行四边形", "六边形" };
         Mesh[] shapes =
         {
             SectionMesh(3),
             SectionMesh(4),
-            SectionMesh(5),
+            ParallelogramMesh(),
             SectionMesh(6)
         };
         for (int i = 0; i < labels.Length; i++)
@@ -329,6 +329,25 @@ public class ChallengeController : MonoBehaviour
         }
 
         var mesh = new Mesh { name = "Section" + sides, vertices = verts, triangles = tris };
+        mesh.RecalculateNormals();
+        mesh.RecalculateBounds();
+        return mesh;
+    }
+
+    static Mesh ParallelogramMesh()
+    {
+        float w = 0.2f;
+        float h = 0.12f;
+        float skew = 0.05f;
+        var mesh = new Mesh { name = "Parallelogram" };
+        mesh.vertices = new[]
+        {
+            new Vector3(-w * 0.5f, -h * 0.5f, 0f),
+            new Vector3(w * 0.5f, -h * 0.5f, 0f),
+            new Vector3(w * 0.5f + skew, h * 0.5f, 0f),
+            new Vector3(-w * 0.5f + skew, h * 0.5f, 0f)
+        };
+        mesh.triangles = new[] { 0, 1, 2, 0, 2, 3, 0, 3, 2, 1, 0, 2 };
         mesh.RecalculateNormals();
         mesh.RecalculateBounds();
         return mesh;

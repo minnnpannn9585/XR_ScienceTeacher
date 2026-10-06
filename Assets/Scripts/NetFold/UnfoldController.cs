@@ -6,7 +6,8 @@ public class UnfoldController : MonoBehaviour
     public bool IsUnfolded { get; private set; }
     public ShapeController Target { get; private set; }
 
-    Sequence _seq;
+    Tween _tween;
+    float _amount;
 
     public void Bind(ShapeController shape)
     {
@@ -15,13 +16,10 @@ public class UnfoldController : MonoBehaviour
             return;
         }
 
-        if (Target != null && IsUnfolded)
-        {
-            Fold(true);
-        }
-
+        Kill();
         Target = shape;
         IsUnfolded = false;
+        _amount = 0f;
     }
 
     public void Unfold(bool instant = false)
@@ -36,39 +34,14 @@ public class UnfoldController : MonoBehaviour
         Target.SetIdleSpin(false);
         if (instant)
         {
-            for (int i = 0; i < Target.FaceList.Count; i++)
-            {
-                Target.FaceList[i].ApplyUnfoldedImmediate();
-            }
-
+            Apply(1f);
             return;
         }
 
-        _seq = DOTween.Sequence();
-        for (int i = 0; i < Target.FaceList.Count; i++)
+        float from = _amount;
+        _tween = DOVirtual.Float(from, 1f, 1.15f, Apply).SetEase(Ease.InOutCubic).OnComplete(() =>
         {
-            ShapeFace face = Target.FaceList[i];
-            float delay = i * 0.045f;
-            var move = face.transform.DOLocalMove(face.UnfoldedLocalPos, 0.55f).SetEase(Ease.InOutCubic).SetDelay(delay);
-            var rot = face.transform.DOLocalRotate(face.UnfoldedLocalRot.eulerAngles, 0.55f).SetEase(Ease.InOutCubic).SetDelay(delay);
-            if (i == 0)
-            {
-                _seq.Append(move);
-                _seq.Join(rot);
-            }
-            else
-            {
-                _seq.Join(move);
-                _seq.Join(rot);
-            }
-        }
-
-        _seq.OnComplete(() =>
-        {
-            if (FeedbackService.Instance != null)
-            {
-                FeedbackService.Instance.Burst(Target.transform.position + Vector3.up * 0.12f, NetFoldTheme.Accent, 40);
-            }
+            FeedbackService.Instance?.Burst(Target.transform.position + Vector3.up * 0.12f, NetFoldTheme.Accent, 40);
         });
     }
 
@@ -83,28 +56,19 @@ public class UnfoldController : MonoBehaviour
         IsUnfolded = false;
         if (instant)
         {
-            for (int i = 0; i < Target.FaceList.Count; i++)
-            {
-                Target.FaceList[i].ApplyFoldedImmediate();
-            }
-
-            Target.SetIdleSpin(true);
+            Apply(0f);
+            Target.SetIdleSpin(Target.CanDrag);
             return;
         }
 
-        _seq = DOTween.Sequence();
-        for (int i = 0; i < Target.FaceList.Count; i++)
+        float from = _amount;
+        _tween = DOVirtual.Float(from, 0f, 0.95f, Apply).SetEase(Ease.InOutCubic).OnComplete(() =>
         {
-            ShapeFace face = Target.FaceList[i];
-            float delay = i * 0.03f;
-            _seq.Join(face.transform.DOLocalMove(face.FoldedLocalPos, 0.5f).SetEase(Ease.InOutCubic).SetDelay(delay));
-            _seq.Join(face.transform.DOLocalRotate(face.FoldedLocalRot.eulerAngles, 0.5f).SetEase(Ease.InOutCubic).SetDelay(delay));
-        }
-
-        _seq.OnComplete(() =>
-        {
-            Target.SetIdleSpin(true);
-            FeedbackService.Instance?.Burst(Target.transform.position + Vector3.up * 0.2f, NetFoldTheme.Success, 28);
+            if (Target != null)
+            {
+                Target.SetIdleSpin(Target.CanDrag);
+                FeedbackService.Instance?.Burst(Target.transform.position + Vector3.up * 0.2f, NetFoldTheme.Success, 28);
+            }
         });
     }
 
@@ -143,12 +107,108 @@ public class UnfoldController : MonoBehaviour
         return true;
     }
 
+    void Apply(float amount)
+    {
+        _amount = amount;
+        if (Target == null)
+        {
+            return;
+        }
+
+        int count = Target.FaceList.Count;
+        var pos = new Vector3[count];
+        var rot = new Quaternion[count];
+        var done = new bool[count];
+        for (int i = 0; i < count; i++)
+        {
+            Eval(i, amount, pos, rot, done);
+        }
+
+        for (int i = 0; i < count; i++)
+        {
+            ShapeFace face = Target.FaceList[i];
+            if (face == null)
+            {
+                continue;
+            }
+
+            face.transform.localPosition = pos[i];
+            face.transform.localRotation = rot[i];
+        }
+    }
+
+    void Eval(int index, float amount, Vector3[] pos, Quaternion[] rot, bool[] done)
+    {
+        if (index < 0 || index >= done.Length || done[index])
+        {
+            return;
+        }
+
+        done[index] = true;
+        ShapeFace face = Target.FaceList[index];
+        if (face == null || !face.HasHinge)
+        {
+            pos[index] = face != null ? face.FoldedLocalPos : Vector3.zero;
+            rot[index] = face != null ? face.FoldedLocalRot : Quaternion.identity;
+            return;
+        }
+
+        float t = HingeAmount(amount, face.Depth);
+        Quaternion swingLocal = Quaternion.AngleAxis(face.UnfoldAngle * t, face.HingeAxis);
+        if (face.HingeParent < 0)
+        {
+            Vector3 offset = face.FoldedLocalPos - face.HingePoint;
+            pos[index] = face.HingePoint + swingLocal * offset;
+            rot[index] = swingLocal * face.FoldedLocalRot;
+            return;
+        }
+
+        int parentIndex = Find(face.HingeParent);
+        if (parentIndex < 0)
+        {
+            pos[index] = face.FoldedLocalPos;
+            rot[index] = face.FoldedLocalRot;
+            return;
+        }
+
+        Eval(parentIndex, amount, pos, rot, done);
+        ShapeFace parent = Target.FaceList[parentIndex];
+        Quaternion delta = rot[parentIndex] * Quaternion.Inverse(parent.FoldedLocalRot);
+        Vector3 hingeNow = pos[parentIndex] + delta * (face.HingePoint - parent.FoldedLocalPos);
+        Vector3 axisNow = delta * face.HingeAxis;
+        Vector3 attachedPos = pos[parentIndex] + delta * (face.FoldedLocalPos - parent.FoldedLocalPos);
+        Quaternion attachedRot = delta * face.FoldedLocalRot;
+        Quaternion swing = Quaternion.AngleAxis(face.UnfoldAngle * t, axisNow.sqrMagnitude < 1e-8f ? Vector3.right : axisNow.normalized);
+        pos[index] = hingeNow + swing * (attachedPos - hingeNow);
+        rot[index] = swing * attachedRot;
+    }
+
+    int Find(int faceIndex)
+    {
+        for (int i = 0; i < Target.FaceList.Count; i++)
+        {
+            if (Target.FaceList[i] != null && Target.FaceList[i].FaceIndex == faceIndex)
+            {
+                return i;
+            }
+        }
+
+        return -1;
+    }
+
+    static float HingeAmount(float amount, int depth)
+    {
+        float delay = Mathf.Min(depth * 0.07f, 0.42f);
+        float x = Mathf.Clamp01((amount - delay) / Mathf.Max(0.2f, 1f - delay));
+        return x * x * (3f - 2f * x);
+    }
+
     void Kill()
     {
-        if (_seq != null)
+        if (_tween != null)
         {
-            _seq.Kill();
-            _seq = null;
+            _tween.Kill();
+            _tween = null;
         }
     }
 }
