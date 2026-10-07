@@ -42,7 +42,7 @@ public class BeakerController : LabProp
         Role = role;
         Action = LabAction.Beaker;
         DisplayName = NameOf(role);
-        var glassMat = LabFactory.Lit(new Color(0.82f, 0.92f, 1f, 0.2f), true, 0.02f, 0.92f, true, new Color(0.35f, 0.55f, 0.8f, 0.15f));
+        var glassMat = LabFactory.Lit(new Color(0.93f, 0.96f, 0.98f, 0.14f), true, 0f, 0.97f, true, new Color(0.55f, 0.68f, 0.8f, 0.05f));
         glassMat.renderQueue = 3000;
         var glass = LabFactory.Primitive(PrimitiveType.Cylinder, "Glass", transform, new Vector3(0f, 0.06f, 0f), new Vector3(0.124f, 0.06f, 0.124f), glassMat, true);
         _glass = glass.GetComponent<MeshRenderer>();
@@ -65,7 +65,7 @@ public class BeakerController : LabProp
         _blobRenderer = blob.GetComponent<MeshRenderer>();
         _blobRenderer.enabled = false;
 
-        var backMat = LabFactory.Lit(new Color(0.9f, 0.92f, 0.95f, 1f), false, 0.05f, 0.4f);
+        var backMat = LabFactory.Lit(NetFoldTheme.Ivory, false, 0.08f, 0.35f);
         LabFactory.Primitive(PrimitiveType.Cube, "ThermoBack", transform, new Vector3(0.09f, 0.05f, 0f), new Vector3(0.012f, 0.1f, 0.012f), backMat, false);
         _thermoMat = LabFactory.Lit(new Color(0.3f, 0.55f, 1f), false, 0.1f, 0.45f, true, new Color(0.3f, 0.55f, 1f));
         var fill = LabFactory.Primitive(PrimitiveType.Cube, "ThermoFill", transform, new Vector3(0.09f, 0.02f, 0f), new Vector3(0.01f, 0.04f, 0.01f), _thermoMat, false);

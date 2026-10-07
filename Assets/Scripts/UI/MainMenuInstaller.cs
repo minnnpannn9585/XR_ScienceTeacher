@@ -13,7 +13,7 @@ public class MainMenuInstaller : MonoBehaviour
         {
             var cam = new GameObject("MenuCamera").AddComponent<Camera>();
             cam.clearFlags = CameraClearFlags.SolidColor;
-            cam.backgroundColor = new Color(0.03f, 0.07f, 0.14f);
+            cam.backgroundColor = NetFoldTheme.Void;
             cam.gameObject.AddComponent<AudioListener>();
         }
 

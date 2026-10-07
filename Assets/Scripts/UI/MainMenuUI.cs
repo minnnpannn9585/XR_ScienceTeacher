@@ -1,43 +1,69 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 public class MainMenuUI : MonoBehaviour
 {
     public void Build()
     {
+        DressWorld();
         var canvas = UiFactory.CreateOverlay("MainMenuCanvas", transform);
         var root = canvas.transform;
-        var bg = new GameObject("BG", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
-        var bgRt = bg.GetComponent<RectTransform>();
-        bgRt.SetParent(root, false);
-        bgRt.anchorMin = Vector2.zero;
-        bgRt.anchorMax = Vector2.one;
-        bgRt.offsetMin = Vector2.zero;
-        bgRt.offsetMax = Vector2.zero;
-        bg.GetComponent<Image>().color = new Color(0.03f, 0.07f, 0.14f, 1f);
+        UiFactory.ScreenWash(root);
 
-        UiFactory.Panel(root, "Card", new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(-520, -460), new Vector2(520, 460), NetFoldTheme.Glass);
-        UiFactory.Label(root, "Title", "AR Science", 48, TextAlignmentOptions.Center, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(-460, 340), new Vector2(460, 420));
-        UiFactory.Label(root, "Sub", "讲解、自由实验、挑战分开进入", 24, TextAlignmentOptions.Center, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(-460, 280), new Vector2(460, 334));
+        var eyebrow = UiFactory.Label(root, "Eyebrow", "科学工作室", 18, TextAlignmentOptions.Left, new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(88f, 292f), new Vector2(760f, 328f), NetFoldTheme.Hairline);
+        eyebrow.fontStyle = FontStyles.Bold;
+        UiFactory.Label(root, "Title", "AR Science", 64, TextAlignmentOptions.Left, new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(84f, 200f), new Vector2(860f, 292f));
+        UiFactory.Label(root, "Sub", "同一间工作室里，讲解、自由实验和挑战分开进入。", 22, TextAlignmentOptions.Left, new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(88f, 148f), new Vector2(820f, 204f), NetFoldTheme.TextDim);
 
-        UiFactory.Label(root, "NetFoldHead", "NetFold · 立体图形", 22, TextAlignmentOptions.Left, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(-450, 220), new Vector2(450, 264));
-        UiFactory.Button(root, "NetFoldLearn", "讲解", new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(-450, 156), new Vector2(-160, 214), SceneLoader.LoadNetFold, NetFoldTheme.AccentDeep);
-        UiFactory.Button(root, "NetFoldFree", "自由实验", new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(-145, 156), new Vector2(145, 214), SceneLoader.LoadNetFoldFree, new Color(0.16f, 0.42f, 0.62f, 1f));
-        UiFactory.Button(root, "NetFoldChallenge", "挑战", new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(160, 156), new Vector2(450, 214), SceneLoader.LoadNetFoldChallenge, new Color(0.1f, 0.28f, 0.48f, 1f));
+        Module(root, "NetFold", "立体图形", "展开、三视图与截面", 18f, 136f, NetFoldTheme.Accent, SceneLoader.LoadNetFold, SceneLoader.LoadNetFoldFree, SceneLoader.LoadNetFoldChallenge);
+        Module(root, "ParticleDrift", "分子热运动", "扩散、温度与微观粒子", -128f, -10f, new Color(0.78f, 0.52f, 0.58f, 1f), SceneLoader.LoadParticleDrift, SceneLoader.LoadParticleDriftFree, SceneLoader.LoadParticleDriftChallenge);
+        Module(root, "LensCraft", "凸透镜成像", "物距、像距与光路", -274f, -156f, NetFoldTheme.Hairline, SceneLoader.LoadLensCraft, SceneLoader.LoadLensCraftFree, SceneLoader.LoadLensCraftChallenge);
 
-        UiFactory.Label(root, "DriftHead", "ParticleDrift · 分子热运动", 22, TextAlignmentOptions.Left, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(-450, 90), new Vector2(450, 134));
-        UiFactory.Button(root, "ParticleDriftLearn", "讲解", new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(-450, 26), new Vector2(-160, 84), SceneLoader.LoadParticleDrift, new Color(0.48f, 0.12f, 0.28f, 1f));
-        UiFactory.Button(root, "ParticleDriftFree", "自由实验", new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(-145, 26), new Vector2(145, 84), SceneLoader.LoadParticleDriftFree, new Color(0.62f, 0.22f, 0.36f, 1f));
-        UiFactory.Button(root, "ParticleDriftChallenge", "挑战", new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(160, 26), new Vector2(450, 84), SceneLoader.LoadParticleDriftChallenge, new Color(0.36f, 0.1f, 0.22f, 1f));
+        UiFactory.Button(root, "Quit", "退出", new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(88f, -332f), new Vector2(280f, -280f), QuitApp, new Color(0.12f, 0.13f, 0.15f, 0.92f));
+        UiFactory.Label(root, "Hint", "右键旋转视角    滚轮缩放    WASD 平移    Esc 返回", 18, TextAlignmentOptions.Left, new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(88f, -392f), new Vector2(820f, -344f), NetFoldTheme.TextDim);
+    }
 
-        UiFactory.Label(root, "LensHead", "LensCraft · 凸透镜成像", 22, TextAlignmentOptions.Left, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(-450, -40), new Vector2(450, 4));
-        UiFactory.Button(root, "LensCraftLearn", "讲解", new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(-450, -104), new Vector2(-160, -46), SceneLoader.LoadLensCraft, new Color(0.1f, 0.38f, 0.42f, 1f));
-        UiFactory.Button(root, "LensCraftFree", "自由实验", new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(-145, -104), new Vector2(145, -46), SceneLoader.LoadLensCraftFree, new Color(0.14f, 0.5f, 0.48f, 1f));
-        UiFactory.Button(root, "LensCraftChallenge", "挑战", new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(160, -104), new Vector2(450, -46), SceneLoader.LoadLensCraftChallenge, new Color(0.08f, 0.28f, 0.36f, 1f));
+    static void Module(Transform root, string id, string title, string blurb, float y0, float y1, Color accent, UnityAction learn, UnityAction free, UnityAction challenge)
+    {
+        var card = UiFactory.Panel(root, id, new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(72f, y0), new Vector2(900f, y1), NetFoldTheme.Glass);
+        var line = card.transform.Find("Hairline");
+        if (line != null)
+        {
+            line.GetComponent<Image>().color = accent;
+        }
 
-        UiFactory.Button(root, "Quit", "退出", new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(-180, -190), new Vector2(180, -132), QuitApp, new Color(0.18f, 0.22f, 0.3f, 0.9f));
-        UiFactory.Label(root, "Hint", "右键旋转视角    滚轮缩放    WASD 平移    Esc 返回", 20, TextAlignmentOptions.Center, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(-460, -280), new Vector2(460, -210));
+        UiFactory.Label(card.transform, "Name", title, 28, TextAlignmentOptions.Left, new Vector2(0f, 1f), new Vector2(0.46f, 1f), new Vector2(24f, -52f), new Vector2(0f, -12f));
+        UiFactory.Label(card.transform, "Blurb", blurb, 18, TextAlignmentOptions.Left, new Vector2(0.46f, 1f), new Vector2(1f, 1f), new Vector2(0f, -50f), new Vector2(-20f, -14f), NetFoldTheme.TextDim);
+        UiFactory.Button(card.transform, "Learn", "讲解", Vector2.zero, Vector2.zero, new Vector2(20f, 16f), new Vector2(286f, 64f), learn);
+        UiFactory.Button(card.transform, "Free", "自由实验", Vector2.zero, Vector2.zero, new Vector2(298f, 16f), new Vector2(564f, 64f), free);
+        UiFactory.Button(card.transform, "Challenge", "挑战", Vector2.zero, Vector2.zero, new Vector2(576f, 16f), new Vector2(808f, 64f), challenge);
+    }
+
+    static void DressWorld()
+    {
+        var cam = Camera.main;
+        if (cam == null)
+        {
+            var camGo = new GameObject("MenuCamera");
+            cam = camGo.AddComponent<Camera>();
+            camGo.tag = "MainCamera";
+            camGo.AddComponent<AudioListener>();
+        }
+
+        Vector3 hero = new Vector3(1.05f, 1.02f, 0.15f);
+        cam.fieldOfView = 32f;
+        cam.transform.position = new Vector3(0.1f, 1.42f, -2.5f);
+        cam.transform.LookAt(new Vector3(0.28f, 1.12f, 0.55f));
+
+        var root = new GameObject("MenuStudio").transform;
+        StudioSet.Install(root, cam, hero);
+        var desk = LabFactory.Primitive(PrimitiveType.Cube, "MenuPlinth", root, new Vector3(hero.x, 0.78f, hero.z), new Vector3(0.78f, 0.045f, 0.78f), StudioSet.Stone(), false);
+        StudioSet.DressDesk(desk.transform);
+        var shape = GeometryFactory.Create(ShapeType.Cube, root, new Vector3(hero.x, 0.805f, hero.z), 0.36f, false);
+        shape.AllowIdleSpin = true;
+        shape.IdleSpinSpeed = 8f;
     }
 
     static void QuitApp()

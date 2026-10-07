@@ -7,6 +7,8 @@ public static class UiFactory
 {
     static TMP_FontAsset _font;
     static Sprite _round;
+    static Sprite _white;
+    static Sprite _wash;
 
     public static TMP_FontAsset DefaultFont
     {
@@ -97,9 +99,9 @@ public static class UiFactory
                 return _round;
             }
 
-            const int s = 64;
+            const int s = 128;
             var tex = new Texture2D(s, s, TextureFormat.RGBA32, false);
-            float r = 18f;
+            float r = 28f;
             for (int y = 0; y < s; y++)
             {
                 for (int x = 0; x < s; x++)
@@ -121,6 +123,64 @@ public static class UiFactory
             tex.wrapMode = TextureWrapMode.Clamp;
             _round = Sprite.Create(tex, new Rect(0, 0, s, s), new Vector2(0.5f, 0.5f), 100f, 0, SpriteMeshType.FullRect, new Vector4(r, r, r, r));
             return _round;
+        }
+    }
+
+    public static Sprite WhiteSprite
+    {
+        get
+        {
+            if (_white != null)
+            {
+                return _white;
+            }
+
+            var tex = new Texture2D(4, 4, TextureFormat.RGBA32, false);
+            var pixels = new Color[16];
+            for (int i = 0; i < pixels.Length; i++)
+            {
+                pixels[i] = Color.white;
+            }
+
+            tex.SetPixels(pixels);
+            tex.Apply();
+            _white = Sprite.Create(tex, new Rect(0, 0, 4, 4), new Vector2(0.5f, 0.5f), 100f);
+            return _white;
+        }
+    }
+
+    public static Sprite WashSprite
+    {
+        get
+        {
+            if (_wash != null)
+            {
+                return _wash;
+            }
+
+            const int w = 256;
+            const int h = 256;
+            var tex = new Texture2D(w, h, TextureFormat.RGBA32, false);
+            tex.wrapMode = TextureWrapMode.Clamp;
+            Color ink = NetFoldTheme.Void;
+            for (int y = 0; y < h; y++)
+            {
+                for (int x = 0; x < w; x++)
+                {
+                    float u = x / (w - 1f);
+                    float v = y / (h - 1f);
+                    float fade = Mathf.SmoothStep(0.94f, 0.02f, Mathf.InverseLerp(0.02f, 0.72f, u));
+                    float edge = Mathf.SmoothStep(0.15f, 1f, Mathf.Abs(v - 0.5f) * 2f);
+                    fade = Mathf.Clamp01(fade + edge * 0.28f * (1f - u));
+                    Color c = Color.Lerp(ink, NetFoldTheme.Horizon, (1f - Mathf.Abs(v - 0.42f) * 1.4f) * 0.35f);
+                    c.a = fade;
+                    tex.SetPixel(x, y, c);
+                }
+            }
+
+            tex.Apply();
+            _wash = Sprite.Create(tex, new Rect(0, 0, w, h), new Vector2(0.5f, 0.5f), 100f);
+            return _wash;
         }
     }
 
@@ -166,11 +226,44 @@ public static class UiFactory
         img.type = Image.Type.Sliced;
         img.color = color;
         go.AddComponent<CanvasGroup>();
-        go.AddComponent<UiFloatCard>();
+        Hairline(go.transform);
         return img;
     }
 
-    public static TMP_Text Label(Transform parent, string name, string text, int size, TextAlignmentOptions align, Vector2 anchorMin, Vector2 anchorMax, Vector2 offsetMin, Vector2 offsetMax)
+    public static Image ScreenWash(Transform parent)
+    {
+        var go = new GameObject("Wash", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
+        var rt = go.GetComponent<RectTransform>();
+        rt.SetParent(parent, false);
+        rt.anchorMin = Vector2.zero;
+        rt.anchorMax = Vector2.one;
+        rt.offsetMin = Vector2.zero;
+        rt.offsetMax = Vector2.zero;
+        var img = go.GetComponent<Image>();
+        img.sprite = WashSprite;
+        img.type = Image.Type.Simple;
+        img.color = Color.white;
+        img.raycastTarget = false;
+        return img;
+    }
+
+    static void Hairline(Transform parent)
+    {
+        var go = new GameObject("Hairline", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
+        var rt = go.GetComponent<RectTransform>();
+        rt.SetParent(parent, false);
+        rt.anchorMin = new Vector2(0f, 1f);
+        rt.anchorMax = new Vector2(1f, 1f);
+        rt.pivot = new Vector2(0.5f, 1f);
+        rt.sizeDelta = new Vector2(-36f, 2f);
+        rt.anchoredPosition = new Vector2(0f, -12f);
+        var img = go.GetComponent<Image>();
+        img.sprite = WhiteSprite;
+        img.color = NetFoldTheme.Hairline;
+        img.raycastTarget = false;
+    }
+
+    public static TMP_Text Label(Transform parent, string name, string text, int size, TextAlignmentOptions align, Vector2 anchorMin, Vector2 anchorMax, Vector2 offsetMin, Vector2 offsetMax, Color? color = null)
     {
         var go = new GameObject(name, typeof(RectTransform), typeof(CanvasRenderer), typeof(TextMeshProUGUI));
         var rt = go.GetComponent<RectTransform>();
@@ -183,7 +276,7 @@ public static class UiFactory
         tmp.font = DefaultFont;
         tmp.text = text;
         tmp.fontSize = size;
-        tmp.color = NetFoldTheme.Text;
+        tmp.color = color ?? NetFoldTheme.Text;
         tmp.alignment = align;
         tmp.raycastTarget = false;
         tmp.enableWordWrapping = true;
@@ -202,11 +295,15 @@ public static class UiFactory
         var img = go.GetComponent<Image>();
         img.sprite = RoundSprite;
         img.type = Image.Type.Sliced;
-        img.color = color ?? NetFoldTheme.AccentDeep;
+        Color fill = color ?? NetFoldTheme.AccentDeep;
+        img.color = fill;
         var btn = go.GetComponent<Button>();
         var colors = btn.colors;
-        colors.highlightedColor = Color.Lerp(img.color, Color.white, 0.2f);
-        colors.pressedColor = Color.Lerp(img.color, Color.black, 0.15f);
+        colors.normalColor = fill;
+        colors.highlightedColor = Color.Lerp(fill, NetFoldTheme.Ivory, 0.18f);
+        colors.pressedColor = Color.Lerp(fill, Color.black, 0.28f);
+        colors.selectedColor = fill;
+        colors.fadeDuration = 0.08f;
         btn.colors = colors;
         Label(go.transform, "Label", text, 26, TextAlignmentOptions.Center, Vector2.zero, Vector2.one, Vector2.zero, Vector2.zero);
         btn.onClick.AddListener(() =>
@@ -222,21 +319,3 @@ public static class UiFactory
     }
 }
 
-public class UiFloatCard : MonoBehaviour
-{
-    RectTransform _rt;
-    Vector2 _base;
-    float _phase;
-
-    void Awake()
-    {
-        _rt = transform as RectTransform;
-        _base = _rt.anchoredPosition;
-        _phase = Random.Range(0f, Mathf.PI * 2f);
-    }
-
-    void Update()
-    {
-        _rt.anchoredPosition = _base + new Vector2(0f, Mathf.Sin(Time.time * 1.2f + _phase) * 3.2f);
-    }
-}

@@ -680,13 +680,15 @@ public class OpticalBenchController : MonoBehaviour
     void BuildDesk()
     {
         transform.position = new Vector3(0f, 0.4f, 0f);
-        LabFactory.Primitive(PrimitiveType.Cube, "Desk", transform, new Vector3(0f, -0.02f, 0f), new Vector3(1.9f, 0.04f, 0.72f), LabFactory.Lit(new Color(0.22f, 0.18f, 0.14f), false, 0.05f, 0.35f), true);
-        LabFactory.Primitive(PrimitiveType.Cube, "Rail", transform, new Vector3(0f, 0.02f, 0f), new Vector3(1.7f, 0.015f, 0.04f), LabFactory.Lit(new Color(0.45f, 0.48f, 0.52f), false, 0.4f, 0.55f), false);
-        LabFactory.Primitive(PrimitiveType.Sphere, "Lamp", transform, new Vector3(-0.78f, 0.08f, -0.12f), Vector3.one * 0.04f, LabFactory.Lit(new Color(1f, 0.85f, 0.4f), false, 0f, 0.2f, true, new Color(1f, 0.8f, 0.3f)), false);
+        var desk = LabFactory.Primitive(PrimitiveType.Cube, "Desk", transform, new Vector3(0f, -0.02f, 0f), new Vector3(1.9f, 0.045f, 0.72f), StudioSet.Stone(), true);
+        StudioSet.DressDesk(desk.transform);
+        LabFactory.Primitive(PrimitiveType.Cube, "Rail", transform, new Vector3(0f, 0.02f, 0f), new Vector3(1.7f, 0.012f, 0.028f), StudioSet.Brass(), false);
+        LabFactory.Primitive(PrimitiveType.Cylinder, "LampStem", transform, new Vector3(-0.78f, 0.04f, -0.14f), new Vector3(0.014f, 0.028f, 0.014f), StudioSet.Brass(), false);
+        LabFactory.Primitive(PrimitiveType.Sphere, "Lamp", transform, new Vector3(-0.78f, 0.08f, -0.14f), Vector3.one * 0.026f, LabFactory.Lit(new Color(1f, 0.9f, 0.72f), false, 0f, 0.45f, true, new Color(1f, 0.72f, 0.32f)), false);
         for (int i = -8; i <= 8; i++)
         {
             float x = i * 0.1f;
-            LabFactory.Primitive(PrimitiveType.Cube, "Tick", transform, new Vector3(x, 0.028f, 0.08f), new Vector3(0.004f, 0.008f, i % 2 == 0 ? 0.03f : 0.018f), LabFactory.Lit(new Color(0.9f, 0.9f, 0.85f), false, 0f, 0.2f), false);
+            LabFactory.Primitive(PrimitiveType.Cube, "Tick", transform, new Vector3(x, 0.03f, 0.08f), new Vector3(0.003f, 0.006f, i % 2 == 0 ? 0.028f : 0.016f), LabFactory.Lit(NetFoldTheme.Ivory, false, 0.05f, 0.35f), false);
         }
 
         var axis = new GameObject("Axis").AddComponent<LineRenderer>();
@@ -696,8 +698,8 @@ public class OpticalBenchController : MonoBehaviour
         axis.SetPosition(0, new Vector3(-0.8f, AxisY, 0f));
         axis.SetPosition(1, new Vector3(0.82f, AxisY, 0f));
         axis.widthMultiplier = 0.003f;
-        axis.material = LabFactory.ParticleMat(new Color(0.85f, 0.9f, 1f, 0.7f));
-        axis.startColor = axis.endColor = new Color(0.85f, 0.9f, 1f, 0.8f);
+        axis.material = LabFactory.ParticleMat(new Color(NetFoldTheme.Ivory.r, NetFoldTheme.Ivory.g, NetFoldTheme.Ivory.b, 0.7f));
+        axis.startColor = axis.endColor = new Color(NetFoldTheme.Ivory.r, NetFoldTheme.Ivory.g, NetFoldTheme.Ivory.b, 0.75f);
     }
 
     void BuildRigs()
@@ -709,7 +711,7 @@ public class OpticalBenchController : MonoBehaviour
         _cam = camGo.AddComponent<Camera>();
         _cam.nearClipPlane = 0.05f;
         _cam.clearFlags = CameraClearFlags.SolidColor;
-        _cam.backgroundColor = new Color(0.04f, 0.07f, 0.12f);
+        _cam.backgroundColor = NetFoldTheme.Void;
         var extra = camGo.AddComponent<UniversalAdditionalCameraData>();
         extra.renderPostProcessing = true;
         camGo.tag = "MainCamera";
@@ -726,10 +728,7 @@ public class OpticalBenchController : MonoBehaviour
         var look = new GameObject("LookTarget");
         look.transform.SetParent(transform, false);
         orbit.Bind(_input, look.transform);
-        var key = new GameObject("KeyLight").AddComponent<Light>();
-        key.type = LightType.Directional;
-        key.intensity = 1.05f;
-        key.transform.rotation = Quaternion.Euler(48f, -30f, 0f);
+        StudioSet.Install(transform, _cam, transform.position);
         var xr = XRRigBuilder.Build(transform, new Vector3(0f, 0f, -0.6f));
         _input.PcCamera = _cam;
         _input.PcRig = pcRig;

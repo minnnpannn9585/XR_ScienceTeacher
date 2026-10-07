@@ -26,7 +26,7 @@ public class LensController : MonoBehaviour
         var body = new GameObject("Body");
         body.transform.SetParent(_glass, false);
         body.AddComponent<MeshFilter>().sharedMesh = _lensMesh;
-        var glassMat = LabFactory.Lit(new Color(0.55f, 0.86f, 1f, 0.42f), true, 0.02f, 0.94f, true, new Color(0.25f, 0.55f, 0.85f, 0.35f));
+        var glassMat = LabFactory.Lit(new Color(0.78f, 0.9f, 0.96f, 0.34f), true, 0.02f, 0.96f, true, new Color(0.45f, 0.62f, 0.75f, 0.12f));
         SetCullOff(glassMat);
         body.AddComponent<MeshRenderer>().sharedMaterial = glassMat;
 
@@ -34,7 +34,7 @@ public class LensController : MonoBehaviour
         var rim = new GameObject("Rim");
         rim.transform.SetParent(_glass, false);
         rim.AddComponent<MeshFilter>().sharedMesh = rimMesh;
-        var rimMat = LabFactory.Lit(new Color(0.55f, 0.62f, 0.7f, 0.95f), true, 0.7f, 0.72f);
+        var rimMat = LabFactory.Lit(NetFoldTheme.Brass, false, 0.9f, 0.62f);
         SetCullOff(rimMat);
         rim.AddComponent<MeshRenderer>().sharedMaterial = rimMat;
         FillRing(rimMesh, RimInner, RimOuter, 0.006f);
@@ -58,7 +58,7 @@ public class LensController : MonoBehaviour
 
     static Transform Mark(OpticalBenchController bench, string caption)
     {
-        var go = LabFactory.Primitive(PrimitiveType.Sphere, caption, bench.transform, Vector3.zero, Vector3.one * 0.018f, LabFactory.Lit(new Color(1f, 0.85f, 0.35f), false, 0f, 0.3f, true, new Color(1f, 0.8f, 0.2f)), false);
+        var go = LabFactory.Primitive(PrimitiveType.Sphere, caption, bench.transform, Vector3.zero, Vector3.one * 0.014f, LabFactory.Lit(NetFoldTheme.Brass, false, 0.4f, 0.45f, true, NetFoldTheme.Brass * 0.35f), false);
         Object.Destroy(go.GetComponent<Collider>());
         LabFactory.WorldLabel(go.transform, caption, new Vector3(0f, 0.04f, 0f));
         return go.transform;

@@ -18,8 +18,9 @@ public class ScreenController : MonoBehaviour, IInteractable
 
     public void Build()
     {
-        _plateColor = new Color(0.92f, 0.94f, 0.96f, 0.82f);
-        var plate = LabFactory.Primitive(PrimitiveType.Cube, "Plate", transform, Vector3.zero, new Vector3(0.02f, 0.24f, 0.18f), LabFactory.Lit(_plateColor, true, 0f, 0.2f), true);
+        _plateColor = new Color(0.93f, 0.91f, 0.86f, 0.92f);
+        LabFactory.Primitive(PrimitiveType.Cube, "Frame", transform, new Vector3(0.012f, 0f, 0f), new Vector3(0.008f, 0.27f, 0.21f), LabFactory.Lit(NetFoldTheme.StoneDeep, false, 0.35f, 0.42f), false);
+        var plate = LabFactory.Primitive(PrimitiveType.Cube, "Plate", transform, Vector3.zero, new Vector3(0.016f, 0.24f, 0.18f), LabFactory.Lit(_plateColor, true, 0f, 0.18f), true);
         _plate = plate.GetComponent<MeshRenderer>();
         _plateMat = _plate.material;
         _glyph = BuildGlyph("Image");

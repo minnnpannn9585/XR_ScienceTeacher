@@ -188,10 +188,8 @@ public class ExperimentController : MonoBehaviour
         anchor.position = new Vector3(0f, 0.4f, 0f);
         _desk = anchor;
 
-        var desk = LabFactory.Primitive(PrimitiveType.Cube, "VirtualDesk", anchor, new Vector3(0f, -0.02f, 0f), new Vector3(1.7f, 0.04f, 1.05f), LabFactory.Lit(new Color(0.4f, 0.27f, 0.16f), false, 0.05f, 0.32f), true);
-        desk.GetComponent<MeshRenderer>().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.On;
-
-        LabFactory.Primitive(PrimitiveType.Cube, "Floor", transform, new Vector3(0f, -0.01f, 0f), new Vector3(8f, 0.02f, 8f), LabFactory.Lit(new Color(0.05f, 0.07f, 0.1f), false, 0f, 0.15f), false);
+        var desk = LabFactory.Primitive(PrimitiveType.Cube, "VirtualDesk", anchor, new Vector3(0f, -0.02f, 0f), new Vector3(1.7f, 0.045f, 1.05f), StudioSet.Stone(), true);
+        StudioSet.DressDesk(desk.transform);
 
         Single = MakeBeaker(BeakerRole.Single);
         Cold = MakeBeaker(BeakerRole.Cold);
@@ -227,7 +225,7 @@ public class ExperimentController : MonoBehaviour
         var cam = camGo.AddComponent<Camera>();
         cam.nearClipPlane = 0.02f;
         cam.clearFlags = CameraClearFlags.SolidColor;
-        cam.backgroundColor = new Color(0.04f, 0.07f, 0.12f);
+        cam.backgroundColor = NetFoldTheme.Void;
         camGo.AddComponent<UniversalAdditionalCameraData>();
         if (FindObjectOfType<AudioListener>() == null)
         {
@@ -243,16 +241,7 @@ public class ExperimentController : MonoBehaviour
         Input.PcCamera = cam;
         Input.PcRig = pcRig;
 
-        var key = new GameObject("KeyLight").AddComponent<Light>();
-        key.type = LightType.Directional;
-        key.intensity = 1.15f;
-        key.color = new Color(1f, 0.96f, 0.9f);
-        key.transform.rotation = Quaternion.Euler(48f, -28f, 0f);
-        var fill = new GameObject("FillLight").AddComponent<Light>();
-        fill.type = LightType.Directional;
-        fill.intensity = 0.35f;
-        fill.color = new Color(0.55f, 0.7f, 1f);
-        fill.transform.rotation = Quaternion.Euler(18f, 140f, 0f);
+        StudioSet.Install(transform, cam, _desk.position);
     }
 
     public void Toolbar(string action)
@@ -1538,7 +1527,7 @@ public class ExperimentController : MonoBehaviour
         go.transform.SetParent(_desk, false);
         var prop = go.AddComponent<LabProp>();
         prop.Lab = this;
-        var mat = LabFactory.Lit(new Color(0.8f, 0.92f, 1f, 0.18f), true, 0.02f, 0.9f, true, new Color(0.4f, 0.6f, 0.85f, 0.1f));
+        var mat = LabFactory.Lit(new Color(0.9f, 0.95f, 0.98f, 0.14f), true, 0f, 0.96f, true, new Color(0.55f, 0.7f, 0.85f, 0.06f));
         LabFactory.Primitive(PrimitiveType.Cylinder, "Dome", go.transform, new Vector3(0f, 0.06f, 0f), new Vector3(0.24f, 0.06f, 0.24f), mat, false);
         LabFactory.WorldLabel(go.transform, "玻璃罩", new Vector3(0f, 0.16f, 0f));
         _all.Add(go);
@@ -1555,11 +1544,11 @@ public class ExperimentController : MonoBehaviour
         var box = go.AddComponent<BoxCollider>();
         box.center = new Vector3(0f, 0.07f, 0f);
         box.size = new Vector3(0.07f, 0.16f, 0.07f);
-        var glass = LabFactory.Lit(new Color(0.85f, 0.93f, 1f, 0.28f), true, 0.02f, 0.85f);
+        var glass = LabFactory.Lit(new Color(0.92f, 0.96f, 0.98f, 0.22f), true, 0.02f, 0.94f);
         LabFactory.Primitive(PrimitiveType.Cylinder, "Bottle", go.transform, new Vector3(0f, 0.06f, 0f), new Vector3(0.05f, 0.05f, 0.05f), glass, false);
         var juice = LabFactory.Lit(liquid, true, 0.05f, 0.5f, true, liquid * 0.3f);
         LabFactory.Primitive(PrimitiveType.Cylinder, "Liquid", go.transform, new Vector3(0f, 0.04f, 0f), new Vector3(0.038f, 0.03f, 0.038f), juice, false);
-        LabFactory.Primitive(PrimitiveType.Sphere, "Cap", go.transform, new Vector3(0f, 0.12f, 0f), Vector3.one * 0.035f, LabFactory.Lit(new Color(0.2f, 0.22f, 0.26f), false, 0.4f, 0.6f), false);
+        LabFactory.Primitive(PrimitiveType.Sphere, "Cap", go.transform, new Vector3(0f, 0.12f, 0f), Vector3.one * 0.035f, LabFactory.Lit(NetFoldTheme.BrassDeep, false, 0.88f, 0.58f), false);
         LabFactory.WorldLabel(go.transform, label, new Vector3(0f, 0.18f, 0f));
         _all.Add(go);
         return prop;

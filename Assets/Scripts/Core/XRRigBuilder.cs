@@ -25,6 +25,7 @@ public static class XRRigBuilder
         cam.nearClipPlane = 0.05f;
         camGo.tag = "MainCamera";
         camGo.AddComponent<UniversalAdditionalCameraData>();
+        StudioSet.ApplyCamera(cam);
         camGo.AddComponent<AudioListener>();
         var tpd = camGo.AddComponent<TrackedPoseDriver>();
         tpd.positionInput = new InputActionProperty(new InputAction("HeadPos", expectedControlType: "Vector3", binding: "<XRHMD>/centerEyePosition"));

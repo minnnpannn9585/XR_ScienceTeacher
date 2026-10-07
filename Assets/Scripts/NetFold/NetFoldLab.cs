@@ -123,21 +123,8 @@ public class NetFoldLab : MonoBehaviour
         DeskAnchor.SetParent(transform, false);
         DeskAnchor.position = new Vector3(0f, 0.78f, 0.35f);
 
-        var desk = GameObject.CreatePrimitive(PrimitiveType.Cube);
-        desk.name = "VirtualDesk";
-        desk.transform.SetParent(DeskAnchor, false);
-        desk.transform.localScale = new Vector3(1.8f, 0.04f, 1.15f);
-        desk.transform.localPosition = Vector3.zero;
-        desk.GetComponent<MeshRenderer>().sharedMaterial = UrpMaterialUtil.CreateLit(NetFoldTheme.Desk, true, 0.05f, 0.85f, true, NetFoldTheme.Accent * 0.25f);
-
-        var glow = GameObject.CreatePrimitive(PrimitiveType.Quad);
-        glow.name = "DeskGlow";
-        glow.transform.SetParent(DeskAnchor, false);
-        glow.transform.localRotation = Quaternion.Euler(90f, 0f, 0f);
-        glow.transform.localPosition = new Vector3(0f, 0.022f, 0f);
-        glow.transform.localScale = new Vector3(1.7f, 1.05f, 1f);
-        UnityEngine.Object.Destroy(glow.GetComponent<Collider>());
-        glow.GetComponent<MeshRenderer>().sharedMaterial = UrpMaterialUtil.CreateLit(new Color(0.3f, 0.65f, 1f, 0.12f), true, 0f, 0.2f, true, NetFoldTheme.Accent * 0.4f);
+        var desk = LabFactory.Primitive(PrimitiveType.Cube, "VirtualDesk", DeskAnchor, Vector3.zero, new Vector3(1.8f, 0.045f, 1.15f), StudioSet.Stone(), true);
+        StudioSet.DressDesk(desk.transform);
 
         Stage = new GameObject("Stage").transform;
         Stage.SetParent(DeskAnchor, false);
@@ -153,8 +140,8 @@ public class NetFoldLab : MonoBehaviour
         camGo.transform.SetParent(pcRig.transform, false);
         var cam = camGo.AddComponent<Camera>();
         cam.nearClipPlane = 0.05f;
-        cam.clearFlags = CameraClearFlags.Skybox;
-        cam.backgroundColor = new Color(0.04f, 0.08f, 0.14f);
+        cam.clearFlags = CameraClearFlags.SolidColor;
+        cam.backgroundColor = NetFoldTheme.Void;
         camGo.AddComponent<UniversalAdditionalCameraData>();
         camGo.tag = "MainCamera";
         if (FindObjectOfType<AudioListener>() == null)
@@ -170,16 +157,7 @@ public class NetFoldLab : MonoBehaviour
         orbit.Pitch = 32f;
         orbit.Distance = 2.55f;
 
-        var light = new GameObject("KeyLight").AddComponent<Light>();
-        light.type = LightType.Directional;
-        light.intensity = 1.05f;
-        light.color = new Color(0.85f, 0.93f, 1f);
-        light.transform.rotation = Quaternion.Euler(42f, -30f, 0f);
-        var fill = new GameObject("FillLight").AddComponent<Light>();
-        fill.type = LightType.Directional;
-        fill.intensity = 0.35f;
-        fill.color = new Color(0.45f, 0.65f, 1f);
-        fill.transform.rotation = Quaternion.Euler(20f, 140f, 0f);
+        StudioSet.Install(transform, cam, DeskAnchor.position);
 
         var xr = XRRigBuilder.Build(transform, new Vector3(0f, 0f, -0.55f));
         Input.PcCamera = cam;

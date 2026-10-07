@@ -34,7 +34,7 @@ public class NetFoldUI : MonoBehaviour
 
         var top = UiFactory.Panel(root, "TopBar", new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(24, -96), new Vector2(-24, -16), NetFoldTheme.Glass);
         UiFactory.Label(top.transform, "Title", mode == GameMode.Free ? "NetFold · 自由实验" : mode == GameMode.Learn ? "NetFold · 讲解" : "NetFold · 挑战", 34, TextAlignmentOptions.Left, new Vector2(0f, 0f), new Vector2(0.62f, 1f), new Vector2(24, 8), new Vector2(-10, -8));
-        ModeLabel = UiFactory.Label(top.transform, "Mode", mode == GameMode.Free ? "自由实验" : mode == GameMode.Learn ? "讲解" : "挑战模式", 22, TextAlignmentOptions.Center, new Vector2(0.64f, 0.18f), new Vector2(0.84f, 0.82f), Vector2.zero, Vector2.zero);
+        ModeLabel = UiFactory.Label(top.transform, "Mode", mode == GameMode.Free ? "自由实验" : mode == GameMode.Learn ? "讲解" : "挑战模式", 22, TextAlignmentOptions.Center, new Vector2(0.64f, 0.18f), new Vector2(0.84f, 0.82f), Vector2.zero, Vector2.zero, NetFoldTheme.Hairline);
         UiFactory.Button(top.transform, "Back", "返回", new Vector2(0.86f, 0.18f), new Vector2(0.99f, 0.82f), Vector2.zero, Vector2.zero, SceneLoader.LoadMainMenu);
         if (mode == GameMode.Free)
         {
@@ -86,7 +86,7 @@ public class NetFoldUI : MonoBehaviour
         for (int i = 0; i < _shapeButtons.Length; i++)
         {
             bool on = _shapeOrder[i] == type;
-            Color color = on ? new Color(0.22f, 0.58f, 0.95f, 1f) : NetFoldTheme.AccentDeep;
+            Color color = on ? new Color(0.28f, 0.31f, 0.36f, 1f) : NetFoldTheme.AccentDeep;
             var button = _shapeButtons[i].GetComponent<Button>();
             var colors = button.colors;
             colors.normalColor = color;

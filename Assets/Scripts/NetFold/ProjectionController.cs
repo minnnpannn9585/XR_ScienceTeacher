@@ -229,6 +229,14 @@ public class ProjectionCard : MonoBehaviour, IDraggable, ISelectable
 
     public void Build(string title, Color color, bool flipX)
     {
+        var frame = GameObject.CreatePrimitive(PrimitiveType.Quad);
+        frame.name = "Frame";
+        frame.transform.SetParent(transform, false);
+        frame.transform.localPosition = new Vector3(0f, 0f, -0.006f);
+        frame.transform.localScale = new Vector3(0.39f, 0.39f, 1f);
+        UnityEngine.Object.Destroy(frame.GetComponent<Collider>());
+        frame.GetComponent<MeshRenderer>().sharedMaterial = UrpMaterialUtil.CreateLit(NetFoldTheme.StoneDeep, false, 0.2f, 0.4f);
+
         var plate = GameObject.CreatePrimitive(PrimitiveType.Quad);
         plate.name = "Plate";
         plate.transform.SetParent(transform, false);
@@ -243,7 +251,7 @@ public class ProjectionCard : MonoBehaviour, IDraggable, ISelectable
         sil.transform.localScale = new Vector3(flipX ? -1f : 1f, 1f, 1f);
         _silhouette = sil.AddComponent<MeshFilter>();
         var rend = sil.AddComponent<MeshRenderer>();
-        rend.sharedMaterial = UrpMaterialUtil.CreateLit(color, true, 0f, 0.15f, true, color);
+        rend.sharedMaterial = UrpMaterialUtil.CreateLit(color, true, 0f, 0.2f, true, color * 0.55f);
     }
 
     public void SetSilhouette(ShapeType type, ViewKind view)

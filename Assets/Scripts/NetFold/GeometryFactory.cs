@@ -13,9 +13,9 @@ public static class GeometryFactory
         root.layer = 0;
 
         var controller = root.AddComponent<ShapeController>();
-        Material faceMat = UrpMaterialUtil.CreateLit(NetFoldTheme.Shape, true, 0.12f, 0.74f, true, NetFoldTheme.EdgeGlow * 0.35f);
-        Material hiMat = UrpMaterialUtil.CreateLit(Color.Lerp(NetFoldTheme.Shape, Color.white, 0.35f), true, 0.08f, 0.8f, true, NetFoldTheme.Accent);
-        Material edgeMat = UrpMaterialUtil.CreateLit(NetFoldTheme.EdgeGlow, true, 0f, 0.2f, true, NetFoldTheme.EdgeGlow * 2f);
+        Material faceMat = UrpMaterialUtil.CreateLit(NetFoldTheme.Shape, true, 0.02f, 0.92f, true, new Color(0.55f, 0.68f, 0.78f, 0.1f));
+        Material hiMat = UrpMaterialUtil.CreateLit(NetFoldTheme.ShapeAlt, true, 0.04f, 0.96f, true, NetFoldTheme.Hairline * 0.25f);
+        Material edgeMat = UrpMaterialUtil.CreateLit(NetFoldTheme.EdgeGlow, true, 0.72f, 0.55f, true, NetFoldTheme.EdgeGlow * 0.4f);
 
         switch (type)
         {
@@ -73,7 +73,7 @@ public static class GeometryFactory
         lr.sharedMaterial = edgeMat;
         lr.loop = true;
         lr.useWorldSpace = false;
-        lr.widthMultiplier = 0.008f;
+        lr.widthMultiplier = 0.0055f;
         lr.positionCount = 0;
         lr.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
         Vector3[] verts = mesh.vertices;

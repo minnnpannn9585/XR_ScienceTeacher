@@ -53,7 +53,7 @@ public class ResultPanel : MonoBehaviour
     {
         _root.SetActive(true);
         _stars.text = stars <= 0 ? "☆☆☆" : stars == 1 ? "★☆☆" : stars == 2 ? "★★☆" : "★★★";
-        _stars.color = stars >= 3 ? NetFoldTheme.Success : stars == 2 ? NetFoldTheme.Accent : NetFoldTheme.Error;
+        _stars.color = stars >= 3 ? NetFoldTheme.Hairline : stars == 2 ? NetFoldTheme.Accent : NetFoldTheme.Error;
         _reason.text = reason;
         _card.text = Knowledge;
     }

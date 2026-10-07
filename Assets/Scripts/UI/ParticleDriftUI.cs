@@ -41,8 +41,8 @@ public class ParticleDriftUI : MonoBehaviour
 
         var top = UiFactory.Panel(root, "TopBar", new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(16f, -92f), new Vector2(-16f, -12f), NetFoldTheme.Glass);
         UiFactory.Label(top.transform, "Title", mode == GameMode.Free ? "ParticleDrift · 自由实验" : mode == GameMode.Learn ? "ParticleDrift · 讲解" : "ParticleDrift · 挑战", 26, TextAlignmentOptions.Left, new Vector2(0f, 0.45f), new Vector2(0.62f, 1f), new Vector2(18f, 0f), new Vector2(-8f, -4f));
-        UiFactory.Label(top.transform, "Sub", "分子热运动与扩散", 18, TextAlignmentOptions.Left, new Vector2(0f, 0f), new Vector2(0.4f, 0.48f), new Vector2(18f, 4f), new Vector2(-8f, 0f));
-        _mode = UiFactory.Label(top.transform, "Mode", mode == GameMode.Free ? "自由实验" : mode == GameMode.Learn ? "讲解" : "挑战模式", 20, TextAlignmentOptions.Center, new Vector2(0.62f, 0.18f), new Vector2(0.82f, 0.82f), Vector2.zero, Vector2.zero);
+        UiFactory.Label(top.transform, "Sub", "分子热运动与扩散", 18, TextAlignmentOptions.Left, new Vector2(0f, 0f), new Vector2(0.4f, 0.48f), new Vector2(18f, 4f), new Vector2(-8f, 0f), NetFoldTheme.TextDim);
+        _mode = UiFactory.Label(top.transform, "Mode", mode == GameMode.Free ? "自由实验" : mode == GameMode.Learn ? "讲解" : "挑战模式", 20, TextAlignmentOptions.Center, new Vector2(0.62f, 0.18f), new Vector2(0.82f, 0.82f), Vector2.zero, Vector2.zero, NetFoldTheme.Hairline);
         UiFactory.Button(top.transform, "Back", "返回", new Vector2(0.84f, 0.16f), new Vector2(0.985f, 0.84f), Vector2.zero, Vector2.zero, SceneLoader.LoadMainMenu);
 
         if (mode != GameMode.Learn)
@@ -331,7 +331,7 @@ public class ParticleDriftUI : MonoBehaviour
         hr.sizeDelta = new Vector2(18f, 18f);
         var handleImg = handle.GetComponent<Image>();
         handleImg.sprite = UiFactory.RoundSprite;
-        handleImg.color = Color.white;
+        handleImg.color = NetFoldTheme.Ivory;
 
         var slider = root.GetComponent<Slider>();
         slider.fillRect = fr;

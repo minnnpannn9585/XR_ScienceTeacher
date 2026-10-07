@@ -32,6 +32,16 @@ public static class UrpMaterialUtil
             mat.SetFloat("_Smoothness", smoothness);
         }
 
+        if (mat.HasProperty("_SpecularHighlights"))
+        {
+            mat.SetFloat("_SpecularHighlights", 1f);
+        }
+
+        if (mat.HasProperty("_EnvironmentReflections"))
+        {
+            mat.SetFloat("_EnvironmentReflections", 1f);
+        }
+
         if (transparent)
         {
             SetTransparent(mat);
