@@ -26,6 +26,8 @@ public class NetFoldUI : MonoBehaviour
             _quiz.Build(quizCanvas.transform);
             GuideTitle = _quiz.TitleText;
             GuideBody = _quiz.BodyText;
+            _quiz.BuildNavigation(quizCanvas.transform, "立体图形", lab.Hint, lab.RestartChallenge);
+            BuildResult(quizCanvas.transform, lab);
             return;
         }
 
@@ -72,8 +74,14 @@ public class NetFoldUI : MonoBehaviour
             Toolbar.Build(root, lab, mode);
         }
 
+        BuildResult(root, lab);
+    }
+
+    void BuildResult(Transform root, NetFoldLab lab)
+    {
         Result = gameObject.AddComponent<ResultPanel>();
         Result.Build(root);
+        Result.Retry = lab.RestartChallenge;
     }
 
     public void HighlightShape(ShapeType type)
@@ -88,13 +96,7 @@ public class NetFoldUI : MonoBehaviour
             bool on = _shapeOrder[i] == type;
             Color color = on ? new Color(0.28f, 0.31f, 0.36f, 1f) : NetFoldTheme.AccentDeep;
             var button = _shapeButtons[i].GetComponent<Button>();
-            var colors = button.colors;
-            colors.normalColor = color;
-            colors.highlightedColor = Color.Lerp(color, Color.white, 0.18f);
-            colors.pressedColor = Color.Lerp(color, Color.black, 0.18f);
-            colors.selectedColor = color;
-            button.colors = colors;
-            _shapeButtons[i].color = color;
+            UiFactory.SetButtonColor(button, color);
         }
     }
 

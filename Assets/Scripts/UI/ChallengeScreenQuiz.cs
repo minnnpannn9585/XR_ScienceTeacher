@@ -41,6 +41,22 @@ public class ChallengeScreenQuiz : MonoBehaviour
         _submit = submit;
     }
 
+    public void BuildNavigation(Transform canvas, string title, UnityAction hint, UnityAction retry)
+    {
+        var top = UiFactory.Panel(canvas, "ChallengeNavigation", new Vector2(0f, 1f), Vector2.one, new Vector2(24f, -100f), new Vector2(-24f, -20f), NetFoldTheme.Glass);
+        UiFactory.Label(top.transform, "Module", title + " · 挑战", 26, TextAlignmentOptions.Left, Vector2.zero, new Vector2(0.40f, 1f), new Vector2(24f, 10f), new Vector2(0f, -10f));
+        UiFactory.Label(top.transform, "Scoring", "无提示、无答错通关得三星", 18, TextAlignmentOptions.Center, new Vector2(0.35f, 0f), new Vector2(0.63f, 1f), Vector2.zero, Vector2.zero, NetFoldTheme.TextDim);
+        UiFactory.Button(top.transform, "Hint", "提示", new Vector2(0.64f, 0f), new Vector2(0.75f, 1f), new Vector2(4f, 14f), new Vector2(-4f, -14f), hint);
+        UiFactory.Button(top.transform, "Retry", "重新挑战", new Vector2(0.75f, 0f), new Vector2(0.89f, 1f), new Vector2(4f, 14f), new Vector2(-4f, -14f), retry);
+        UiFactory.Button(top.transform, "Back", "返回", new Vector2(0.89f, 0f), new Vector2(1f, 1f), new Vector2(4f, 14f), new Vector2(-14f, -14f), SceneLoader.LoadMainMenu);
+    }
+
+    public TMP_Text BuildStatus(Transform canvas)
+    {
+        var panel = UiFactory.Panel(canvas, "ChallengeFeedback", new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(-560f, 282f), new Vector2(560f, 348f), NetFoldTheme.Glass);
+        return UiFactory.Label(panel.transform, "Status", "", 22, TextAlignmentOptions.Center, Vector2.zero, Vector2.one, new Vector2(20f, 8f), new Vector2(-20f, -14f), NetFoldTheme.Hairline);
+    }
+
     public void SetQuestion(string title, string body)
     {
         if (_title != null)
@@ -86,11 +102,12 @@ public class ChallengeScreenQuiz : MonoBehaviour
             return;
         }
 
-        var image = _choiceButtons[index].GetComponent<Image>();
-        if (image != null)
-        {
-            image.color = NetFoldTheme.Error;
-        }
+        var button = _choiceButtons[index];
+        if (!button.interactable) return;
+        UiFactory.SetButtonColor(button, NetFoldTheme.Error * new Color(0.55f, 0.55f, 0.55f, 1f));
+        button.interactable = false;
+        var label = button.GetComponentInChildren<TMP_Text>();
+        if (label != null) label.text += " · 再想想";
     }
 
     public void ClearChoices()
@@ -99,6 +116,7 @@ public class ChallengeScreenQuiz : MonoBehaviour
         {
             if (_choiceButtons[i] != null)
             {
+                _choiceButtons[i].gameObject.SetActive(false);
                 Destroy(_choiceButtons[i].gameObject);
             }
         }

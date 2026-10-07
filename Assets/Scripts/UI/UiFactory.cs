@@ -194,7 +194,8 @@ public static class UiFactory
         var scaler = go.GetComponent<CanvasScaler>();
         scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
         scaler.referenceResolution = new Vector2(1920, 1080);
-        scaler.matchWidthOrHeight = 0.5f;
+        // Keep the entire authored layout visible on narrow and ultrawide screens.
+        scaler.screenMatchMode = CanvasScaler.ScreenMatchMode.Expand;
         return canvas;
     }
 
@@ -296,16 +297,13 @@ public static class UiFactory
         img.sprite = RoundSprite;
         img.type = Image.Type.Sliced;
         Color fill = color ?? NetFoldTheme.AccentDeep;
-        img.color = fill;
         var btn = go.GetComponent<Button>();
-        var colors = btn.colors;
-        colors.normalColor = fill;
-        colors.highlightedColor = Color.Lerp(fill, NetFoldTheme.Ivory, 0.18f);
-        colors.pressedColor = Color.Lerp(fill, Color.black, 0.28f);
-        colors.selectedColor = fill;
-        colors.fadeDuration = 0.08f;
-        btn.colors = colors;
-        Label(go.transform, "Label", text, 26, TextAlignmentOptions.Center, Vector2.zero, Vector2.one, Vector2.zero, Vector2.zero);
+        btn.targetGraphic = img;
+        SetButtonColor(btn, fill);
+        var label = Label(go.transform, "Label", text, 26, TextAlignmentOptions.Center, Vector2.zero, Vector2.one, new Vector2(12f, 4f), new Vector2(-12f, -4f));
+        label.enableAutoSizing = true;
+        label.fontSizeMin = 18f;
+        label.fontSizeMax = 26f;
         btn.onClick.AddListener(() =>
         {
             if (FeedbackService.Instance != null)
@@ -316,6 +314,20 @@ public static class UiFactory
             onClick?.Invoke();
         });
         return btn;
+    }
+
+    public static void SetButtonColor(Button btn, Color fill)
+    {
+        // ColorBlock already tints the graphic; a colored base would square RGB.
+        if (btn.targetGraphic != null) btn.targetGraphic.color = Color.white;
+        var colors = btn.colors;
+        colors.normalColor = fill;
+        colors.highlightedColor = Color.Lerp(fill, NetFoldTheme.Ivory, 0.18f);
+        colors.pressedColor = Color.Lerp(fill, Color.black, 0.28f);
+        colors.selectedColor = Color.Lerp(fill, NetFoldTheme.Ivory, 0.24f);
+        colors.disabledColor = Color.Lerp(fill, NetFoldTheme.Void, 0.45f);
+        colors.fadeDuration = 0.12f;
+        btn.colors = colors;
     }
 }
 

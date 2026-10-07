@@ -37,6 +37,9 @@ public class LensCraftUI : MonoBehaviour
             _quiz.BindSubmit(lab.SubmitAnswer);
             _guideTitle = _quiz.TitleText;
             _guideBody = _quiz.BodyText;
+            _quiz.BuildNavigation(quizCanvas.transform, "凸透镜成像", () => lab.Toolbar("提示"), lab.RestartChallenge);
+            _status = _quiz.BuildStatus(quizCanvas.transform);
+            BuildResult(quizCanvas.transform, lab);
             return;
         }
 
@@ -110,6 +113,11 @@ public class LensCraftUI : MonoBehaviour
         UiFactory.Label(bottom.transform, "Keys", keys, 16, TextAlignmentOptions.Left, new Vector2(0f, 0f), new Vector2(0.74f, 0.24f), new Vector2(16f, 4f), new Vector2(-8f, 0f));
         BuildAnswer(bottom.transform);
 
+        BuildResult(root, lab);
+    }
+
+    void BuildResult(Transform root, OpticalBenchController lab)
+    {
         Result = gameObject.AddComponent<ResultPanel>();
         Result.Build(root);
         Result.Knowledge = "知识卡\n凸透镜对光有会聚作用。\n1/f = 1/u + 1/v。\nu > 2f：倒立缩小实像。\nu = 2f：倒立等大实像。\nf < u < 2f：倒立放大实像。\nu = f：不成像。\nu < f：正立放大虚像。";

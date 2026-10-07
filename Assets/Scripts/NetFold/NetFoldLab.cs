@@ -66,10 +66,11 @@ public class NetFoldLab : MonoBehaviour
                 UI.GuideBody.text = msg;
             }
         };
-        Challenge.Completed += (_, reason) =>
+        Challenge.Completed += (stars, reason) =>
         {
             UI.ClearChoices();
             UI.SetChallengeGuide("挑战完成", reason);
+            UI.Result?.Show(stars, reason);
         };
         if (startMode == GameMode.Challenge)
         {

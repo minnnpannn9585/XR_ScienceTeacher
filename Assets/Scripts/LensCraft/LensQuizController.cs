@@ -12,11 +12,13 @@ public class LensQuizController : MonoBehaviour
     int _correct;
     float _answerCm;
     bool _notedBlur;
+    Coroutine _advance;
 
     public bool Running => _running;
 
     public void Begin(OpticalBenchController bench, StarRatingController stars)
     {
+        CancelAdvance();
         _bench = bench;
         _stars = stars;
         _running = true;
@@ -28,6 +30,7 @@ public class LensQuizController : MonoBehaviour
 
     public void Stop()
     {
+        CancelAdvance();
         _running = false;
         if (_bench != null && _bench.UI != null)
         {
@@ -68,7 +71,7 @@ public class LensQuizController : MonoBehaviour
 
     public void Hint()
     {
-        if (!_running)
+        if (!_running || _waiting)
         {
             return;
         }
@@ -194,12 +197,13 @@ public class LensQuizController : MonoBehaviour
     void Advance()
     {
         _waiting = true;
-        _bench.StartCoroutine(NextSoon());
+        _advance = StartCoroutine(NextSoon());
     }
 
     System.Collections.IEnumerator NextSoon()
     {
         yield return new WaitForSeconds(0.9f);
+        _advance = null;
         if (!_running)
         {
             yield break;
@@ -212,6 +216,13 @@ public class LensQuizController : MonoBehaviour
         }
 
         Show(_index + 1);
+    }
+
+    void CancelAdvance()
+    {
+        if (_advance != null) StopCoroutine(_advance);
+        _advance = null;
+        _waiting = false;
     }
 
     void Finish()

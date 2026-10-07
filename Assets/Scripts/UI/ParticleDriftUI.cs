@@ -33,6 +33,9 @@ public class ParticleDriftUI : MonoBehaviour
             _quiz.Build(quizCanvas.transform);
             GuideTitle = _quiz.TitleText;
             GuideBody = _quiz.BodyText;
+            _quiz.BuildNavigation(quizCanvas.transform, "分子热运动", () => lab.Toolbar("提示"), lab.RestartChallenge);
+            _state = _quiz.BuildStatus(quizCanvas.transform);
+            BuildResult(quizCanvas.transform, lab);
             return;
         }
 
@@ -127,6 +130,11 @@ public class ParticleDriftUI : MonoBehaviour
             : "右键旋转  滚轮缩放  WASD平移  Tab微观  R重置  Enter确认  Esc返回";
         UiFactory.Label(bottom.transform, "Keys", keys, 16, TextAlignmentOptions.Left, new Vector2(0f, 0f), new Vector2(0.72f, guided ? 0.1f : 0.18f), new Vector2(16f, 4f), new Vector2(-8f, 0f));
 
+        BuildResult(root, lab);
+    }
+
+    void BuildResult(Transform root, ExperimentController lab)
+    {
         Result = gameObject.AddComponent<ResultPanel>();
         Result.Build(root);
         Result.Knowledge = "知识卡\n分子在不停地做无规则运动。\n温度越高，分子运动越剧烈，扩散越快。\n扩散是分子从高浓度向低浓度运动。\n分子之间有间隔，酒精与水混合后总体积小于两者之和。";

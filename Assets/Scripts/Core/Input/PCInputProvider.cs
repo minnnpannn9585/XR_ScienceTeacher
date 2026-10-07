@@ -1,12 +1,16 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
-using UnityEngine.InputSystem.UI;
+using System.Collections.Generic;
+using TMPro;
 
 public class PCInputProvider : MonoBehaviour, IInputProvider
 {
     Camera _camera;
     InputAdapter _adapter;
+    readonly List<RaycastResult> _uiHits = new List<RaycastResult>();
+    PointerEventData _pointerData;
+    EventSystem _pointerEventSystem;
 
     public Ray PointerRay { get; private set; }
     public bool SelectPressed { get; private set; }
@@ -97,20 +101,46 @@ public class PCInputProvider : MonoBehaviour, IInputProvider
 
         MoveAxis = Vector2.ClampMagnitude(move, 1f);
         IsPointerOverUi = IsOverUi(mousePos);
+        var selected = EventSystem.current != null ? EventSystem.current.currentSelectedGameObject : null;
+        var field = selected != null ? selected.GetComponentInParent<TMP_InputField>() : null;
+        bool typing = field != null && field.isFocused;
+        if (IsPointerOverUi || typing || ResultPanel.HasOpenPanel)
+        {
+            SecondaryHeld = false;
+            LookDelta = Vector2.zero;
+            ZoomDelta = 0f;
+        }
+        if (typing || ResultPanel.HasOpenPanel)
+        {
+            MoveAxis = Vector2.zero;
+            ResetPressed = false;
+            ViewTogglePressed = false;
+            RayTogglePressed = false;
+            // Enter still submits a numerical answer through InputManager.
+            if (ResultPanel.HasOpenPanel) ConfirmPressed = false;
+            if (typing) BackPressed = false;
+        }
     }
 
-    static bool IsOverUi(Vector2 screenPos)
+    bool IsOverUi(Vector2 screenPos)
     {
         if (EventSystem.current == null)
         {
             return false;
         }
 
-        if (EventSystem.current.currentInputModule is InputSystemUIInputModule)
+        // Raycast the current position instead of using last frame's UI state.
+        if (_pointerData == null || _pointerEventSystem != EventSystem.current)
         {
-            return EventSystem.current.IsPointerOverGameObject();
+            _pointerEventSystem = EventSystem.current;
+            _pointerData = new PointerEventData(_pointerEventSystem);
         }
-
-        return EventSystem.current.IsPointerOverGameObject();
+        _pointerData.Reset();
+        _pointerData.position = screenPos;
+        _uiHits.Clear();
+        EventSystem.current.RaycastAll(_pointerData, _uiHits);
+        for (int i = 0; i < _uiHits.Count; i++)
+            if (_uiHits[i].module is UnityEngine.UI.GraphicRaycaster) return true;
+        return false;
     }
 }

@@ -20,6 +20,7 @@ public class ChallengeController : MonoBehaviour
     int _q2Answer = 0;
     int _q3Answer = 2;
     bool _waiting;
+    Tween _advance;
 
     public void Bind(StarRatingController stars, Transform stage)
     {
@@ -29,6 +30,7 @@ public class ChallengeController : MonoBehaviour
 
     public void Begin()
     {
+        CancelAdvance();
         IsRunning = true;
         QuestionIndex = 0;
         Stars.ResetRound();
@@ -37,13 +39,14 @@ public class ChallengeController : MonoBehaviour
 
     public void Stop()
     {
+        CancelAdvance();
         IsRunning = false;
         ClearSpawned();
     }
 
     public void UseHint()
     {
-        if (!IsRunning)
+        if (!IsRunning || _waiting)
         {
             return;
         }
@@ -66,6 +69,7 @@ public class ChallengeController : MonoBehaviour
                 break;
         }
 
+        LastPick = -1;
         Answered?.Invoke(false, hint);
     }
 
@@ -98,7 +102,7 @@ public class ChallengeController : MonoBehaviour
             PlayCorrectFx();
             Answered?.Invoke(true, "回答正确！");
             _waiting = true;
-            DOVirtual.DelayedCall(1.05f, NextOrFinish);
+            _advance = DOVirtual.DelayedCall(1.05f, NextOrFinish);
         }
         else
         {
@@ -111,6 +115,8 @@ public class ChallengeController : MonoBehaviour
 
     void NextOrFinish()
     {
+        _advance = null;
+        if (!IsRunning) return;
         _waiting = false;
         if (QuestionIndex >= 2)
         {
@@ -124,8 +130,18 @@ public class ChallengeController : MonoBehaviour
         ShowQuestion(QuestionIndex);
     }
 
+    void CancelAdvance()
+    {
+        _advance?.Kill();
+        _advance = null;
+        _waiting = false;
+    }
+
+    void OnDestroy() => CancelAdvance();
+
     void ShowQuestion(int index)
     {
+        LastPick = -1;
         ClearSpawned();
         switch (index)
         {
