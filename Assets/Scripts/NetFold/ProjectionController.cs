@@ -81,9 +81,9 @@ public class ProjectionController : MonoBehaviour
     {
         _root = new GameObject("ProjectionRig").transform;
         _root.SetParent(_anchor != null ? _anchor : transform, false);
-        _front = CreateCard("主视图", new Vector3(0f, 0.22f, -0.5f), Quaternion.LookRotation(Vector3.back, Vector3.up), NetFoldTheme.FrontView, true);
-        _top = CreateCard("俯视图", new Vector3(0f, 0.72f, 0f), Quaternion.Euler(-90f, 0f, 0f), NetFoldTheme.TopView, false);
-        _side = CreateCard("左视图", new Vector3(-0.5f, 0.22f, 0f), Quaternion.LookRotation(Vector3.left, Vector3.up), NetFoldTheme.SideView, true);
+        _front = CreateCard(Loc.Get("viewname.front"), new Vector3(0f, 0.22f, -0.5f), Quaternion.LookRotation(Vector3.back, Vector3.up), NetFoldTheme.FrontView, true);
+        _top = CreateCard(Loc.Get("viewname.top"), new Vector3(0f, 0.72f, 0f), Quaternion.Euler(-90f, 0f, 0f), NetFoldTheme.TopView, false);
+        _side = CreateCard(Loc.Get("viewname.side"), new Vector3(-0.5f, 0.22f, 0f), Quaternion.LookRotation(Vector3.left, Vector3.up), NetFoldTheme.SideView, true);
         CreateRayPool(_frontLines, NetFoldTheme.FrontView, 8);
         CreateRayPool(_topLines, NetFoldTheme.TopView, 8);
         CreateRayPool(_sideLines, NetFoldTheme.SideView, 8);

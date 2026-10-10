@@ -284,11 +284,11 @@ public class BeakerController : LabProp
     {
         switch (role)
         {
-            case BeakerRole.Cold: return "冷水";
-            case BeakerRole.Hot: return "热水";
-            case BeakerRole.Alcohol: return "酒精";
-            case BeakerRole.Water: return "水";
-            default: return "水";
+            case BeakerRole.Cold: return Loc.Get("beaker.cold");
+            case BeakerRole.Hot: return Loc.Get("beaker.hot");
+            case BeakerRole.Alcohol: return Loc.Get("beaker.alcohol");
+            case BeakerRole.Water: return Loc.Get("beaker.water");
+            default: return Loc.Get("beaker.water");
         }
     }
 

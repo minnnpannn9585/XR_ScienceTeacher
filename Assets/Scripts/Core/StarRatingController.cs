@@ -53,19 +53,19 @@ public class StarRatingController : MonoBehaviour
         int stars = EvaluateStars();
         if (stars == 3)
         {
-            return "一次通过且未使用提示";
+            return Loc.Get("stars.3");
         }
 
         if (stars == 2)
         {
-            return "使用了 1 次提示";
+            return Loc.Get("stars.2");
         }
 
         if (stars == 1)
         {
-            return HintCount >= 2 ? "使用了 2 次以上提示或进行了重试" : "进行了重试";
+            return HintCount >= 2 ? Loc.Get("stars.1.hints") : Loc.Get("stars.1.retry");
         }
 
-        return "尚未完成本关挑战";
+        return Loc.Get("stars.0");
     }
 }

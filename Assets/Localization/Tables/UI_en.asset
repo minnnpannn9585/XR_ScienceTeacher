@@ -1,0 +1,1662 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9620f8c34305754d8cc9a7e49e852d9, type: 3}
+  m_Name: UI_en
+  m_EditorClassIdentifier: 
+  m_LocaleId:
+    m_Code: en
+  m_SharedData: {fileID: 11400000, guid: 69f722616344a9446b78ad8cb83c5d2c, type: 2}
+  m_Metadata:
+    m_Items:
+    - rid: 1134318009864945691
+  m_TableData:
+  - m_Id: 1857900544
+    m_Localized: "{0} \xB7 {1}"
+    m_Metadata:
+      m_Items:
+      - rid: 1134318009864945691
+  - m_Id: 1887260672
+    m_Localized: Back
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891454976
+    m_Localized: Previous
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891454977
+    m_Localized: Next
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891454978
+    m_Localized: Reset
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891454979
+    m_Localized: Hint
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891454980
+    m_Localized: Auto Demo
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891454981
+    m_Localized: Lesson
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891454982
+    m_Localized: Free Lab
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891454983
+    m_Localized: Challenge
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891454984
+    m_Localized: Challenge
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891454985
+    m_Localized: Challenge complete
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891454986
+    m_Localized: Submit
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891454987
+    m_Localized: Retry
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891454988
+    m_Localized: Try Again
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891454989
+    m_Localized: Main Menu
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891454990
+    m_Localized: Close
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891454991
+    m_Localized: Quit
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891454992
+    m_Localized: Settings
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891454993
+    m_Localized: Language
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891454994
+    m_Localized: On
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891454995
+    m_Localized: Off
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891454996
+    m_Localized: Learn
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891454997
+    m_Localized: Select
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891454998
+    m_Localized: Correct!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891454999
+    m_Localized: Finish the current question first
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455000
+    m_Localized: Auto Demo plays in the lesson
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455001
+    m_Localized: Auto Demo is finished. You can try it yourself. Open Free Lab or
+      Challenge from the main menu.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455002
+    m_Localized: The lesson is finished. Open Free Lab or Challenge from the main
+      menu.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455003
+    m_Localized: Right-drag to orbit    Scroll to zoom    Previous / Next    Esc
+      to leave
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455004
+    m_Localized: " \xB7 Not quite"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455005
+    m_Localized: "{0} \xB7 Challenge"
+    m_Metadata:
+      m_Items:
+      - rid: 1134318009864945691
+  - m_Id: 1891455006
+    m_Localized: 'Three stars: no hints and no wrong answers'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455007
+    m_Localized: Science Studio
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455008
+    m_Localized: Learn the idea, try the experiment, then earn three stars.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455009
+    m_Localized: Solid Shapes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455010
+    m_Localized: Nets, views, and sections
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455011
+    m_Localized: Molecular Motion
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455012
+    m_Localized: Diffusion, temperature, particles
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455013
+    m_Localized: Convex Lens
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455014
+    m_Localized: Distance and ray diagrams
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455015
+    m_Localized: "Progress  {0} / 9 stars   \xB7   best score saved"
+    m_Metadata:
+      m_Items:
+      - rid: 1134318009864945691
+  - m_Id: 1891455016
+    m_Localized: Right-drag to orbit    Scroll to zoom    WASD to move    Esc to
+      leave
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455017
+    m_Localized: "Not yet explored  \u2606\u2606\u2606"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455018
+    m_Localized: Best  {0}
+    m_Metadata:
+      m_Items:
+      - rid: 1134318009864945691
+  - m_Id: 1891455019
+    m_Localized: Settings
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455020
+    m_Localized: Language
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455021
+    m_Localized: Choose a language. Labs use the language you pick here.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455022
+    m_Localized: "Current language: \u4E2D\u6587"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455023
+    m_Localized: 'Current language: English'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455024
+    m_Localized: Rotate
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455025
+    m_Localized: Scale
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455026
+    m_Localized: Unfold
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455027
+    m_Localized: Fold
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455028
+    m_Localized: Views
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455029
+    m_Localized: Section
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455030
+    m_Localized: Front
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455031
+    m_Localized: Top
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455032
+    m_Localized: Side
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455033
+    m_Localized: Section
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455034
+    m_Localized: Challenge
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455035
+    m_Localized: Lesson
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455036
+    m_Localized: Rotate
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455037
+    m_Localized: Scale
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455038
+    m_Localized: Select
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455039
+    m_Localized: Net
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455040
+    m_Localized: Solid
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455041
+    m_Localized: Three views
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455042
+    m_Localized: Free Lab
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455043
+    m_Localized: Learn
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455044
+    m_Localized: Front
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455045
+    m_Localized: Top
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455046
+    m_Localized: Left
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455047
+    m_Localized: Cube
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455048
+    m_Localized: Cylinder
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455049
+    m_Localized: Cone
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455050
+    m_Localized: Triangular prism
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455051
+    m_Localized: Triangle
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455052
+    m_Localized: Rectangle
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455053
+    m_Localized: Parallelogram
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455054
+    m_Localized: Hexagon
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455055
+    m_Localized: Option A
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455056
+    m_Localized: Option B
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455057
+    m_Localized: Option C
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455058
+    m_Localized: Pick a solid from the top. Only one is shown. Rotate it, unfold
+      it, open the three views, or drag the cutting plane.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455059
+    m_Localized: This is a {0}. Rotate, scale, unfold, fold, open the three views,
+      or drag the cutting plane. Choosing another solid puts this one away.
+    m_Metadata:
+      m_Items:
+      - rid: 1134318009864945691
+  - m_Id: 1891455060
+    m_Localized: The four-step lesson is finished. Open Free Lab or Challenge from
+      the main menu.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455061
+    m_Localized: Right-drag to orbit    Scroll to zoom    The solid is locked while
+      the lesson plays    Esc to leave
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455062
+    m_Localized: No solid selected
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455063
+    m_Localized: Faces  {0}
+    m_Metadata:
+      m_Items:
+      - rid: 1134318009864945691
+  - m_Id: 1891455064
+    m_Localized: Faces  --
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455065
+    m_Localized: Edges  {0}
+    m_Metadata:
+      m_Items:
+      - rid: 1134318009864945691
+  - m_Id: 1891455066
+    m_Localized: Edges  --
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455067
+    m_Localized: Vertices  {0}
+    m_Metadata:
+      m_Items:
+      - rid: 1134318009864945691
+  - m_Id: 1891455068
+    m_Localized: Vertices  --
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455069
+    m_Localized: View  {0}
+    m_Metadata:
+      m_Items:
+      - rid: 1134318009864945691
+  - m_Id: 1891455070
+    m_Localized: Section sides  {0}
+    m_Metadata:
+      m_Items:
+      - rid: 1134318009864945691
+  - m_Id: 1891455071
+    m_Localized: Section sides  --
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455072
+    m_Localized: Rays  Front {0}  Top {1}  Side {2}
+    m_Metadata:
+      m_Items:
+      - rid: 1134318009864945691
+  - m_Id: 1891455073
+    m_Localized: Rays  Off
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455074
+    m_Localized: Step 1 / 4  Meet the cube
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455075
+    m_Localized: Step 2 / 4  Unfold and fold
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455076
+    m_Localized: Step 3 / 4  Three-view projection
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455077
+    m_Localized: Step 4 / 4  Cross-sections
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455078
+    m_Localized: A solid is enclosed by faces. Faces meet at edges, and edges meet
+      at vertices. A cube has 6 identical square faces, 12 edges, and 8 vertices.
+      Opposite faces are parallel, and neighboring edges are perpendicular. Nets,
+      views, and sections all use these counts.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455079
+    m_Localized: Cut a solid along some edges and lay it flat. That flat shape is
+      a net. A net must fold back into the original solid. A cube has 11 nets. The
+      squares must form a closed box, with no overlap and no missing face.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455080
+    m_Localized: 'Three views show one solid from three directions: the front view,
+      the top view, and the left view. Blue is the front direction, green is the
+      top, and purple is the left. Front and top share the same length, front and
+      left share the same height, and top and left share the same width.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455081
+    m_Localized: 'A plane cutting through a solid makes a cross-section. A cube''s
+      section is not always a square. A steeper cut can add sides: a triangle, quadrilateral,
+      pentagon, or at most a hexagon. The side count on the right follows the cutting
+      angle.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455082
+    m_Localized: Question 1  Choose the solid from the views
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455083
+    m_Localized: Use the three views on the stage and choose the matching solid.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455084
+    m_Localized: Question 2  Choose the views for the solid
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455085
+    m_Localized: 'Which set of views matches the solid? From left to right: A, B,
+      C.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455086
+    m_Localized: Question 3  Name the cross-section
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455087
+    m_Localized: Which shape is this slanted cut through a cube? The four choices
+      run from left to right.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455088
+    m_Localized: 'Hint: all three views are squares, and only a cube matches.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455089
+    m_Localized: 'Hint: the top view is a triangle, so it is a triangular prism.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455090
+    m_Localized: 'Hint: opposite sides are parallel and equal, but the angles are
+      not right angles, so it is a parallelogram, not a rectangle.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455091
+    m_Localized: Look again. The wrong view is marked in red.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455092
+    m_Localized: Cleared on the first try, with no hints
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455093
+    m_Localized: Used 1 hint
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455094
+    m_Localized: Used 2 or more hints, or retried
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455095
+    m_Localized: Retried
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455096
+    m_Localized: This challenge is not finished
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455097
+    m_Localized: New best!  {0}
+    m_Metadata:
+      m_Items:
+      - rid: 1134318009864945691
+  - m_Id: 1891455098
+    m_Localized: Best so far  {0}
+    m_Metadata:
+      m_Items:
+      - rid: 1134318009864945691
+  - m_Id: 1891455099
+    m_Localized: 'Notes
+
+      Cube: 6 faces, 12 edges, 8 vertices
+
+      Cylinder:
+      3 faces, 2 edges, 0 vertices
+
+      Cone: 2 faces, 1 edge, 1 vertex
+
+      Triangular
+      prism: 5 faces, 9 edges, 6 vertices
+
+      A slanted cut through a cube can
+      have 3 to 6 sides.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455100
+    m_Localized: 'Notes
+
+      Molecules never stop moving at random.
+
+      Higher
+      temperature means faster motion and faster diffusion.
+
+      Diffusion carries
+      molecules from high concentration toward low concentration.
+
+      Molecules
+      have gaps between them, so alcohol plus water occupies less volume than the
+      two liquids apart.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455101
+    m_Localized: 'Notes
+
+      A convex lens converges light.
+
+      1/f = 1/u +
+      1/v.
+
+      u > 2f: inverted, diminished real image.
+
+      u = 2f: inverted,
+      same-size real image.
+
+      f < u < 2f: inverted, magnified real image.
+
+      u
+      = f: no image.
+
+      u < f: upright, magnified virtual image.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455102
+    m_Localized: Molecular motion and diffusion
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455103
+    m_Localized: Switch to the micro view, change the temperature, drop fuchsin into
+      cold or hot water, or drag the alcohol beaker into the water.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455104
+    m_Localized: Right-drag orbit  Scroll zoom  WASD move  Tab micro  R reset  Enter
+      confirm  Esc leave
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455105
+    m_Localized: 'Cyan: temperature    Orange: spread'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455106
+    m_Localized: Temperature
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455107
+    m_Localized: Heat
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455108
+    m_Localized: Cool
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455109
+    m_Localized: Add fuchsin
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455110
+    m_Localized: Open gas
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455111
+    m_Localized: Start diffusion
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455112
+    m_Localized: Start electrolysis
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455113
+    m_Localized: Micro/Macro
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455114
+    m_Localized: Heatmap
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455115
+    m_Localized: Temp curve
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455116
+    m_Localized: Micro
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455117
+    m_Localized: Macro
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455118
+    m_Localized: Molecules  {0}
+    m_Metadata:
+      m_Items:
+      - rid: 1134318009864945691
+  - m_Id: 1891455119
+    m_Localized: "Status  {0} \xB7 {1}"
+    m_Metadata:
+      m_Items:
+      - rid: 1134318009864945691
+  - m_Id: 1891455120
+    m_Localized: Drop volume  {0}%
+    m_Metadata:
+      m_Items:
+      - rid: 1134318009864945691
+  - m_Id: 1891455121
+    m_Localized: Temperature  --
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455122
+    m_Localized: "Temperature  {0}  {1} \xB0C"
+    m_Metadata:
+      m_Items:
+      - rid: 1134318009864945691
+  - m_Id: 1891455123
+    m_Localized: Mean particle speed  {0}  (relative)
+    m_Metadata:
+      m_Items:
+      - rid: 1134318009864945691
+  - m_Id: 1891455124
+    m_Localized: Diffusion time  --
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455125
+    m_Localized: Diffusion time  {0} s
+    m_Metadata:
+      m_Items:
+      - rid: 1134318009864945691
+  - m_Id: 1891455126
+    m_Localized: Diffusion time  {0} s  even
+    m_Metadata:
+      m_Items:
+      - rid: 1134318009864945691
+  - m_Id: 1891455127
+    m_Localized: Diffusion time  {0} s  spreading
+    m_Metadata:
+      m_Items:
+      - rid: 1134318009864945691
+  - m_Id: 1891455128
+    m_Localized: Concentration  50+50=100 mL, actual 92 mL
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455129
+    m_Localized: Concentration  water 50 mL, alcohol 50 mL
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455130
+    m_Localized: Concentration  no fuchsin yet
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455131
+    m_Localized: Concentration  {0}
+    m_Metadata:
+      m_Items:
+      - rid: 1134318009864945691
+  - m_Id: 1891455132
+    m_Localized: Concentration  spread {0}%
+    m_Metadata:
+      m_Items:
+      - rid: 1134318009864945691
+  - m_Id: 1891455133
+    m_Localized: No fuchsin yet
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455134
+    m_Localized: Center {0}%    Edge {1}%
+    m_Metadata:
+      m_Items:
+      - rid: 1134318009864945691
+  - m_Id: 1891455135
+    m_Localized: Mean particle speed  --
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455136
+    m_Localized: Concentration  --
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455137
+    m_Localized: Status  --
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455138
+    m_Localized: Cold water
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455139
+    m_Localized: Hot water
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455140
+    m_Localized: Alcohol
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455141
+    m_Localized: Water
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455142
+    m_Localized: Fast
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455143
+    m_Localized: Medium
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455144
+    m_Localized: Slow
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455145
+    m_Localized: speeds up
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455146
+    m_Localized: slows down
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455147
+    m_Localized: Fuchsin dropper
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455148
+    m_Localized: Hot plate
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455149
+    m_Localized: Cold plate
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455150
+    m_Localized: Thermometer
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455151
+    m_Localized: Ammonia
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455152
+    m_Localized: Phenolphthalein paper
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455153
+    m_Localized: Nitrogen dioxide
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455154
+    m_Localized: Bell jar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455155
+    m_Localized: Molecules keep moving at random
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455156
+    m_Localized: Change the temperature, watch diffusion, or drag the alcohol into
+      the water
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455157
+    m_Localized: Lesson complete
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455158
+    m_Localized: The five-step lesson is finished. To change the temperature, add
+      fuchsin, or mix alcohol yourself, open Free Lab from the main menu.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455159
+    m_Localized: 'Heatmap on: red is high, blue is low'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455160
+    m_Localized: Heatmap off
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455161
+    m_Localized: Higher temperature means faster molecular motion
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455162
+    m_Localized: Follow the question during the challenge
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455163
+    m_Localized: Go to step 3, then add fuchsin
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455164
+    m_Localized: Answer the current question
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455165
+    m_Localized: In step 3, open the gas bottles and watch ammonia and nitrogen dioxide
+      diffuse
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455166
+    m_Localized: Ammonia diffuses. The phenolphthalein paper turns red from near
+      to far
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455167
+    m_Localized: Nitrogen dioxide is diffusing
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455168
+    m_Localized: 'Illustration: charged particles drift in an electric field'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455169
+    m_Localized: At the macro scale, the water looks still
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455170
+    m_Localized: At the micro scale, water molecules never stop moving
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455171
+    m_Localized: Molecules have no fixed path. A collision sends them another way
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455172
+    m_Localized: Molecules are slow in cold water and fast in hot water
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455173
+    m_Localized: As temperature rises, molecules move faster
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455174
+    m_Localized: Fuchsin spreads faster in hot water
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455175
+    m_Localized: 50 mL water + 50 mL alcohol
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455176
+    m_Localized: Molecules slip into each other's gaps, so the total volume shrinks
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455177
+    m_Localized: Step 1 / 5    Macro and micro
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455178
+    m_Localized: Step 2 / 5    Random motion
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455179
+    m_Localized: Step 3 / 5    Effect of temperature
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455180
+    m_Localized: Step 4 / 5    Diffusion
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455181
+    m_Localized: Step 5 / 5    Gaps between molecules
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455182
+    m_Localized: A beaker of water sits still, as if nothing is happening. Water
+      is made of vast numbers of molecules, too small to see. Switch to the micro
+      view and those molecules are moving. The calm surface and the moving particles
+      are two scales of the same water.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455183
+    m_Localized: Molecules move at random. They have no fixed route, and a collision
+      changes their direction. This motion does not stop unless the temperature is
+      absolute zero. Diffusion, evaporation, and dissolving all come from it.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455184
+    m_Localized: Temperature measures the average kinetic energy of the molecules.
+      They move slowly in cold water and quickly in hot water. Heat the hot water
+      further and the thermometer, the particle speed, and the curve all rise together.
+      The same change is always faster in hot water.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455185
+    m_Localized: 'In diffusion, molecules of one substance move into another, from
+      high concentration toward low concentration. Drop fuchsin into cold and hot
+      water together: the hotter molecules move more, so the color evens out sooner.
+      On the heatmap, red is high and blue is low.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455186
+    m_Localized: Molecules are not packed solid. There are gaps between them. 50
+      mL of water plus 50 mL of alcohol would be 100 mL if there were no gaps. The
+      mixture is only about 92 mL, because each kind of molecule slips into the other's
+      gaps.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455187
+    m_Localized: Step 1 / 4    Molecular motion
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455188
+    m_Localized: Step 2 / 4    Temperature and motion
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455189
+    m_Localized: Step 3 / 4    Fuchsin diffusion
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455190
+    m_Localized: Step 4 / 4    Gaps between molecules
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455191
+    m_Localized: Press Tab for the micro view and watch the water molecules keep
+      moving.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455192
+    m_Localized: Drag the temperature slider. As it rises, molecules speed up, and
+      the thermometer and speed curve change with it.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455193
+    m_Localized: Drag the fuchsin dropper onto the cold or hot beaker and release.
+      Open the heatmap to compare how fast the color spreads.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455194
+    m_Localized: Drag the alcohol beaker onto the water. After mixing, the volume
+      is less than the two amounts added together.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455195
+    m_Localized: There are gaps between molecules
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455196
+    m_Localized: Fuchsin spreads from high concentration toward low concentration
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455197
+    m_Localized: Watch which beaker the fuchsin colors faster
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455198
+    m_Localized: Cold water spreads faster
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455199
+    m_Localized: Hot water spreads faster
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455200
+    m_Localized: "Predict how fast it spreads at {0} \xB0C"
+    m_Metadata:
+      m_Items:
+      - rid: 1134318009864945691
+  - m_Id: 1891455201
+    m_Localized: "Set the temperature so the color evens out in 5.5\u20138.5 s"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455202
+    m_Localized: The higher the temperature, the faster the diffusion
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455203
+    m_Localized: Correct. Molecules move more in hot water, so the color evens out
+      sooner
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455204
+    m_Localized: 'Look at the temperature again: high is fast, low is slow'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455205
+    m_Localized: "Correct. Playing the diffusion. Expected \u201C{0}\u201D."
+    m_Metadata:
+      m_Items:
+      - rid: 1134318009864945691
+  - m_Id: 1891455206
+    m_Localized: Diffusion has started. Wait until the solution is even
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455207
+    m_Localized: '{0} is evenly mixed'
+    m_Metadata:
+      m_Items:
+      - rid: 1134318009864945691
+  - m_Id: 1891455208
+    m_Localized: "Measured {0} s, matching \u201C{1}\u201D"
+    m_Metadata:
+      m_Items:
+      - rid: 1134318009864945691
+  - m_Id: 1891455209
+    m_Localized: Molecules have gaps between them. 50 mL + 50 mL = 100 mL, but the
+      mixture is only 92 mL
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455210
+    m_Localized: In the {0}, fuchsin is spreading from high concentration toward
+      low
+    m_Metadata:
+      m_Items:
+      - rid: 1134318009864945691
+  - m_Id: 1891455211
+    m_Localized: Diffusion is running, so the temperature is locked
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455212
+    m_Localized: This question already sets the water temperature
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455213
+    m_Localized: "{0} {1} \xB0C, molecular motion {2}"
+    m_Metadata:
+      m_Items:
+      - rid: 1134318009864945691
+  - m_Id: 1891455214
+    m_Localized: Diffusion time {0} s, inside the target range
+    m_Metadata:
+      m_Items:
+      - rid: 1134318009864945691
+  - m_Id: 1891455215
+    m_Localized: 'Too cold: the molecules are moving too slowly'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455216
+    m_Localized: 'Too hot: the molecules are moving too quickly'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455217
+    m_Localized: Compare how fast the two beakers change color. Higher temperature
+      means faster diffusion.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455218
+    m_Localized: Very hot water is Fast, medium water is Medium, and near-freezing
+      water is Slow.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455219
+    m_Localized: "The target is 5.5\u20138.5 seconds. About 45 \xB0C to 65 \xB0C
+      lands in that range."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455220
+    m_Localized: Challenge 1 / 3    Temperature and speed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455221
+    m_Localized: Challenge 2 / 3    Predict the time
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455222
+    m_Localized: Challenge 3 / 3    Hit the time
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455223
+    m_Localized: Fuchsin was added to cold and hot water at the same time. Choose
+      the beaker that spreads faster.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455224
+    m_Localized: "The water is {0} \xB0C. Predict how fast the fuchsin becomes even."
+    m_Metadata:
+      m_Items:
+      - rid: 1134318009864945691
+  - m_Id: 1891455225
+    m_Localized: "Set the temperature so the fuchsin evens out in 5.5\u20138.5 seconds,
+      then start diffusion."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455226
+    m_Localized: How a convex lens forms an image
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455227
+    m_Localized: Drag the candle, the screen, and the focal length. Watch the object
+      distance, image distance, and the kind of image.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455228
+    m_Localized: Drag the candle and screen    L rays    Tab depth    R reset   
+      Esc leave
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455229
+    m_Localized: Drag the candle and screen    L rays    R reset    Esc leave
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455230
+    m_Localized: Object distance u  {0}
+    m_Metadata:
+      m_Items:
+      - rid: 1134318009864945691
+  - m_Id: 1891455231
+    m_Localized: Image distance v  {0}
+    m_Metadata:
+      m_Items:
+      - rid: 1134318009864945691
+  - m_Id: 1891455232
+    m_Localized: Focal length f  {0}
+    m_Metadata:
+      m_Items:
+      - rid: 1134318009864945691
+  - m_Id: 1891455233
+    m_Localized: Magnification  {0}
+    m_Metadata:
+      m_Items:
+      - rid: 1134318009864945691
+  - m_Id: 1891455234
+    m_Localized: Image  {0}
+    m_Metadata:
+      m_Items:
+      - rid: 1134318009864945691
+  - m_Id: 1891455235
+    m_Localized: Rule  {0}
+    m_Metadata:
+      m_Items:
+      - rid: 1134318009864945691
+  - m_Id: 1891455236
+    m_Localized: "Object distance u  \u2014"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455237
+    m_Localized: "Image distance v  \u2014"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455238
+    m_Localized: "Focal length f  \u2014"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455239
+    m_Localized: "Magnification  \u2014"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455240
+    m_Localized: "Image  \u2014"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455241
+    m_Localized: "Rule  \u2014"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455242
+    m_Localized: Focal length f (cm)
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455243
+    m_Localized: Lamp
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455244
+    m_Localized: Parallel ray
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455245
+    m_Localized: Through center
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455246
+    m_Localized: Through focus
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455247
+    m_Localized: Show rays
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455248
+    m_Localized: Guides
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455249
+    m_Localized: Depth
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455250
+    m_Localized: No image
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455251
+    m_Localized: Inverted
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455252
+    m_Localized: Upright
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455253
+    m_Localized: same-size
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455254
+    m_Localized: magnified
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455255
+    m_Localized: diminished
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455256
+    m_Localized: real image
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455257
+    m_Localized: virtual image
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455258
+    m_Localized: '{0}, {1} {2}'
+    m_Metadata:
+      m_Items:
+      - rid: 1134318009864945691
+  - m_Id: 1891455259
+    m_Localized: 'u = f: refracted rays stay parallel, so no image forms'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455260
+    m_Localized: 'u < f: upright, magnified virtual image'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455261
+    m_Localized: 'u > 2f: inverted, diminished real image'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455262
+    m_Localized: 'u = 2f: inverted, same-size real image'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455263
+    m_Localized: 'f < u < 2f: inverted, magnified real image'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455264
+    m_Localized: Inverted, diminished real image
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455265
+    m_Localized: Inverted, same-size real image
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455266
+    m_Localized: Inverted, magnified real image
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455267
+    m_Localized: Upright, magnified virtual image
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455268
+    m_Localized: A convex lens converges light
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455269
+    m_Localized: A shorter focal length converges light more strongly
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455270
+    m_Localized: Lamp on
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455271
+    m_Localized: Lamp off
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455272
+    m_Localized: The three special rays are shown
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455273
+    m_Localized: Rays hidden
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455274
+    m_Localized: Focus guides shown
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455275
+    m_Localized: Guides hidden
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455276
+    m_Localized: Depth-of-field blur on
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455277
+    m_Localized: Depth-of-field blur off
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455278
+    m_Localized: You can inspect each special ray on its own
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455279
+    m_Localized: Lesson complete
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455280
+    m_Localized: The eight-step lesson is finished. To drag the candle and screen
+      yourself, open Free Lab from the main menu.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455281
+    m_Localized: The screen is moving toward a sharp real image
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455282
+    m_Localized: 'Red: parallel to the axis, then through the focus'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455283
+    m_Localized: 'Green: through the optical center, direction unchanged'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455284
+    m_Localized: 'Blue: through the focus, then parallel to the axis'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455285
+    m_Localized: u > 2f, inverted diminished real image
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455286
+    m_Localized: u = 2f, inverted same-size real image
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455287
+    m_Localized: f < u < 2f, inverted magnified real image
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455288
+    m_Localized: u = f, refracted rays are parallel, no image
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455289
+    m_Localized: u < f, upright magnified virtual image
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455290
+    m_Localized: Focal length is decreasing, so the lens converges more
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455291
+    m_Localized: Step 1 / 8    The optical bench
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455292
+    m_Localized: Step 2 / 8    Three special rays
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455293
+    m_Localized: Step 3 / 8    Beyond 2f
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455294
+    m_Localized: Step 4 / 8    At 2f
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455295
+    m_Localized: Step 5 / 8    Between f and 2f
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455296
+    m_Localized: Step 6 / 8    At the focus
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455297
+    m_Localized: Step 7 / 8    Inside the focus
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455298
+    m_Localized: Step 8 / 8    Changing the focal length
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455299
+    m_Localized: The bench holds a candle, a convex lens, and a screen. The candle
+      is the object, the lens converges the light, and the screen catches the real
+      image. Object distance u, image distance v, and focal length f satisfy 1/f
+      = 1/u + 1/v. The real image is sharpest when the screen is at the image.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455300
+    m_Localized: A convex lens converges light. A ray parallel to the axis passes
+      through the focus after refraction. A ray through the optical center does not
+      change direction. A ray through the focus leaves parallel to the axis. The
+      image is where any two of these rays meet.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455301
+    m_Localized: 'When the object is beyond twice the focal length (u > 2f), the
+      image is real, inverted, and diminished. It falls on the other side of the
+      lens, between f and 2f. A camera works this way: a distant scene becomes a
+      smaller real image.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455302
+    m_Localized: When the object is exactly at 2f, the image is real, inverted, and
+      the same size. It also sits at 2f on the other side. Object and image distances
+      are equal, and the magnification is 1.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455303
+    m_Localized: When the object is between f and 2f, the image is real, inverted,
+      and magnified. It forms beyond 2f. Projectors use this magnified real image.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455304
+    m_Localized: When the object is at the focus (u = f), the refracted rays are
+      parallel and never meet, so no image forms. No screen position gives a sharp
+      image.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455305
+    m_Localized: When the object is inside the focus (u < f), the refracted rays
+      diverge. Extended backward, they meet on the object's side as an upright, magnified
+      virtual image. A virtual image cannot be caught on a screen; you see it by
+      looking through the lens. A magnifying glass works this way.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455306
+    m_Localized: The smaller the focal length, the more strongly a convex lens converges
+      light. With the object fixed, a shorter focal length pulls the image closer
+      to the lens and changes its size. A longer focal length converges light more
+      weakly.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455307
+    m_Localized: Step 1 / 4    The optical bench
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455308
+    m_Localized: Step 2 / 4    Three special rays
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455309
+    m_Localized: Step 3 / 4    Object distance and the image
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455310
+    m_Localized: Step 4 / 4    Focal length
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455311
+    m_Localized: Drag the candle and the screen. A convex lens converges light. u,
+      v, and f are shown on the right.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455312
+    m_Localized: Red runs parallel to the axis and then through the focus. Green
+      goes through the center and does not bend. Blue goes through the focus and
+      then runs parallel to the axis.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455313
+    m_Localized: Drag the candle in from far away. The screen focuses itself. Watch
+      the real image, the missing image, and the virtual image.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1895649280
+    m_Localized: Drag the focal-length slider. A shorter focal length converges more
+      strongly, and both the image distance and the image size change.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1895649281
+    m_Localized: Watch how the three special rays meet
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1895649282
+    m_Localized: Drag the candle in toward the lens
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1895649283
+    m_Localized: Move the candle, focal length, and screen freely
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1895649284
+    m_Localized: As the object distance falls, the image changes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1895649285
+    m_Localized: 'u < f: an upright, magnified virtual image'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1895649286
+    m_Localized: The screen is close to the sharp position
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1895649287
+    m_Localized: A sharp inverted real image is on the screen
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1895649288
+    m_Localized: The screen is in the wrong place, so the image is blurry
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1895649289
+    m_Localized: Sharp position v = uf/(u-f), about {0}
+    m_Metadata:
+      m_Items:
+      - rid: 1134318009864945691
+  - m_Id: 1895649290
+    m_Localized: 'Hint: {0}'
+    m_Metadata:
+      m_Items:
+      - rid: 1134318009864945691
+  - m_Id: 1895649291
+    m_Localized: "1/v = 1/f - 1/u, so v = uf/(u-f) \u2248 {0} cm"
+    m_Metadata:
+      m_Items:
+      - rid: 1134318009864945691
+  - m_Id: 1895649292
+    m_Localized: Enter the image distance in centimeters
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1895649293
+    m_Localized: Correct, v = {0} cm
+    m_Metadata:
+      m_Items:
+      - rid: 1134318009864945691
+  - m_Id: 1895649294
+    m_Localized: Try the calculation again. 1/f = 1/u + 1/v, so v = uf/(u-f)
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1895649295
+    m_Localized: 'Correct: {0}'
+    m_Metadata:
+      m_Items:
+      - rid: 1134318009864945691
+  - m_Id: 1895649296
+    m_Localized: Not quite. {0}
+    m_Metadata:
+      m_Items:
+      - rid: 1134318009864945691
+  - m_Id: 1895649297
+    m_Localized: Challenge 1 / 3    Find the sharp image
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1895649298
+    m_Localized: Drag the screen until the inverted real image is sharp.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1895649299
+    m_Localized: Drag the screen until the image is sharp
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1895649300
+    m_Localized: Challenge 2 / 3    Name the image
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1895649301
+    m_Localized: Use the object distance and focal length to choose the kind of image.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1895649302
+    m_Localized: u = 22 cm, f = 15 cm
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1895649303
+    m_Localized: Challenge 3 / 3    Calculate the image distance
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1895649304
+    m_Localized: u = 40 cm, f = 16 cm. Find the image distance v in centimeters,
+      then press Enter.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1895649305
+    m_Localized: Enter v in centimeters
+    m_Metadata:
+      m_Items: []
+  references:
+    version: 2
+    RefIds:
+    - rid: 1134318009864945691
+      type: {class: SmartFormatTag, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_Entries: 0050bd6e000000001d50bd70000000002750bd70000000002a50bd70000000005350bd70000000005750bd70000000005950bd70000000005b50bd70000000005d50bd70000000005e50bd70000000006050bd70000000007950bd70000000007a50bd70000000008e50bd70000000008f50bd70000000009050bd70000000009250bd70000000009350bd70000000009550bd70000000009650bd70000000009750bd70000000009b50bd70000000009c50bd70000000009e50bd7000000000e050bd7000000000e550bd7000000000e750bd7000000000e850bd7000000000ea50bd7000000000ed50bd7000000000ee50bd7000000000f850bd7000000000fe50bd7000000000ff50bd70000000000051bd70000000000151bd70000000000251bd70000000000351bd70000000001a51bd70000000000950fd70000000000a50fd70000000000b50fd70000000000d50fd70000000000f50fd70000000001050fd7000000000

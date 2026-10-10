@@ -167,9 +167,9 @@ public class ConcentrationHeatmap : MonoBehaviour
     {
         if (Center <= 0.001f && Edge <= 0.001f)
         {
-            return "尚无品红";
+            return Loc.Get("drift.heat.none");
         }
 
-        return "中心 " + Mathf.RoundToInt(Center * 100f) + "%    边缘 " + Mathf.RoundToInt(Edge * 100f) + "%";
+        return Loc.Format("drift.heat.describe", Mathf.RoundToInt(Center * 100f), Mathf.RoundToInt(Edge * 100f));
     }
 }

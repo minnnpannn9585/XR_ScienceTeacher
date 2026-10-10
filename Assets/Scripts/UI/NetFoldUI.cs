@@ -26,7 +26,7 @@ public class NetFoldUI : MonoBehaviour
             _quiz.Build(quizCanvas.transform);
             GuideTitle = _quiz.TitleText;
             GuideBody = _quiz.BodyText;
-            _quiz.BuildNavigation(quizCanvas.transform, "立体图形", lab.Hint, lab.RestartChallenge);
+            _quiz.BuildNavigation(quizCanvas.transform, Loc.Get("menu.netfold"), lab.Hint, lab.RestartChallenge);
             BuildResult(quizCanvas.transform, lab);
             return;
         }
@@ -35,37 +35,37 @@ public class NetFoldUI : MonoBehaviour
         var root = canvas.transform;
 
         var top = UiFactory.Panel(root, "TopBar", new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(24, -96), new Vector2(-24, -16), NetFoldTheme.Glass);
-        UiFactory.Label(top.transform, "Title", mode == GameMode.Free ? "NetFold · 自由实验" : mode == GameMode.Learn ? "NetFold · 讲解" : "NetFold · 挑战", 34, TextAlignmentOptions.Left, new Vector2(0f, 0f), new Vector2(0.62f, 1f), new Vector2(24, 8), new Vector2(-10, -8));
-        ModeLabel = UiFactory.Label(top.transform, "Mode", mode == GameMode.Free ? "自由实验" : mode == GameMode.Learn ? "讲解" : "挑战模式", 22, TextAlignmentOptions.Center, new Vector2(0.64f, 0.18f), new Vector2(0.84f, 0.82f), Vector2.zero, Vector2.zero, NetFoldTheme.Hairline);
-        UiFactory.Button(top.transform, "Back", "返回", new Vector2(0.86f, 0.18f), new Vector2(0.99f, 0.82f), Vector2.zero, Vector2.zero, SceneLoader.LoadMainMenu);
+        UiFactory.Label(top.transform, "Title", Loc.Branded("NetFold", mode), 34, TextAlignmentOptions.Left, new Vector2(0f, 0f), new Vector2(0.62f, 1f), new Vector2(24, 8), new Vector2(-10, -8));
+        ModeLabel = UiFactory.Label(top.transform, "Mode", mode == GameMode.Free ? Loc.Get("common.free") : mode == GameMode.Learn ? Loc.Get("common.lesson") : Loc.Get("common.challengeMode"), 22, TextAlignmentOptions.Center, new Vector2(0.64f, 0.18f), new Vector2(0.84f, 0.82f), Vector2.zero, Vector2.zero, NetFoldTheme.Hairline);
+        UiFactory.Button(top.transform, "Back", Loc.Get("common.back"), new Vector2(0.86f, 0.18f), new Vector2(0.99f, 0.82f), Vector2.zero, Vector2.zero, SceneLoader.LoadMainMenu);
         if (mode == GameMode.Free)
         {
             BuildShapePicker(root, lab);
         }
 
         var right = UiFactory.Panel(root, "Data", new Vector2(1f, 0.5f), new Vector2(1f, 0.5f), new Vector2(-300, -250), new Vector2(-24, 250), NetFoldTheme.Glass);
-        var title = UiFactory.Label(right.transform, "Name", "未选择几何体", 28, TextAlignmentOptions.Left, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(20, -56), new Vector2(-16, -16));
-        var faces = UiFactory.Label(right.transform, "Faces", "面数  --", 24, TextAlignmentOptions.Left, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(20, -108), new Vector2(-16, -60));
-        var edges = UiFactory.Label(right.transform, "Edges", "棱数  --", 24, TextAlignmentOptions.Left, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(20, -156), new Vector2(-16, -108));
-        var verts = UiFactory.Label(right.transform, "Verts", "顶点数  --", 24, TextAlignmentOptions.Left, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(20, -204), new Vector2(-16, -156));
-        var view = UiFactory.Label(right.transform, "View", mode == GameMode.Free ? "当前视图  自由实验" : "当前视图  讲解", 22, TextAlignmentOptions.Left, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(20, -260), new Vector2(-16, -210));
-        var section = UiFactory.Label(right.transform, "Section", "截面边数  --", 22, TextAlignmentOptions.Left, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(20, -312), new Vector2(-16, -264));
-        var proj = UiFactory.Label(right.transform, "Proj", "投影线  关", 20, TextAlignmentOptions.Left, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(20, -380), new Vector2(-16, -318));
+        var title = UiFactory.Label(right.transform, "Name", Loc.Get("netfold.none"), 28, TextAlignmentOptions.Left, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(20, -56), new Vector2(-16, -16));
+        var faces = UiFactory.Label(right.transform, "Faces", Loc.Get("netfold.faces.empty"), 24, TextAlignmentOptions.Left, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(20, -108), new Vector2(-16, -60));
+        var edges = UiFactory.Label(right.transform, "Edges", Loc.Get("netfold.edges.empty"), 24, TextAlignmentOptions.Left, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(20, -156), new Vector2(-16, -108));
+        var verts = UiFactory.Label(right.transform, "Verts", Loc.Get("netfold.verts.empty"), 24, TextAlignmentOptions.Left, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(20, -204), new Vector2(-16, -156));
+        var view = UiFactory.Label(right.transform, "View", Loc.Format("netfold.view", mode == GameMode.Free ? Loc.Get("view.free") : Loc.Get("view.lesson")), 22, TextAlignmentOptions.Left, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(20, -260), new Vector2(-16, -210));
+        var section = UiFactory.Label(right.transform, "Section", Loc.Get("netfold.section.empty"), 22, TextAlignmentOptions.Left, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(20, -312), new Vector2(-16, -264));
+        var proj = UiFactory.Label(right.transform, "Proj", Loc.Get("netfold.rays.off"), 20, TextAlignmentOptions.Left, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(20, -380), new Vector2(-16, -318));
         DataPanel = gameObject.AddComponent<ShapeDataPanel>();
         DataPanel.Bind(faces, edges, verts, view, section, proj, title);
 
         bool guided = mode == GameMode.Learn;
         var bottom = UiFactory.Panel(root, "Guide", new Vector2(0f, 0f), new Vector2(1f, 0f), guided ? new Vector2(24, 16) : new Vector2(250, 18), guided ? new Vector2(-330, 250) : new Vector2(-250, 150), NetFoldTheme.Glass);
-        string guideTitle = mode == GameMode.Free ? "自由实验" : GameModeController.StepTitle(LearnStep.Recognize);
-        string guideBody = mode == GameMode.Free ? "从顶部选择一个几何体。一次只显示一个，可以旋转、展开、看三视图，或拖动截面。" : GameModeController.StepHint(LearnStep.Recognize);
+        string guideTitle = mode == GameMode.Free ? Loc.Get("common.free") : GameModeController.StepTitle(LearnStep.Recognize);
+        string guideBody = mode == GameMode.Free ? Loc.Get("netfold.free.body") : GameModeController.StepHint(LearnStep.Recognize);
         GuideTitle = UiFactory.Label(bottom.transform, "Step", guideTitle, 26, TextAlignmentOptions.Left, new Vector2(0f, guided ? 0.78f : 0.55f), new Vector2(0.72f, 1f), new Vector2(20, 0), new Vector2(-10, -8));
         GuideBody = UiFactory.Label(bottom.transform, "Body", guideBody, 20, TextAlignmentOptions.TopLeft, new Vector2(0f, guided ? 0.08f : 0f), new Vector2(0.72f, guided ? 0.76f : 0.58f), new Vector2(20, 10), new Vector2(-10, 0));
         ChallengeLabel = UiFactory.Label(bottom.transform, "ChallengeMsg", "", 20, TextAlignmentOptions.MidlineLeft, new Vector2(0f, 0f), new Vector2(0.72f, 0.55f), new Vector2(20, 8), new Vector2(-10, 0));
         if (mode == GameMode.Learn)
         {
-            UiFactory.Button(bottom.transform, "Prev", "上一步", new Vector2(0.76f, 0.55f), new Vector2(0.87f, 0.92f), Vector2.zero, Vector2.zero, lab.PrevStep);
-            UiFactory.Button(bottom.transform, "Next", "下一步", new Vector2(0.88f, 0.55f), new Vector2(0.99f, 0.92f), Vector2.zero, Vector2.zero, lab.NextStep);
-            UiFactory.Label(bottom.transform, "Keys", "右键旋转视角    滚轮缩放    物体已锁定，只播放讲解动画    Esc 返回", 16, TextAlignmentOptions.Left, new Vector2(0f, 0f), new Vector2(0.72f, 0.12f), new Vector2(20, 6), new Vector2(-8, 0));
+            UiFactory.Button(bottom.transform, "Prev", Loc.Get("common.prev"), new Vector2(0.76f, 0.55f), new Vector2(0.87f, 0.92f), Vector2.zero, Vector2.zero, lab.PrevStep);
+            UiFactory.Button(bottom.transform, "Next", Loc.Get("common.next"), new Vector2(0.88f, 0.55f), new Vector2(0.99f, 0.92f), Vector2.zero, Vector2.zero, lab.NextStep);
+            UiFactory.Label(bottom.transform, "Keys", Loc.Get("netfold.keys"), 16, TextAlignmentOptions.Left, new Vector2(0f, 0f), new Vector2(0.72f, 0.12f), new Vector2(20, 6), new Vector2(-8, 0));
         }
 
         if (mode != GameMode.Learn)
@@ -118,7 +118,7 @@ public class NetFoldUI : MonoBehaviour
     {
         if (GuideTitle != null) GuideTitle.text = GameModeController.StepTitle(step);
         if (GuideBody != null) GuideBody.text = GameModeController.StepHint(step);
-        if (ModeLabel != null) ModeLabel.text = "讲解";
+        if (ModeLabel != null) ModeLabel.text = Loc.Get("common.lesson");
     }
 
     public void SetChallengeGuide(string title, string body)
@@ -131,7 +131,7 @@ public class NetFoldUI : MonoBehaviour
 
         if (GuideTitle != null) GuideTitle.text = title;
         if (GuideBody != null) GuideBody.text = body;
-        if (ModeLabel != null) ModeLabel.text = "挑战模式";
+        if (ModeLabel != null) ModeLabel.text = Loc.Get("common.challengeMode");
     }
 
     public void ShowChoices(string[] labels, Action<int> picked)

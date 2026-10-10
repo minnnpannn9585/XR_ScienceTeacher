@@ -36,6 +36,10 @@ EditorBuildSettings:
     path: Assets/Scenes/LensCraftChallenge.unity
     guid: a9c3e05f6d4b4a8c1e2f304152637485
   m_configObjects:
+    com.unity.addressableassets: {fileID: 11400000, guid: 2c62b583b522d66488f2e5992bc26720,
+      type: 2}
+    com.unity.localization.settings: {fileID: 11400000, guid: 2ae7c6af768ef434281ffaf1a063cfe2,
+      type: 2}
     com.unity.xr.management.loader_settings: {fileID: 11400000, guid: 293bdef553a15dd46927b0da918f09d9,
       type: 2}
     com.unity.xr.openxr.settings4: {fileID: 11400000, guid: a978d5a2ad0c2a84faa7dc2fedff48cd,

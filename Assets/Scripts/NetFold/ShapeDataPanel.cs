@@ -32,38 +32,38 @@ public class ShapeDataPanel : MonoBehaviour
         }
 
         Set(TitleText, ShapeCatalog.DisplayName(shape.Type));
-        Set(FacesText, "面数  " + shape.Faces);
-        Set(EdgesText, "棱数  " + shape.Edges);
-        Set(VerticesText, "顶点数  " + shape.Vertices);
+        Set(FacesText, Loc.Format("netfold.faces", shape.Faces));
+        Set(EdgesText, Loc.Format("netfold.edges", shape.Edges));
+        Set(VerticesText, Loc.Format("netfold.verts", shape.Vertices));
     }
 
     public void SetView(string view)
     {
-        Set(ViewText, "当前视图  " + view);
+        Set(ViewText, Loc.Format("netfold.view", view));
     }
 
     public void SetSectionEdges(int count)
     {
-        Set(SectionText, "截面边数  " + (count > 0 ? count.ToString() : "--"));
+        Set(SectionText, count > 0 ? Loc.Format("netfold.section", count) : Loc.Get("netfold.section.empty"));
     }
 
     public void SetProjection(bool front, bool top, bool side)
     {
-        Set(ProjectionText, "投影线  主" + On(front) + "  俯" + On(top) + "  左" + On(side));
+        Set(ProjectionText, Loc.Format("netfold.rays", On(front), On(top), On(side)));
     }
 
     public void Clear()
     {
-        Set(TitleText, "未选择几何体");
-        Set(FacesText, "面数  --");
-        Set(EdgesText, "棱数  --");
-        Set(VerticesText, "顶点数  --");
-        Set(ViewText, "当前视图  学习");
-        Set(SectionText, "截面边数  --");
-        Set(ProjectionText, "投影线  关");
+        Set(TitleText, Loc.Get("netfold.none"));
+        Set(FacesText, Loc.Get("netfold.faces.empty"));
+        Set(EdgesText, Loc.Get("netfold.edges.empty"));
+        Set(VerticesText, Loc.Get("netfold.verts.empty"));
+        Set(ViewText, Loc.Format("netfold.view", Loc.Get("view.learn")));
+        Set(SectionText, Loc.Get("netfold.section.empty"));
+        Set(ProjectionText, Loc.Get("netfold.rays.off"));
     }
 
-    static string On(bool v) => v ? "开" : "关";
+    static string On(bool v) => v ? Loc.Get("common.on") : Loc.Get("common.off");
 
     static void Set(TMP_Text text, string value)
     {

@@ -49,12 +49,12 @@ public class LensQuizController : MonoBehaviour
         if (_bench.Sharpness > 0.78f)
         {
             _hold += Time.deltaTime;
-            _bench.Status = "光屏接近清晰位置";
+            _bench.Status = Loc.Get("lens.near.sharp");
             if (_hold > 0.45f)
             {
                 _bench.ScreenPlate.Flash();
                 FeedbackService.Instance?.Success(_bench.ScreenPlate.transform.position);
-                _bench.Status = "光屏上出现清晰的倒立实像";
+                _bench.Status = Loc.Get("lens.sharp");
                 Advance();
             }
         }
@@ -64,7 +64,7 @@ public class LensQuizController : MonoBehaviour
             if (_bench.Sharpness < 0.35f && !_notedBlur)
             {
                 _notedBlur = true;
-                _bench.Status = "光屏位置不对，像不清晰";
+                _bench.Status = Loc.Get("lens.blur");
             }
         }
     }
@@ -80,13 +80,13 @@ public class LensQuizController : MonoBehaviour
         switch (_index)
         {
             case 0:
-                _bench.Status = "清晰位置 v = uf/(u-f)，约 " + LensMath.Centimeters(_bench.Imaging.ImageDistance);
+                _bench.Status = Loc.Format("lens.hint.v", LensMath.Centimeters(_bench.Imaging.ImageDistance));
                 break;
             case 1:
-                _bench.Status = "提示：" + _bench.Imaging.Rule;
+                _bench.Status = Loc.Format("lens.hint.rule", _bench.Imaging.Rule);
                 break;
             default:
-                _bench.Status = "1/v = 1/f - 1/u，v = uf/(u-f) ≈ " + _answerCm.ToString("0.0") + " cm";
+                _bench.Status = Loc.Format("lens.hint.calc", _answerCm.ToString("0.0"));
                 break;
         }
     }
@@ -102,14 +102,14 @@ public class LensQuizController : MonoBehaviour
         if (!float.TryParse(text, NumberStyles.Float, CultureInfo.InvariantCulture, out float value)
             && !float.TryParse(text, NumberStyles.Float, CultureInfo.CurrentCulture, out value))
         {
-            _bench.Status = "请输入像距，单位是厘米";
+            _bench.Status = Loc.Get("lens.need.number");
             return;
         }
 
         if (Mathf.Abs(value - _answerCm) <= Mathf.Max(1.2f, _answerCm * 0.08f))
         {
             FeedbackService.Instance?.Success(_bench.ScreenPlate.transform.position);
-            _bench.Status = "计算正确，v = " + _answerCm.ToString("0.0") + " cm";
+            _bench.Status = Loc.Format("lens.calc.ok", _answerCm.ToString("0.0"));
             _stars.RegisterSuccess();
             Finish();
         }
@@ -117,7 +117,7 @@ public class LensQuizController : MonoBehaviour
         {
             _stars.RegisterRetry();
             FeedbackService.Instance?.Error(_bench.ScreenPlate.transform.position, _bench.ScreenPlate.transform);
-            _bench.Status = "再算一次。公式：1/f = 1/u + 1/v，即 v = uf/(u-f)";
+            _bench.Status = Loc.Get("lens.calc.again");
         }
     }
 
@@ -131,7 +131,7 @@ public class LensQuizController : MonoBehaviour
         if (index == _correct)
         {
             FeedbackService.Instance?.Success(_bench.transform.position + Vector3.up * 0.2f);
-            _bench.Status = "正确：" + _bench.Imaging.Nature;
+            _bench.Status = Loc.Format("lens.correct.nature", _bench.Imaging.Nature);
             _bench.UI.ClearChoices();
             Advance();
         }
@@ -140,7 +140,7 @@ public class LensQuizController : MonoBehaviour
             _stars.RegisterRetry();
             _bench.UI.MarkChoice(index);
             FeedbackService.Instance?.Error(_bench.transform.position + Vector3.up * 0.2f, _bench.transform);
-            _bench.Status = "不对。" + _bench.Imaging.Rule;
+            _bench.Status = Loc.Format("lens.wrong.rule", _bench.Imaging.Rule);
         }
     }
 
@@ -159,27 +159,27 @@ public class LensQuizController : MonoBehaviour
         switch (index)
         {
             case 0:
-                _bench.UI.SetChallenge("挑战 1 / 3    找清晰像", "拖动光屏，让倒立实像变清晰。");
+                _bench.UI.SetChallenge(Loc.Get("lens.q1.title"), Loc.Get("lens.q1.body"));
                 _bench.ObjectDistance = 0.42f;
                 _bench.Focal = 0.16f;
                 _bench.ScreenDistance = 0.55f;
                 _bench.LockCandle = true;
                 _bench.LockScreen = false;
-                _bench.Status = "拖动光屏，直到像清晰";
+                _bench.Status = Loc.Get("lens.q1.status");
                 break;
             case 1:
-                _bench.UI.SetChallenge("挑战 2 / 3    判断像的性质", "根据物距和焦距选择像的性质。");
+                _bench.UI.SetChallenge(Loc.Get("lens.q2.title"), Loc.Get("lens.q2.body"));
                 _bench.ObjectDistance = 0.22f;
                 _bench.Focal = 0.15f;
                 _bench.LockCandle = true;
                 _bench.LockScreen = true;
                 _bench.AutoScreen = true;
                 _correct = 2;
-                _bench.UI.ShowChoices(new[] { "倒立缩小实像", "倒立等大实像", "倒立放大实像", "正立放大虚像" }, Pick);
-                _bench.Status = "u = 22 cm，f = 15 cm";
+                _bench.UI.ShowChoices(new[] { Loc.Get("lens.choice.reduced"), Loc.Get("lens.choice.equal"), Loc.Get("lens.choice.magnified"), Loc.Get("lens.choice.virtual") }, Pick);
+                _bench.Status = Loc.Get("lens.q2.status");
                 break;
             default:
-                _bench.UI.SetChallenge("挑战 3 / 3    计算像距", "u = 40 cm，f = 16 cm。求像距 v（厘米），回车提交。");
+                _bench.UI.SetChallenge(Loc.Get("lens.q3.title"), Loc.Get("lens.q3.body"));
                 _bench.ObjectDistance = 0.4f;
                 _bench.Focal = 0.16f;
                 _bench.LockCandle = true;
@@ -187,7 +187,7 @@ public class LensQuizController : MonoBehaviour
                 _bench.AutoScreen = true;
                 _answerCm = 100f * (0.4f * 0.16f) / (0.4f - 0.16f);
                 _bench.UI.SetAnswerVisible(true);
-                _bench.Status = "输入 v 的厘米数";
+                _bench.Status = Loc.Get("lens.q3.status");
                 break;
         }
 
@@ -238,7 +238,7 @@ public class LensQuizController : MonoBehaviour
         }
         else
         {
-            _bench.UI.SetChallenge("挑战完成", _stars.EvaluateReason());
+            _bench.UI.SetChallenge(Loc.Get("common.done"), _stars.EvaluateReason());
         }
     }
 }

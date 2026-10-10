@@ -44,11 +44,11 @@ public class ChallengeScreenQuiz : MonoBehaviour
     public void BuildNavigation(Transform canvas, string title, UnityAction hint, UnityAction retry)
     {
         var top = UiFactory.Panel(canvas, "ChallengeNavigation", new Vector2(0f, 1f), Vector2.one, new Vector2(24f, -100f), new Vector2(-24f, -20f), NetFoldTheme.Glass);
-        UiFactory.Label(top.transform, "Module", title + " · 挑战", 26, TextAlignmentOptions.Left, Vector2.zero, new Vector2(0.40f, 1f), new Vector2(24f, 10f), new Vector2(0f, -10f));
-        UiFactory.Label(top.transform, "Scoring", "无提示、无答错通关得三星", 18, TextAlignmentOptions.Center, new Vector2(0.35f, 0f), new Vector2(0.63f, 1f), Vector2.zero, Vector2.zero, NetFoldTheme.TextDim);
-        UiFactory.Button(top.transform, "Hint", "提示", new Vector2(0.64f, 0f), new Vector2(0.75f, 1f), new Vector2(4f, 14f), new Vector2(-4f, -14f), hint);
-        UiFactory.Button(top.transform, "Retry", "重新挑战", new Vector2(0.75f, 0f), new Vector2(0.89f, 1f), new Vector2(4f, 14f), new Vector2(-4f, -14f), retry);
-        UiFactory.Button(top.transform, "Back", "返回", new Vector2(0.89f, 0f), new Vector2(1f, 1f), new Vector2(4f, 14f), new Vector2(-14f, -14f), SceneLoader.LoadMainMenu);
+        UiFactory.Label(top.transform, "Module", Loc.Format("quiz.title", title), 26, TextAlignmentOptions.Left, Vector2.zero, new Vector2(0.40f, 1f), new Vector2(24f, 10f), new Vector2(0f, -10f));
+        UiFactory.Label(top.transform, "Scoring", Loc.Get("quiz.scoring"), 18, TextAlignmentOptions.Center, new Vector2(0.35f, 0f), new Vector2(0.63f, 1f), Vector2.zero, Vector2.zero, NetFoldTheme.TextDim);
+        UiFactory.Button(top.transform, "Hint", Loc.Get("common.hint"), new Vector2(0.64f, 0f), new Vector2(0.75f, 1f), new Vector2(4f, 14f), new Vector2(-4f, -14f), hint);
+        UiFactory.Button(top.transform, "Retry", Loc.Get("common.retryChallenge"), new Vector2(0.75f, 0f), new Vector2(0.89f, 1f), new Vector2(4f, 14f), new Vector2(-4f, -14f), retry);
+        UiFactory.Button(top.transform, "Back", Loc.Get("common.back"), new Vector2(0.89f, 0f), new Vector2(1f, 1f), new Vector2(4f, 14f), new Vector2(-14f, -14f), SceneLoader.LoadMainMenu);
     }
 
     public TMP_Text BuildStatus(Transform canvas)
@@ -107,7 +107,7 @@ public class ChallengeScreenQuiz : MonoBehaviour
         UiFactory.SetButtonColor(button, NetFoldTheme.Error * new Color(0.55f, 0.55f, 0.55f, 1f));
         button.interactable = false;
         var label = button.GetComponentInChildren<TMP_Text>();
-        if (label != null) label.text += " · 再想想";
+        if (label != null) label.text += Loc.Get("quiz.again");
     }
 
     public void ClearChoices()
@@ -184,7 +184,7 @@ public class ChallengeScreenQuiz : MonoBehaviour
         _answer.pointSize = 24;
         _answer.contentType = TMP_InputField.ContentType.DecimalNumber;
 
-        UiFactory.Button(root, "Submit", "提交", new Vector2(0.74f, 0.12f), new Vector2(0.98f, 0.88f), Vector2.zero, Vector2.zero, () => _submit?.Invoke());
+        UiFactory.Button(root, "Submit", Loc.Get("common.submit"), new Vector2(0.74f, 0.12f), new Vector2(0.98f, 0.88f), Vector2.zero, Vector2.zero, () => _submit?.Invoke());
         _answerRoot.SetActive(false);
     }
 }

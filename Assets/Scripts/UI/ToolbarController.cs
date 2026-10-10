@@ -19,7 +19,7 @@ public class ToolbarController : MonoBehaviour
         {
             string action = names[i];
             float top = -16 - i * 66;
-            UiFactory.Button(panel.transform, action, action, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(14, top - 54), new Vector2(-14, top), () => Invoke(action));
+            UiFactory.Button(panel.transform, action, Loc.Action(action), new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(14, top - 54), new Vector2(-14, top), () => Invoke(action));
         }
 
         _rays = new GameObject("ProjectionRays", typeof(RectTransform));
@@ -29,9 +29,9 @@ public class ToolbarController : MonoBehaviour
         raysRt.anchorMax = new Vector2(1f, 0f);
         raysRt.offsetMin = new Vector2(0f, 8f);
         raysRt.offsetMax = new Vector2(0f, 56f);
-        UiFactory.Button(raysRt, "FrontRay", "主视投影", new Vector2(0f, 0f), new Vector2(0.33f, 1f), new Vector2(8, 0), new Vector2(-2, 0), () => ToggleRay(0));
-        UiFactory.Button(raysRt, "TopRay", "俯视投影", new Vector2(0.33f, 0f), new Vector2(0.66f, 1f), new Vector2(2, 0), new Vector2(-2, 0), () => ToggleRay(1));
-        UiFactory.Button(raysRt, "SideRay", "左视投影", new Vector2(0.66f, 0f), new Vector2(1f, 1f), new Vector2(2, 0), new Vector2(-8, 0), () => ToggleRay(2));
+        UiFactory.Button(raysRt, "FrontRay", Loc.Get("tool.front"), new Vector2(0f, 0f), new Vector2(0.33f, 1f), new Vector2(8, 0), new Vector2(-2, 0), () => ToggleRay(0));
+        UiFactory.Button(raysRt, "TopRay", Loc.Get("tool.top"), new Vector2(0.33f, 0f), new Vector2(0.66f, 1f), new Vector2(2, 0), new Vector2(-2, 0), () => ToggleRay(1));
+        UiFactory.Button(raysRt, "SideRay", Loc.Get("tool.side"), new Vector2(0.66f, 0f), new Vector2(1f, 1f), new Vector2(2, 0), new Vector2(-8, 0), () => ToggleRay(2));
         _rays.SetActive(mode == GameMode.Challenge);
     }
 

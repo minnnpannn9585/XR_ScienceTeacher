@@ -1,0 +1,1493 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b11a58205ec3474ca216360e9fa74a8, type: 3}
+  m_Name: UI Shared Data
+  m_EditorClassIdentifier: 
+  m_TableCollectionName: UI
+  m_TableCollectionNameGuidString: 69f722616344a9446b78ad8cb83c5d2c
+  m_Entries:
+  - m_Id: 1857900544
+    m_Key: title.branded
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1887260672
+    m_Key: common.back
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891454976
+    m_Key: common.prev
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891454977
+    m_Key: common.next
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891454978
+    m_Key: common.reset
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891454979
+    m_Key: common.hint
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891454980
+    m_Key: common.demo
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891454981
+    m_Key: common.lesson
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891454982
+    m_Key: common.free
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891454983
+    m_Key: common.challenge
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891454984
+    m_Key: common.challengeMode
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891454985
+    m_Key: common.done
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891454986
+    m_Key: common.submit
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891454987
+    m_Key: common.retryChallenge
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891454988
+    m_Key: common.tryAgain
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891454989
+    m_Key: common.mainMenu
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891454990
+    m_Key: common.close
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891454991
+    m_Key: common.quit
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891454992
+    m_Key: common.settings
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891454993
+    m_Key: common.language
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891454994
+    m_Key: common.on
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891454995
+    m_Key: common.off
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891454996
+    m_Key: common.learnView
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891454997
+    m_Key: common.select
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891454998
+    m_Key: common.correct
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891454999
+    m_Key: common.finishQuestion
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455000
+    m_Key: common.demo.learnOnly
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455001
+    m_Key: common.demo.done
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455002
+    m_Key: common.lesson.menu
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455003
+    m_Key: common.keys.lesson
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455004
+    m_Key: quiz.again
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455005
+    m_Key: quiz.title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455006
+    m_Key: quiz.scoring
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455007
+    m_Key: menu.eyebrow
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455008
+    m_Key: menu.subtitle
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455009
+    m_Key: menu.netfold
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455010
+    m_Key: menu.netfold.blurb
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455011
+    m_Key: menu.drift
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455012
+    m_Key: menu.drift.blurb
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455013
+    m_Key: menu.lens
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455014
+    m_Key: menu.lens.blurb
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455015
+    m_Key: menu.progress
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455016
+    m_Key: menu.hint
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455017
+    m_Key: menu.waiting
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455018
+    m_Key: menu.best
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455019
+    m_Key: menu.settings.title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455020
+    m_Key: menu.settings.language
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455021
+    m_Key: menu.settings.hint
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455022
+    m_Key: menu.current.zh
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455023
+    m_Key: menu.current.en
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455024
+    m_Key: tool.rotate
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455025
+    m_Key: tool.scale
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455026
+    m_Key: tool.unfold
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455027
+    m_Key: tool.fold
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455028
+    m_Key: tool.views
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455029
+    m_Key: tool.section
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455030
+    m_Key: tool.front
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455031
+    m_Key: tool.top
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455032
+    m_Key: tool.side
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455033
+    m_Key: view.section
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455034
+    m_Key: view.challenge
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455035
+    m_Key: view.lesson
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455036
+    m_Key: view.rotate
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455037
+    m_Key: view.scale
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455038
+    m_Key: view.select
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455039
+    m_Key: view.net
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455040
+    m_Key: view.solid
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455041
+    m_Key: view.ortho
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455042
+    m_Key: view.free
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455043
+    m_Key: view.learn
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455044
+    m_Key: viewname.front
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455045
+    m_Key: viewname.top
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455046
+    m_Key: viewname.side
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455047
+    m_Key: shape.cube
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455048
+    m_Key: shape.cylinder
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455049
+    m_Key: shape.cone
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455050
+    m_Key: shape.prism
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455051
+    m_Key: shape.triangle
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455052
+    m_Key: shape.rect
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455053
+    m_Key: shape.para
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455054
+    m_Key: shape.hex
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455055
+    m_Key: option.a
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455056
+    m_Key: option.b
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455057
+    m_Key: option.c
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455058
+    m_Key: netfold.free.body
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455059
+    m_Key: netfold.free.current
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455060
+    m_Key: netfold.lesson.done
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455061
+    m_Key: netfold.keys
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455062
+    m_Key: netfold.none
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455063
+    m_Key: netfold.faces
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455064
+    m_Key: netfold.faces.empty
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455065
+    m_Key: netfold.edges
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455066
+    m_Key: netfold.edges.empty
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455067
+    m_Key: netfold.verts
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455068
+    m_Key: netfold.verts.empty
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455069
+    m_Key: netfold.view
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455070
+    m_Key: netfold.section
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455071
+    m_Key: netfold.section.empty
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455072
+    m_Key: netfold.rays
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455073
+    m_Key: netfold.rays.off
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455074
+    m_Key: netfold.step1.title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455075
+    m_Key: netfold.step2.title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455076
+    m_Key: netfold.step3.title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455077
+    m_Key: netfold.step4.title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455078
+    m_Key: netfold.step1.body
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455079
+    m_Key: netfold.step2.body
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455080
+    m_Key: netfold.step3.body
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455081
+    m_Key: netfold.step4.body
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455082
+    m_Key: netfold.q1.title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455083
+    m_Key: netfold.q1.body
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455084
+    m_Key: netfold.q2.title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455085
+    m_Key: netfold.q2.body
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455086
+    m_Key: netfold.q3.title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455087
+    m_Key: netfold.q3.body
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455088
+    m_Key: netfold.hint1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455089
+    m_Key: netfold.hint2
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455090
+    m_Key: netfold.hint3
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455091
+    m_Key: netfold.wrong
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455092
+    m_Key: stars.3
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455093
+    m_Key: stars.2
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455094
+    m_Key: stars.1.hints
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455095
+    m_Key: stars.1.retry
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455096
+    m_Key: stars.0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455097
+    m_Key: result.newBest
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455098
+    m_Key: result.history
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455099
+    m_Key: knowledge.netfold
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455100
+    m_Key: knowledge.drift
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455101
+    m_Key: knowledge.lens
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455102
+    m_Key: drift.sub
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455103
+    m_Key: drift.free.body
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455104
+    m_Key: drift.keys.free
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455105
+    m_Key: drift.curveKey
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455106
+    m_Key: drift.tempCap
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455107
+    m_Key: drift.heat
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455108
+    m_Key: drift.cool
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455109
+    m_Key: drift.drop
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455110
+    m_Key: drift.gas
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455111
+    m_Key: drift.run
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455112
+    m_Key: drift.ion
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455113
+    m_Key: drift.tool.view
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455114
+    m_Key: drift.tool.heat
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455115
+    m_Key: drift.tool.curve
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455116
+    m_Key: drift.micro
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455117
+    m_Key: drift.macro
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455118
+    m_Key: drift.count
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455119
+    m_Key: drift.stateLine
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455120
+    m_Key: drift.volume
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455121
+    m_Key: drift.temp.empty
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455122
+    m_Key: drift.temp.value
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455123
+    m_Key: drift.speed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455124
+    m_Key: drift.time.empty
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455125
+    m_Key: drift.time
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455126
+    m_Key: drift.time.even
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455127
+    m_Key: drift.time.going
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455128
+    m_Key: drift.conc.mix
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455129
+    m_Key: drift.conc.separate
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455130
+    m_Key: drift.conc.none
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455131
+    m_Key: drift.conc.heat
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455132
+    m_Key: drift.conc.progress
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455133
+    m_Key: drift.heat.none
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455134
+    m_Key: drift.heat.describe
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455135
+    m_Key: drift.speed.empty
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455136
+    m_Key: drift.conc.empty
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455137
+    m_Key: drift.state.empty
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455138
+    m_Key: beaker.cold
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455139
+    m_Key: beaker.hot
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455140
+    m_Key: beaker.alcohol
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455141
+    m_Key: beaker.water
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455142
+    m_Key: band.fast
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455143
+    m_Key: band.mid
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455144
+    m_Key: band.slow
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455145
+    m_Key: band.faster
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455146
+    m_Key: band.slower
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455147
+    m_Key: world.dropper
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455148
+    m_Key: world.heat
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455149
+    m_Key: world.cool
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455150
+    m_Key: world.thermo
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455151
+    m_Key: world.ammonia
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455152
+    m_Key: world.papers
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455153
+    m_Key: world.no2
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455154
+    m_Key: world.cover
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455155
+    m_Key: drift.state.random
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455156
+    m_Key: drift.state.free
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455157
+    m_Key: drift.lesson.done.title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455158
+    m_Key: drift.lesson.done.body
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455159
+    m_Key: drift.heat.on
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455160
+    m_Key: drift.heat.off
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455161
+    m_Key: drift.hotter
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455162
+    m_Key: drift.challenge.follow
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455163
+    m_Key: drift.drop.step
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455164
+    m_Key: drift.answer.current
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455165
+    m_Key: drift.gas.step
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455166
+    m_Key: drift.ammonia
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455167
+    m_Key: drift.no2
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455168
+    m_Key: drift.ion.state
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455169
+    m_Key: drift.macro.still
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455170
+    m_Key: drift.micro.move
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455171
+    m_Key: drift.random.turn
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455172
+    m_Key: drift.cold.hot
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455173
+    m_Key: drift.temp.up
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455174
+    m_Key: drift.hot.faster
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455175
+    m_Key: drift.volumes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455176
+    m_Key: drift.gaps.fill
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455177
+    m_Key: drift.beat1.title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455178
+    m_Key: drift.beat2.title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455179
+    m_Key: drift.beat3.title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455180
+    m_Key: drift.beat4.title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455181
+    m_Key: drift.beat5.title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455182
+    m_Key: drift.beat1.body
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455183
+    m_Key: drift.beat2.body
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455184
+    m_Key: drift.beat3.body
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455185
+    m_Key: drift.beat4.body
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455186
+    m_Key: drift.beat5.body
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455187
+    m_Key: drift.ui1.title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455188
+    m_Key: drift.ui2.title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455189
+    m_Key: drift.ui3.title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455190
+    m_Key: drift.ui4.title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455191
+    m_Key: drift.ui1.body
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455192
+    m_Key: drift.ui2.body
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455193
+    m_Key: drift.ui3.body
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455194
+    m_Key: drift.ui4.body
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455195
+    m_Key: drift.gaps.short
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455196
+    m_Key: drift.spread.short
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455197
+    m_Key: drift.watch.which
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455198
+    m_Key: drift.choice.cold
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455199
+    m_Key: drift.choice.hot
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455200
+    m_Key: drift.q2.predict
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455201
+    m_Key: drift.q3.adjust
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455202
+    m_Key: drift.q1.hotter
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455203
+    m_Key: drift.q1.correct
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455204
+    m_Key: drift.q2.again
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455205
+    m_Key: drift.q2.ok
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455206
+    m_Key: drift.started
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455207
+    m_Key: drift.uniform
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455208
+    m_Key: drift.q2.measured
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455209
+    m_Key: drift.mixed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455210
+    m_Key: drift.dropping
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455211
+    m_Key: drift.temp.locked
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455212
+    m_Key: drift.temp.given
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455213
+    m_Key: drift.nudge
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455214
+    m_Key: drift.q.time.ok
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455215
+    m_Key: drift.q.time.cold
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455216
+    m_Key: drift.q.time.hot
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455217
+    m_Key: drift.hint1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455218
+    m_Key: drift.hint2
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455219
+    m_Key: drift.hint3
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455220
+    m_Key: drift.q1.title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455221
+    m_Key: drift.q2.title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455222
+    m_Key: drift.q3.title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455223
+    m_Key: drift.q1.body
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455224
+    m_Key: drift.q2.body
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455225
+    m_Key: drift.q3.body
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455226
+    m_Key: lens.sub
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455227
+    m_Key: lens.free.body
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455228
+    m_Key: lens.keys.challenge
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455229
+    m_Key: lens.keys.free
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455230
+    m_Key: lens.u
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455231
+    m_Key: lens.v
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455232
+    m_Key: lens.f
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455233
+    m_Key: lens.mag
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455234
+    m_Key: lens.nature.row
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455235
+    m_Key: lens.rule.row
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455236
+    m_Key: lens.u.empty
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455237
+    m_Key: lens.v.empty
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455238
+    m_Key: lens.f.empty
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455239
+    m_Key: lens.mag.empty
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455240
+    m_Key: lens.nature.empty
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455241
+    m_Key: lens.rule.empty
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455242
+    m_Key: lens.fcap
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455243
+    m_Key: lens.lamp
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455244
+    m_Key: lens.ray1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455245
+    m_Key: lens.ray2
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455246
+    m_Key: lens.ray3
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455247
+    m_Key: lens.tool.rays
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455248
+    m_Key: lens.tool.guides
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455249
+    m_Key: lens.tool.dof
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455250
+    m_Key: lens.noImage
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455251
+    m_Key: lens.inverted
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455252
+    m_Key: lens.upright
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455253
+    m_Key: lens.equal
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455254
+    m_Key: lens.magnified
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455255
+    m_Key: lens.reduced
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455256
+    m_Key: lens.real
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455257
+    m_Key: lens.virtual
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455258
+    m_Key: lens.nature
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455259
+    m_Key: lens.rule.focus
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455260
+    m_Key: lens.rule.inside
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455261
+    m_Key: lens.rule.beyond
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455262
+    m_Key: lens.rule.twice
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455263
+    m_Key: lens.rule.between
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455264
+    m_Key: lens.choice.reduced
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455265
+    m_Key: lens.choice.equal
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455266
+    m_Key: lens.choice.magnified
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455267
+    m_Key: lens.choice.virtual
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455268
+    m_Key: lens.converge
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455269
+    m_Key: lens.focal.stronger
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455270
+    m_Key: lens.light.on
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455271
+    m_Key: lens.light.off
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455272
+    m_Key: lens.rays.on
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455273
+    m_Key: lens.rays.off
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455274
+    m_Key: lens.guides.on
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455275
+    m_Key: lens.guides.off
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455276
+    m_Key: lens.dof.on
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455277
+    m_Key: lens.dof.off
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455278
+    m_Key: lens.rays.each
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455279
+    m_Key: lens.lesson.done.title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455280
+    m_Key: lens.lesson.done.body
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455281
+    m_Key: lens.focusing
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455282
+    m_Key: lens.ray.red
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455283
+    m_Key: lens.ray.green
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455284
+    m_Key: lens.ray.blue
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455285
+    m_Key: lens.case.beyond
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455286
+    m_Key: lens.case.twice
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455287
+    m_Key: lens.case.between
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455288
+    m_Key: lens.case.focus
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455289
+    m_Key: lens.case.inside
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455290
+    m_Key: lens.focal.shrink
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455291
+    m_Key: lens.beat1.title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455292
+    m_Key: lens.beat2.title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455293
+    m_Key: lens.beat3.title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455294
+    m_Key: lens.beat4.title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455295
+    m_Key: lens.beat5.title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455296
+    m_Key: lens.beat6.title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455297
+    m_Key: lens.beat7.title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455298
+    m_Key: lens.beat8.title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455299
+    m_Key: lens.beat1.body
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455300
+    m_Key: lens.beat2.body
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455301
+    m_Key: lens.beat3.body
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455302
+    m_Key: lens.beat4.body
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455303
+    m_Key: lens.beat5.body
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455304
+    m_Key: lens.beat6.body
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455305
+    m_Key: lens.beat7.body
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455306
+    m_Key: lens.beat8.body
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455307
+    m_Key: lens.ui1.title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455308
+    m_Key: lens.ui2.title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455309
+    m_Key: lens.ui3.title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455310
+    m_Key: lens.ui4.title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455311
+    m_Key: lens.ui1.body
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455312
+    m_Key: lens.ui2.body
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1891455313
+    m_Key: lens.ui3.body
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1895649280
+    m_Key: lens.ui4.body
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1895649281
+    m_Key: lens.watch.rays
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1895649282
+    m_Key: lens.drag.candle
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1895649283
+    m_Key: lens.free.status
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1895649284
+    m_Key: lens.drag.changing
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1895649285
+    m_Key: lens.drag.virtual
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1895649286
+    m_Key: lens.near.sharp
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1895649287
+    m_Key: lens.sharp
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1895649288
+    m_Key: lens.blur
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1895649289
+    m_Key: lens.hint.v
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1895649290
+    m_Key: lens.hint.rule
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1895649291
+    m_Key: lens.hint.calc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1895649292
+    m_Key: lens.need.number
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1895649293
+    m_Key: lens.calc.ok
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1895649294
+    m_Key: lens.calc.again
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1895649295
+    m_Key: lens.correct.nature
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1895649296
+    m_Key: lens.wrong.rule
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1895649297
+    m_Key: lens.q1.title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1895649298
+    m_Key: lens.q1.body
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1895649299
+    m_Key: lens.q1.status
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1895649300
+    m_Key: lens.q2.title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1895649301
+    m_Key: lens.q2.body
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1895649302
+    m_Key: lens.q2.status
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1895649303
+    m_Key: lens.q3.title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1895649304
+    m_Key: lens.q3.body
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1895649305
+    m_Key: lens.q3.status
+    m_Metadata:
+      m_Items: []
+  m_Metadata:
+    m_Items: []
+  m_KeyGenerator:
+    rid: 1134318009864945688
+  references:
+    version: 2
+    RefIds:
+    - rid: 1134318009864945688
+      type: {class: DistributedUIDGenerator, ns: UnityEngine.Localization.Tables,
+        asm: Unity.Localization}
+      data:
+        m_CustomEpoch: 1791649559165

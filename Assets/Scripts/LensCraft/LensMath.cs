@@ -34,8 +34,8 @@ public static class LensMath
             result.ImageDistance = float.PositiveInfinity;
             result.AbsMagnification = 0f;
             result.Scale = ImageScaleKind.None;
-            result.Nature = "不成像";
-            result.Rule = "u = f，折射光线平行射出，不成像";
+            result.Nature = Loc.Get("lens.noImage");
+            result.Rule = Loc.Get("lens.rule.focus");
             return result;
         }
 
@@ -62,25 +62,25 @@ public static class LensMath
             result.Scale = ImageScaleKind.Equal;
         }
 
-        string upright = result.IsInverted ? "倒立" : "正立";
-        string size = result.Scale == ImageScaleKind.Equal ? "等大" : result.Scale == ImageScaleKind.Magnified ? "放大" : "缩小";
-        string kind = result.IsReal ? "实像" : "虚像";
-        result.Nature = upright + size + kind;
+        string upright = result.IsInverted ? Loc.Get("lens.inverted") : Loc.Get("lens.upright");
+        string size = result.Scale == ImageScaleKind.Equal ? Loc.Get("lens.equal") : result.Scale == ImageScaleKind.Magnified ? Loc.Get("lens.magnified") : Loc.Get("lens.reduced");
+        string kind = result.IsReal ? Loc.Get("lens.real") : Loc.Get("lens.virtual");
+        result.Nature = Loc.Format("lens.nature", upright, size, kind);
         if (!result.IsReal)
         {
-            result.Rule = "u < f，成正立放大虚像";
+            result.Rule = Loc.Get("lens.rule.inside");
         }
         else if (u > 2f * f + 0.012f)
         {
-            result.Rule = "u > 2f，成倒立缩小实像";
+            result.Rule = Loc.Get("lens.rule.beyond");
         }
         else if (Mathf.Abs(u - 2f * f) <= 0.016f)
         {
-            result.Rule = "u = 2f，成倒立等大实像";
+            result.Rule = Loc.Get("lens.rule.twice");
         }
         else
         {
-            result.Rule = "f < u < 2f，成倒立放大实像";
+            result.Rule = Loc.Get("lens.rule.between");
         }
 
         return result;

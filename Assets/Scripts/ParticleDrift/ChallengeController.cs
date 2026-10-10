@@ -96,12 +96,12 @@ namespace ParticleDrift
 
             if (seconds >= TargetMin && seconds <= TargetMax)
             {
-                message = "扩散时间 " + seconds.ToString("0.0") + " 秒，落在目标范围内";
+                message = Loc.Format("drift.q.time.ok", seconds.ToString("0.0"));
                 return true;
             }
 
             _stars.RegisterRetry();
-            message = seconds > TargetMax ? "温度偏低，分子运动太慢" : "温度偏高，分子运动太快";
+            message = seconds > TargetMax ? Loc.Get("drift.q.time.cold") : Loc.Get("drift.q.time.hot");
             return false;
         }
 
@@ -129,11 +129,11 @@ namespace ParticleDrift
             switch (Index)
             {
                 case 0:
-                    return "比较两杯变色速度。温度越高，扩散越快。";
+                    return Loc.Get("drift.hint1");
                 case 1:
-                    return "水温很高选很快，中等水温选中等，接近冰水选很慢。";
+                    return Loc.Get("drift.hint2");
                 default:
-                    return "目标是 5.5–8.5 秒。大约 45℃ 到 65℃ 会落在这个范围。";
+                    return Loc.Get("drift.hint3");
             }
         }
 
@@ -154,11 +154,11 @@ namespace ParticleDrift
             switch (index)
             {
                 case 0:
-                    return "冷水和热水已同时滴入品红。选出扩散更快的烧杯。";
+                    return Loc.Get("drift.q1.body");
                 case 1:
-                    return "当前水温 " + GivenTemperature.ToString("0") + " ℃。预测品红扩散到均匀的快慢。";
+                    return Loc.Format("drift.q2.body", GivenTemperature.ToString("0"));
                 default:
-                    return "调节温度，使品红在 5.5–8.5 秒内扩散均匀，然后开始扩散。";
+                    return Loc.Get("drift.q3.body");
             }
         }
 
@@ -166,9 +166,9 @@ namespace ParticleDrift
         {
             switch (index)
             {
-                case 0: return "挑战 1 / 3    温度与扩散速度";
-                case 1: return "挑战 2 / 3    预测扩散时间";
-                default: return "挑战 3 / 3    调温达标";
+                case 0: return Loc.Get("drift.q1.title");
+                case 1: return Loc.Get("drift.q2.title");
+                default: return Loc.Get("drift.q3.title");
             }
         }
     }

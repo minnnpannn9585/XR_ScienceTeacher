@@ -47,7 +47,7 @@ public class NetFoldLab : MonoBehaviour
         Section.EdgeCountChanged += edges =>
         {
             UI.DataPanel?.SetSectionEdges(edges);
-            UI.DataPanel?.SetView("截面");
+            UI.DataPanel?.SetView(Loc.Get("view.section"));
         };
         Challenge.Presented += (title, body, choices) =>
         {
@@ -69,7 +69,7 @@ public class NetFoldLab : MonoBehaviour
         Challenge.Completed += (stars, reason) =>
         {
             UI.ClearChoices();
-            UI.SetChallengeGuide("挑战完成", reason);
+            UI.SetChallengeGuide(Loc.Get("common.done"), reason);
             UI.Result?.Show(stars, reason);
         };
         if (startMode == GameMode.Challenge)
@@ -197,7 +197,7 @@ public class NetFoldLab : MonoBehaviour
             Projection.SetActive(false);
             Section.SetActive(false);
             Challenge.Begin();
-            UI.DataPanel?.SetView("挑战");
+            UI.DataPanel?.SetView(Loc.Get("view.challenge"));
         }
     }
 
@@ -206,7 +206,7 @@ public class NetFoldLab : MonoBehaviour
         StopDemo();
         Challenge.Stop();
         UI.SetLearnGuide(step);
-        UI.DataPanel?.SetView("讲解");
+        UI.DataPanel?.SetView(Loc.Get("view.lesson"));
         switch (step)
         {
             case LearnStep.Recognize:
@@ -325,7 +325,7 @@ public class NetFoldLab : MonoBehaviour
         {
             if (UI.GuideBody != null)
             {
-                UI.GuideBody.text = "四步讲解已完成。自由实验和挑战从主菜单进入。";
+                UI.GuideBody.text = Loc.Get("netfold.lesson.done");
             }
 
             return;
@@ -347,7 +347,7 @@ public class NetFoldLab : MonoBehaviour
     public void SetTool(InteractTool tool)
     {
         Input.ActiveTool = tool;
-        UI.DataPanel?.SetView(tool == InteractTool.Rotate ? "旋转" : tool == InteractTool.Scale ? "缩放" : "选择");
+        UI.DataPanel?.SetView(tool == InteractTool.Rotate ? Loc.Get("view.rotate") : tool == InteractTool.Scale ? Loc.Get("view.scale") : Loc.Get("view.select"));
     }
 
     public void ResetSelected()
@@ -377,7 +377,7 @@ public class NetFoldLab : MonoBehaviour
             Section.SetActive(false);
             Unfolding.Bind(_hero);
             Unfolding.Unfold();
-            UI.DataPanel?.SetView("展开图");
+            UI.DataPanel?.SetView(Loc.Get("view.net"));
             return;
         }
 
@@ -389,7 +389,7 @@ public class NetFoldLab : MonoBehaviour
         Modes.SetStep(LearnStep.Unfold);
         Unfolding.Bind(_hero);
         Unfolding.Unfold();
-        UI.DataPanel?.SetView("展开图");
+        UI.DataPanel?.SetView(Loc.Get("view.net"));
     }
 
     public void Fold()
@@ -397,7 +397,7 @@ public class NetFoldLab : MonoBehaviour
         if (_launch == GameMode.Free)
         {
             Unfolding.Fold();
-            UI.DataPanel?.SetView("立体");
+            UI.DataPanel?.SetView(Loc.Get("view.solid"));
             return;
         }
 
@@ -407,7 +407,7 @@ public class NetFoldLab : MonoBehaviour
         }
 
         Unfolding.Fold();
-        UI.DataPanel?.SetView("立体");
+        UI.DataPanel?.SetView(Loc.Get("view.solid"));
     }
 
     public void ToggleProjection()
@@ -427,7 +427,7 @@ public class NetFoldLab : MonoBehaviour
                 UI.Toolbar.SetProjectionRays(Projection.IsActive);
             }
 
-            UI.DataPanel?.SetView(Projection.IsActive ? "三视图" : "自由实验");
+            UI.DataPanel?.SetView(Projection.IsActive ? Loc.Get("view.ortho") : Loc.Get("view.free"));
             UI.DataPanel?.SetProjection(Projection.FrontRays, Projection.TopRays, Projection.SideRays);
             return;
         }
@@ -445,7 +445,7 @@ public class NetFoldLab : MonoBehaviour
 
         Projection.Bind(_hero);
         Projection.Toggle();
-        UI.DataPanel?.SetView(Projection.IsActive ? "三视图" : "学习");
+        UI.DataPanel?.SetView(Projection.IsActive ? Loc.Get("view.ortho") : Loc.Get("view.learn"));
         UI.DataPanel?.SetProjection(Projection.FrontRays, Projection.TopRays, Projection.SideRays);
     }
 
@@ -469,7 +469,7 @@ public class NetFoldLab : MonoBehaviour
 
             Section.Bind(_hero);
             Section.Toggle();
-            UI.DataPanel?.SetView(Section.IsActive ? "截面" : "自由实验");
+            UI.DataPanel?.SetView(Section.IsActive ? Loc.Get("view.section") : Loc.Get("view.free"));
             return;
         }
 
@@ -486,7 +486,7 @@ public class NetFoldLab : MonoBehaviour
 
         Section.Bind(_hero);
         Section.Toggle();
-        UI.DataPanel?.SetView(Section.IsActive ? "截面" : "学习");
+        UI.DataPanel?.SetView(Section.IsActive ? Loc.Get("view.section") : Loc.Get("view.learn"));
     }
 
     public void ToggleProjectionRay(int index)
@@ -594,12 +594,12 @@ public class NetFoldLab : MonoBehaviour
         StopDemo();
         if (UI.GuideTitle != null)
         {
-            UI.GuideTitle.text = "自由实验";
+            UI.GuideTitle.text = Loc.Get("common.free");
         }
 
         if (UI.ModeLabel != null)
         {
-            UI.ModeLabel.text = "自由实验";
+            UI.ModeLabel.text = Loc.Get("common.free");
         }
 
         ShowFreeShape(ShapeType.Cube);
@@ -630,10 +630,10 @@ public class NetFoldLab : MonoBehaviour
         UI.HighlightShape(type);
         if (UI.GuideBody != null)
         {
-            UI.GuideBody.text = "当前是" + ShapeCatalog.DisplayName(type) + "。可以旋转、缩放、展开、折叠、看三视图，或拖动截面。换一个几何体时，上一个会收起来。";
+            UI.GuideBody.text = Loc.Format("netfold.free.current", ShapeCatalog.DisplayName(type));
         }
 
-        UI.DataPanel?.SetView("自由实验");
+        UI.DataPanel?.SetView(Loc.Get("view.free"));
     }
 
     void ClearLearnShapes()

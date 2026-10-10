@@ -5,13 +5,13 @@ public static class ShapeCatalog
         switch (type)
         {
             case ShapeType.Cube:
-                return "正方体";
+                return Loc.Get("shape.cube");
             case ShapeType.Cylinder:
-                return "圆柱";
+                return Loc.Get("shape.cylinder");
             case ShapeType.Cone:
-                return "圆锥";
+                return Loc.Get("shape.cone");
             case ShapeType.TriangularPrism:
-                return "三棱柱";
+                return Loc.Get("shape.prism");
             default:
                 return type.ToString();
         }

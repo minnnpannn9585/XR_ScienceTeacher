@@ -56,15 +56,15 @@ public class ChallengeController : MonoBehaviour
         switch (QuestionIndex)
         {
             case 0:
-                hint = "提示：三个视图都是正方形，只有正方体同时满足。";
+                hint = Loc.Get("netfold.hint1");
                 HighlightCorrect();
                 break;
             case 1:
-                hint = "提示：俯视图是三角形的，对应三棱柱。";
+                hint = Loc.Get("netfold.hint2");
                 HighlightCorrect();
                 break;
             default:
-                hint = "提示：对边平行且相等，但夹角不是直角，所以是平行四边形，不是矩形。";
+                hint = Loc.Get("netfold.hint3");
                 HighlightCorrect();
                 break;
         }
@@ -100,7 +100,7 @@ public class ChallengeController : MonoBehaviour
             Stars.RegisterSuccess();
             FeedbackService.Instance?.Success(_stage.position + Vector3.up * 0.2f);
             PlayCorrectFx();
-            Answered?.Invoke(true, "回答正确！");
+            Answered?.Invoke(true, Loc.Get("common.correct"));
             _waiting = true;
             _advance = DOVirtual.DelayedCall(1.05f, NextOrFinish);
         }
@@ -109,7 +109,7 @@ public class ChallengeController : MonoBehaviour
             Stars.RegisterRetry();
             FeedbackService.Instance?.Error(_stage.position + Vector3.up * 0.2f, _stage);
             MarkWrong(index);
-            Answered?.Invoke(false, "再想一想，错误的视图已用红色标出。");
+            Answered?.Invoke(false, Loc.Get("netfold.wrong"));
         }
     }
 
@@ -147,7 +147,7 @@ public class ChallengeController : MonoBehaviour
         {
             case 0:
                 BuildQuestion1();
-                Presented?.Invoke("第 1 题  根据三视图选择几何体", "根据台上的三个视图，选择对应的几何体。", new[]
+                Presented?.Invoke(Loc.Get("netfold.q1.title"), Loc.Get("netfold.q1.body"), new[]
                 {
                     ShapeCatalog.DisplayName(ShapeType.Cube),
                     ShapeCatalog.DisplayName(ShapeType.Cylinder),
@@ -156,20 +156,20 @@ public class ChallengeController : MonoBehaviour
                 break;
             case 1:
                 BuildQuestion2();
-                Presented?.Invoke("第 2 题  根据几何体选择三视图", "台上的几何体对应哪一组三视图？从左到右是 A、B、C。", new[] { "A", "B", "C" });
+                Presented?.Invoke(Loc.Get("netfold.q2.title"), Loc.Get("netfold.q2.body"), new[] { "A", "B", "C" });
                 break;
             default:
                 BuildQuestion3();
-                Presented?.Invoke("第 3 题  判断截面形状", "斜切正方体得到的截面是哪一种？从左到右对应四个选项。", new[] { "三角形", "矩形", "平行四边形", "六边形" });
+                Presented?.Invoke(Loc.Get("netfold.q3.title"), Loc.Get("netfold.q3.body"), new[] { Loc.Get("shape.triangle"), Loc.Get("shape.rect"), Loc.Get("shape.para"), Loc.Get("shape.hex") });
                 break;
         }
     }
 
     void BuildQuestion1()
     {
-        CreateViewBoard(ShapeType.Cube, ViewKind.Front, "主视图", new Vector3(-0.36f, 0.2f, 0.28f));
-        CreateViewBoard(ShapeType.Cube, ViewKind.Top, "俯视图", new Vector3(0f, 0.2f, 0.28f));
-        CreateViewBoard(ShapeType.Cube, ViewKind.Side, "左视图", new Vector3(0.36f, 0.2f, 0.28f));
+        CreateViewBoard(ShapeType.Cube, ViewKind.Front, Loc.Get("viewname.front"), new Vector3(-0.36f, 0.2f, 0.28f));
+        CreateViewBoard(ShapeType.Cube, ViewKind.Top, Loc.Get("viewname.top"), new Vector3(0f, 0.2f, 0.28f));
+        CreateViewBoard(ShapeType.Cube, ViewKind.Side, Loc.Get("viewname.side"), new Vector3(0.36f, 0.2f, 0.28f));
         SpawnChoiceShape(ShapeType.Cube, new Vector3(-0.38f, 0f, -0.16f), 0);
         SpawnChoiceShape(ShapeType.Cylinder, new Vector3(0f, 0f, -0.16f), 1);
         SpawnChoiceShape(ShapeType.Cone, new Vector3(0.38f, 0f, -0.16f), 2);
@@ -180,9 +180,9 @@ public class ChallengeController : MonoBehaviour
         var shape = GeometryFactory.Create(ShapeType.TriangularPrism, _stage, new Vector3(0f, 0f, -0.16f), 0.34f, false);
         shape.AllowIdleSpin = true;
         _spawned.Add(shape.gameObject);
-        CreateViewSet(0, ShapeType.TriangularPrism, "选项 A", new Vector3(-0.42f, 0.2f, 0.3f));
-        CreateViewSet(1, ShapeType.Cube, "选项 B", new Vector3(0f, 0.2f, 0.3f));
-        CreateViewSet(2, ShapeType.Cylinder, "选项 C", new Vector3(0.42f, 0.2f, 0.3f));
+        CreateViewSet(0, ShapeType.TriangularPrism, Loc.Get("option.a"), new Vector3(-0.42f, 0.2f, 0.3f));
+        CreateViewSet(1, ShapeType.Cube, Loc.Get("option.b"), new Vector3(0f, 0.2f, 0.3f));
+        CreateViewSet(2, ShapeType.Cylinder, Loc.Get("option.c"), new Vector3(0.42f, 0.2f, 0.3f));
     }
 
     void BuildQuestion3()
@@ -200,7 +200,7 @@ public class ChallengeController : MonoBehaviour
         plane.GetComponent<MeshRenderer>().sharedMaterial = BoardMat(new Color(1f, 0.82f, 0.28f, 0.85f), true);
         UnityEngine.Object.Destroy(plane.GetComponent<Collider>());
         _spawned.Add(plane);
-        string[] labels = { "三角形", "矩形", "平行四边形", "六边形" };
+        string[] labels = { Loc.Get("shape.triangle"), Loc.Get("shape.rect"), Loc.Get("shape.para"), Loc.Get("shape.hex") };
         Mesh[] shapes =
         {
             SectionMesh(3),

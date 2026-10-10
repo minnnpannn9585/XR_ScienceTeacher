@@ -73,10 +73,11 @@ public class ExperimentController : MonoBehaviour
     int _flow = 1;
     int _outlineId;
     Coroutine _demo;
-    string _state = "分子在不停做无规则运动";
+    string _state;
 
     public void Bootstrap(GameMode startMode)
     {
+        _state = Loc.Get("drift.state.random");
         LabFactory.UseWorldLabels = startMode != GameMode.Challenge;
         _launchMode = startMode;
         DOTween.Init();
@@ -144,8 +145,8 @@ public class ExperimentController : MonoBehaviour
         Temperature.Tick(dt, celsius, progress);
         if (UI != null)
         {
-            string view = Views != null && Views.IsMicro ? "微观" : "宏观";
-            UI.Refresh(TempText(), SpeedText(), TimeText(), ConcText(), "分子数  " + MoleculeCount(), "当前状态  " + view + " · " + _state, "滴加体积  " + Mathf.RoundToInt(Volume01 * 100f) + "%");
+            string view = Views != null && Views.IsMicro ? Loc.Get("drift.micro") : Loc.Get("drift.macro");
+            UI.Refresh(TempText(), SpeedText(), TimeText(), ConcText(), Loc.Format("drift.count", MoleculeCount()), Loc.Format("drift.stateLine", view, _state), Loc.Format("drift.volume", Mathf.RoundToInt(Volume01 * 100f)));
         }
     }
 
@@ -294,7 +295,7 @@ public class ExperimentController : MonoBehaviour
         }
 
         _challenge = true;
-        UI.SetMode("挑战模式");
+        UI.SetMode(Loc.Get("common.challengeMode"));
         Quiz.Begin(Stars);
     }
 
@@ -311,7 +312,7 @@ public class ExperimentController : MonoBehaviour
         {
             if (_challenge)
             {
-                _state = "请先完成当前挑战题";
+                _state = Loc.Get("common.finishQuestion");
             }
 
             return;
@@ -319,10 +320,10 @@ public class ExperimentController : MonoBehaviour
 
         if (_beat >= 4)
         {
-            _state = "讲解已完成。自由实验和挑战从主菜单进入。";
+            _state = Loc.Get("common.lesson.menu");
             if (UI != null)
             {
-                UI.SetLesson("讲解完成", "五步讲解已完成。想自己调节温度、滴品红或混合酒精，从主菜单进入自由实验。");
+                UI.SetLesson(Loc.Get("drift.lesson.done.title"), Loc.Get("drift.lesson.done.body"));
             }
 
             return;
@@ -383,7 +384,7 @@ public class ExperimentController : MonoBehaviour
     {
         _heatmap = !_heatmap;
         ApplyHeatmap();
-        _state = _heatmap ? "浓度热力图已打开，红色高、蓝色低" : "浓度热力图已关闭";
+        _state = _heatmap ? Loc.Get("drift.heat.on") : Loc.Get("drift.heat.off");
     }
 
     public void ToggleCurve()
@@ -427,7 +428,7 @@ public class ExperimentController : MonoBehaviour
         Selected.SetTemperature(value);
         if (!_challenge && Step == DriftStep.Temperature)
         {
-            _state = "温度越高，分子运动越剧烈";
+            _state = Loc.Get("drift.hotter");
         }
     }
 
@@ -440,20 +441,20 @@ public class ExperimentController : MonoBehaviour
     {
         if (_challenge)
         {
-            _state = "挑战中请按题目操作";
+            _state = Loc.Get("drift.challenge.follow");
             return;
         }
 
         if (_launchMode != GameMode.Free && Step != DriftStep.Diffusion)
         {
-            _state = "请进入步骤 3，再滴入品红";
+            _state = Loc.Get("drift.drop.step");
             return;
         }
 
         BeakerController target = Selected != null && Selected.gameObject.activeInHierarchy && Selected.Role != BeakerRole.Alcohol ? Selected : Hot;
         Diffusion.Drop(target, Volume01);
         SelectBeaker(target);
-        _state = target.DisplayName + "中，品红正在从高浓度向低浓度扩散";
+        _state = Loc.Format("drift.dropping", target.DisplayName);
     }
 
     public void StartDiffusion()
@@ -466,7 +467,7 @@ public class ExperimentController : MonoBehaviour
             }
             else
             {
-                _state = "请按当前题目作答";
+                _state = Loc.Get("drift.answer.current");
             }
 
             return;
@@ -479,7 +480,7 @@ public class ExperimentController : MonoBehaviour
     {
         if (_challenge || Step != DriftStep.Diffusion)
         {
-            _state = "请在步骤 3 打开气体瓶，观察氨分子和二氧化氮扩散";
+            _state = Loc.Get("drift.gas.step");
             return;
         }
 
@@ -491,7 +492,7 @@ public class ExperimentController : MonoBehaviour
                 _ammoniaPs.Play();
             }
 
-            _state = "氨分子扩散，酚酞试纸由近及远变红";
+            _state = Loc.Get("drift.ammonia");
             return;
         }
 
@@ -501,7 +502,7 @@ public class ExperimentController : MonoBehaviour
             _no2Ps.Play();
         }
 
-        _state = "二氧化氮气体正在扩散";
+        _state = Loc.Get("drift.no2");
     }
 
     public void StartElectrolysis()
@@ -512,7 +513,7 @@ public class ExperimentController : MonoBehaviour
         }
 
         Selected.Motion.PulseField();
-        _state = "示意：带电微粒在电场中定向移动";
+        _state = Loc.Get("drift.ion.state");
     }
 
     public void OnPropSelected(LabProp prop)
@@ -576,7 +577,7 @@ public class ExperimentController : MonoBehaviour
     {
         if (_launchMode != GameMode.Learn)
         {
-            _state = "自动演示在讲解关卡中播放";
+            _state = Loc.Get("common.demo.learnOnly");
             return;
         }
 
@@ -620,11 +621,11 @@ public class ExperimentController : MonoBehaviour
                 Single.SetTemperature(25f);
                 SelectBeaker(Single);
                 Views.Set(false);
-                _state = "宏观下，水面看起来是静止的";
+                _state = Loc.Get("drift.macro.still");
                 yield return new WaitForSeconds(1.8f);
                 if (epoch != _epoch) yield break;
                 Views.Set(true);
-                _state = "微观下，水分子在不停运动";
+                _state = Loc.Get("drift.micro.move");
                 yield return new WaitForSeconds(2.4f);
                 break;
             case 1:
@@ -632,7 +633,7 @@ public class ExperimentController : MonoBehaviour
                 Single.SetTemperature(25f);
                 SelectBeaker(Single);
                 Views.Set(true);
-                _state = "分子没有固定方向，碰撞后就转向";
+                _state = Loc.Get("drift.random.turn");
                 yield return new WaitForSeconds(3f);
                 break;
             case 2:
@@ -641,7 +642,7 @@ public class ExperimentController : MonoBehaviour
                 Hot.SetTemperature(28f);
                 SelectBeaker(Hot);
                 Views.Set(true);
-                _state = "冷水分子慢，热水分子快";
+                _state = Loc.Get("drift.cold.hot");
                 yield return new WaitForSeconds(1.4f);
                 float temp = 28f;
                 while (temp < 86f)
@@ -650,7 +651,7 @@ public class ExperimentController : MonoBehaviour
                     temp += Time.deltaTime * 18f;
                     Hot.SetTemperature(temp);
                     SyncSlider();
-                    _state = "温度升高，分子运动加快";
+                    _state = Loc.Get("drift.temp.up");
                     yield return null;
                 }
 
@@ -666,7 +667,7 @@ public class ExperimentController : MonoBehaviour
                 Diffusion.Drop(Cold, 0.7f);
                 _heatmap = true;
                 ApplyHeatmap();
-                _state = "热水中的品红扩散更快";
+                _state = Loc.Get("drift.hot.faster");
                 yield return new WaitForSeconds(4.2f);
                 break;
             default:
@@ -676,7 +677,7 @@ public class ExperimentController : MonoBehaviour
                 SelectBeaker(Water);
                 Views.Set(false);
                 Step = DriftStep.Gaps;
-                _state = "50 mL 水 + 50 mL 酒精";
+                _state = Loc.Get("drift.volumes");
                 yield return new WaitForSeconds(1.3f);
                 if (epoch != _epoch) yield break;
                 Alcohol.transform.position = Water.transform.position + new Vector3(0.05f, 0.02f, 0f);
@@ -684,7 +685,7 @@ public class ExperimentController : MonoBehaviour
                 yield return new WaitForSeconds(1.4f);
                 if (epoch != _epoch) yield break;
                 Views.Set(true);
-                _state = "分子进入彼此的间隔，总体积变小";
+                _state = Loc.Get("drift.gaps.fill");
                 yield return new WaitForSeconds(2.2f);
                 break;
         }
@@ -696,11 +697,11 @@ public class ExperimentController : MonoBehaviour
     {
         switch (index)
         {
-            case 0: return "步骤 1 / 5    宏观和微观";
-            case 1: return "步骤 2 / 5    无规则运动";
-            case 2: return "步骤 3 / 5    温度的影响";
-            case 3: return "步骤 4 / 5    扩散";
-            default: return "步骤 5 / 5    分子间的间隔";
+            case 0: return Loc.Get("drift.beat1.title");
+            case 1: return Loc.Get("drift.beat2.title");
+            case 2: return Loc.Get("drift.beat3.title");
+            case 3: return Loc.Get("drift.beat4.title");
+            default: return Loc.Get("drift.beat5.title");
         }
     }
 
@@ -709,15 +710,15 @@ public class ExperimentController : MonoBehaviour
         switch (index)
         {
             case 0:
-                return "一杯水放在桌上，水面平静，好像没有变化。水其实由大量分子组成，分子非常小，肉眼看不见。切到微观以后，就能看见这些分子在运动。宏观现象和微观粒子是同一杯水的两个层次。";
+                return Loc.Get("drift.beat1.body");
             case 1:
-                return "分子在不停地做无规则运动：没有固定路线，碰到别的分子就改变方向。只要不是绝对零度，这种运动就不会停。扩散、蒸发、溶解，都和分子的运动有关。";
+                return Loc.Get("drift.beat2.body");
             case 2:
-                return "温度反映分子的平均动能。冷水里分子运动慢，热水里分子运动快。把热水继续加热，温度计上升，粒子速度和曲线也一起变快。所以同样的变化，在热水里总是比冷水更快。";
+                return Loc.Get("drift.beat3.body");
             case 3:
-                return "扩散是不同物质的分子彼此进入对方，方向是从浓度高的地方到浓度低的地方。品红同时滴进冷水和热水：热水中分子运动更剧烈，品红散得更快，先变得均匀。热力图里红色浓度高，蓝色浓度低。";
+                return Loc.Get("drift.beat4.body");
             default:
-                return "分子并不是紧紧挤在一起，中间有空隙。50 mL 水加上 50 mL 酒精，如果没有间隔，混合后应是 100 mL。实际大约只有 92 mL，因为两种分子钻进了彼此的空隙。";
+                return Loc.Get("drift.beat5.body");
         }
     }
 
@@ -788,7 +789,7 @@ public class ExperimentController : MonoBehaviour
         Alcohol.SetTemperature(22f);
         SelectBeaker(Hot);
         SetDraggable();
-        _state = "可以自由调节温度、观察扩散，或把酒精拖进水里";
+        _state = Loc.Get("drift.state.free");
         if (UI != null)
         {
             UI.SetFree();
@@ -822,24 +823,24 @@ public class ExperimentController : MonoBehaviour
             Cold.BeginDiffusion(18);
             Hot.BeginDiffusion(18);
             SelectBeaker(Hot);
-            UI.ShowChoices(new[] { "冷水扩散更快", "热水扩散更快" }, i => AnswerQ1(i == 0 ? Cold : Hot));
-            _state = "观察哪一杯品红扩散更快";
+            UI.ShowChoices(new[] { Loc.Get("drift.choice.cold"), Loc.Get("drift.choice.hot") }, i => AnswerQ1(i == 0 ? Cold : Hot));
+            _state = Loc.Get("drift.watch.which");
         }
         else if (index == 1)
         {
             ShowOnly(Single.gameObject, _thermo);
             Single.SetTemperature(Quiz.GivenTemperature);
             SelectBeaker(Single);
-            UI.ShowChoices(new[] { "很快", "中等", "很慢" }, AnswerQ2);
-            _state = "预测 " + Quiz.GivenTemperature.ToString("0") + " ℃ 下的扩散快慢";
+            UI.ShowChoices(new[] { Loc.Get("band.fast"), Loc.Get("band.mid"), Loc.Get("band.slow") }, AnswerQ2);
+            _state = Loc.Format("drift.q2.predict", Quiz.GivenTemperature.ToString("0"));
         }
         else
         {
             ShowOnly(Single.gameObject, _thermo, _heat.gameObject, _cool.gameObject);
             Single.SetTemperature(15f);
             SelectBeaker(Single);
-            UI.ShowChoices(new[] { "开始扩散" }, _ => StartJudged());
-            _state = "调节温度，使均匀时间落在 5.5–8.5 秒";
+            UI.ShowChoices(new[] { Loc.Get("drift.run") }, _ => StartJudged());
+            _state = Loc.Get("drift.q3.adjust");
         }
 
         SetDraggable();
@@ -850,14 +851,14 @@ public class ExperimentController : MonoBehaviour
     void OnFinished(int stars, string reason)
     {
         UI.ClearChoices();
-        _state = "挑战完成";
+        _state = Loc.Get("common.done");
         if (UI.Result != null)
         {
             UI.Result.Show(stars, reason);
         }
         else
         {
-            UI.SetChallengeGuide("挑战完成", reason);
+            UI.SetChallengeGuide(Loc.Get("common.done"), reason);
         }
     }
 
@@ -876,7 +877,7 @@ public class ExperimentController : MonoBehaviour
                 FeedbackService.Instance.Error(picked.transform.position, picked.transform);
             }
 
-            _state = "温度越高，扩散越快";
+            _state = Loc.Get("drift.q1.hotter");
             return;
         }
 
@@ -894,7 +895,7 @@ public class ExperimentController : MonoBehaviour
         }
 
         UI.ClearChoices();
-        _state = "正确。热水中分子运动更剧烈，颜色会更快变均匀";
+        _state = Loc.Get("drift.q1.correct");
         if (already)
         {
             StartCoroutine(AdvanceSoon());
@@ -919,7 +920,7 @@ public class ExperimentController : MonoBehaviour
                 FeedbackService.Instance.Error(Single.transform.position, Single.transform);
             }
 
-            _state = "再看温度：高温很快，低温很慢";
+            _state = Loc.Get("drift.q2.again");
             return;
         }
 
@@ -932,7 +933,7 @@ public class ExperimentController : MonoBehaviour
 
         UI.ClearChoices();
         _awaitQ2 = true;
-        _state = "预测正确，正在播放扩散。预期「" + TemperatureController.BandName(TemperatureController.BandFor(Quiz.GivenTemperature)) + "」";
+        _state = Loc.Format("drift.q2.ok", TemperatureController.BandName(TemperatureController.BandFor(Quiz.GivenTemperature)));
     }
 
     void StartJudged()
@@ -947,14 +948,14 @@ public class ExperimentController : MonoBehaviour
         Single.SetGreen(false);
         Single.ClearDye();
         Single.BeginDiffusion(22);
-        _state = "扩散已开始，请等待溶液均匀";
+        _state = Loc.Get("drift.started");
     }
 
     void OnUniform(BeakerController beaker)
     {
         if (!_challenge)
         {
-            _state = beaker.DisplayName + "已扩散均匀";
+            _state = Loc.Format("drift.uniform", beaker.DisplayName);
             return;
         }
 
@@ -968,7 +969,7 @@ public class ExperimentController : MonoBehaviour
         if (_awaitQ2 && beaker == Single)
         {
             _awaitQ2 = false;
-            _state = "实测 " + beaker.DiffusionElapsed.ToString("0.0") + " 秒，与「" + TemperatureController.BandName(TemperatureController.BandFor(Quiz.GivenTemperature)) + "」相符";
+            _state = Loc.Format("drift.q2.measured", beaker.DiffusionElapsed.ToString("0.0"), TemperatureController.BandName(TemperatureController.BandFor(Quiz.GivenTemperature)));
             StartCoroutine(AdvanceSoon());
             return;
         }
@@ -1029,7 +1030,7 @@ public class ExperimentController : MonoBehaviour
             FeedbackService.Instance.Success(Water.transform.position);
         }
 
-        _state = "分子之间有间隔。50 mL + 50 mL = 100 mL，混合后只有 92 mL";
+        _state = Loc.Get("drift.mixed");
         return true;
     }
 
@@ -1052,7 +1053,7 @@ public class ExperimentController : MonoBehaviour
 
         Diffusion.Drop(best, Volume01);
         SelectBeaker(best);
-        _state = best.DisplayName + "中，品红正在从高浓度向低浓度扩散";
+        _state = Loc.Format("drift.dropping", best.DisplayName);
     }
 
     IEnumerator DemoRoutine()
@@ -1073,7 +1074,7 @@ public class ExperimentController : MonoBehaviour
             temp += Time.deltaTime * 24f;
             Hot.SetTemperature(temp);
             SyncSlider();
-            _state = "温度越高，分子运动越剧烈";
+            _state = Loc.Get("drift.hotter");
             yield return null;
         }
 
@@ -1085,7 +1086,7 @@ public class ExperimentController : MonoBehaviour
         Diffusion.Drop(Cold, 0.7f);
         _heatmap = true;
         ApplyHeatmap();
-        _state = "热水中的品红扩散更快";
+        _state = Loc.Get("drift.hot.faster");
         yield return new WaitForSeconds(2.4f);
         if (epoch != _epoch) yield break;
 
@@ -1095,7 +1096,7 @@ public class ExperimentController : MonoBehaviour
         TryMix();
         yield return new WaitForSeconds(2f);
         if (epoch != _epoch) yield break;
-        _state = "自动演示结束。可以自己操作。自由实验和挑战从主菜单进入。";
+        _state = Loc.Get("common.demo.done");
     }
 
     IEnumerator AdvanceSoon()
@@ -1196,13 +1197,13 @@ public class ExperimentController : MonoBehaviour
 
         if (_lockTemp)
         {
-            _state = _q3Running ? "扩散进行中，温度已锁定" : "本题水温已给定";
+            _state = _q3Running ? Loc.Get("drift.temp.locked") : Loc.Get("drift.temp.given");
             return;
         }
 
         Selected.SetTemperature(Selected.Temperature + delta);
         SyncSlider();
-        _state = Selected.DisplayName + " " + Selected.Temperature.ToString("0") + " ℃，分子运动" + (delta > 0f ? "加快" : "减慢");
+        _state = Loc.Format("drift.nudge", Selected.DisplayName, Selected.Temperature.ToString("0"), delta > 0f ? Loc.Get("band.faster") : Loc.Get("band.slower"));
     }
 
     void SelectBeaker(BeakerController beaker)
@@ -1344,33 +1345,33 @@ public class ExperimentController : MonoBehaviour
     {
         if (Selected == null)
         {
-            return "温度  --";
+            return Loc.Get("drift.temp.empty");
         }
 
-        return "温度  " + Selected.DisplayName + "  " + Selected.Temperature.ToString("0") + " ℃";
+        return Loc.Format("drift.temp.value", Selected.DisplayName, Selected.Temperature.ToString("0"));
     }
 
     string SpeedText()
     {
         float speed = Selected != null && Selected.Motion != null ? Selected.Motion.AverageSpeed : TemperatureController.MotionScale(25f);
-        return "粒子平均速度  " + speed.ToString("0.00") + "  （相对）";
+        return Loc.Format("drift.speed", speed.ToString("0.00"));
     }
 
     string TimeText()
     {
         if (Selected == null || (!Selected.Diffusing && !Selected.Uniform && Selected.DiffusionElapsed <= 0f))
         {
-            return "扩散时间  --";
+            return Loc.Get("drift.time.empty");
         }
 
-        string text = "扩散时间  " + Selected.DiffusionElapsed.ToString("0.0") + " 秒";
+        string text = Loc.Format("drift.time", Selected.DiffusionElapsed.ToString("0.0"));
         if (Selected.Uniform)
         {
-            text += "  已均匀";
+            text = Loc.Format("drift.time.even", Selected.DiffusionElapsed.ToString("0.0"));
         }
         else if (Selected.Diffusing)
         {
-            text += "  扩散中";
+            text = Loc.Format("drift.time.going", Selected.DiffusionElapsed.ToString("0.0"));
         }
 
         return text;
@@ -1380,25 +1381,25 @@ public class ExperimentController : MonoBehaviour
     {
         if (_mixed)
         {
-            return "浓度分布  50+50=100 mL，实际 92 mL";
+            return Loc.Get("drift.conc.mix");
         }
 
         if (!_challenge && Step == DriftStep.Gaps && Water != null && Water.gameObject.activeInHierarchy)
         {
-            return "浓度分布  水 50 mL，酒精 50 mL";
+            return Loc.Get("drift.conc.separate");
         }
 
         if (Selected == null || Selected.Heatmap == null || Selected.Dye01 <= 0.01f)
         {
-            return "浓度分布  尚无品红";
+            return Loc.Get("drift.conc.none");
         }
 
         if (_heatmap)
         {
-            return "浓度分布  " + Selected.Heatmap.Describe();
+            return Loc.Format("drift.conc.heat", Selected.Heatmap.Describe());
         }
 
-        return "浓度分布  扩散进度 " + Mathf.RoundToInt(Selected.Dye01 * 100f) + "%";
+        return Loc.Format("drift.conc.progress", Mathf.RoundToInt(Selected.Dye01 * 100f));
     }
 
     int MoleculeCount()
@@ -1419,10 +1420,10 @@ public class ExperimentController : MonoBehaviour
     {
         switch (step)
         {
-            case DriftStep.Motion: return "分子在不停做无规则运动";
-            case DriftStep.Temperature: return "温度越高，分子运动越剧烈";
-            case DriftStep.Diffusion: return "品红从高浓度区域向低浓度区域扩散";
-            default: return "分子之间有间隔";
+            case DriftStep.Motion: return Loc.Get("drift.state.random");
+            case DriftStep.Temperature: return Loc.Get("drift.hotter");
+            case DriftStep.Diffusion: return Loc.Get("drift.spread.short");
+            default: return Loc.Get("drift.gaps.short");
         }
     }
 
@@ -1451,7 +1452,7 @@ public class ExperimentController : MonoBehaviour
         LabFactory.Primitive(PrimitiveType.Sphere, "Bulb", go.transform, new Vector3(0f, 0.1f, 0f), Vector3.one * 0.04f, bulb, false);
         var stem = LabFactory.Lit(new Color(0.85f, 0.9f, 0.95f, 0.45f), true, 0.02f, 0.8f);
         LabFactory.Primitive(PrimitiveType.Cylinder, "Stem", go.transform, new Vector3(0f, 0.045f, 0f), new Vector3(0.012f, 0.04f, 0.012f), stem, false);
-        LabFactory.WorldLabel(go.transform, "品红滴管", new Vector3(0f, 0.16f, 0f));
+        LabFactory.WorldLabel(go.transform, Loc.Get("world.dropper"), new Vector3(0f, 0.16f, 0f));
         _all.Add(go);
         return prop;
     }
@@ -1464,7 +1465,7 @@ public class ExperimentController : MonoBehaviour
         prop.Action = action;
         prop.Lab = this;
         prop.Place(local);
-        LabFactory.WorldLabel(go.transform, action == LabAction.Heat ? "加热台" : "冷却台", new Vector3(0f, 0.08f, 0f));
+        LabFactory.WorldLabel(go.transform, action == LabAction.Heat ? Loc.Get("world.heat") : Loc.Get("world.cool"), new Vector3(0f, 0.08f, 0f));
         _all.Add(go);
         return prop;
     }
@@ -1480,7 +1481,7 @@ public class ExperimentController : MonoBehaviour
         _thermoMat = LabFactory.Lit(new Color(0.25f, 0.5f, 1f), false, 0.1f, 0.4f, true, new Color(0.3f, 0.5f, 1f));
         var fill = LabFactory.Primitive(PrimitiveType.Cube, "Fill", go.transform, new Vector3(0f, 0.05f, 0f), new Vector3(0.018f, 0.06f, 0.018f), _thermoMat, false);
         _thermoFill = fill.transform;
-        LabFactory.WorldLabel(go.transform, "温度计", new Vector3(0f, 0.22f, 0f));
+        LabFactory.WorldLabel(go.transform, Loc.Get("world.thermo"), new Vector3(0f, 0.22f, 0f));
         prop.Place(new Vector3(0.46f, 0f, 0.02f));
         _thermo = go;
         _all.Add(go);
@@ -1488,7 +1489,7 @@ public class ExperimentController : MonoBehaviour
 
     void BuildAmmonia()
     {
-        _ammonia = MakeBottle("Ammonia", LabAction.Ammonia, new Color(0.75f, 0.9f, 0.55f, 0.8f), "氨水");
+        _ammonia = MakeBottle("Ammonia", LabAction.Ammonia, new Color(0.75f, 0.9f, 0.55f, 0.8f), Loc.Get("world.ammonia"));
         _ammonia.Place(new Vector3(-0.48f, 0f, -0.22f));
         _ammoniaPs = MakeSmoke(_ammonia.transform, new Color(0.75f, 0.95f, 0.45f, 0.8f), 0.012f, 14f, 0.02f, 1.5f, new Vector3(0.14f, 0.03f, 0f));
 
@@ -1505,14 +1506,14 @@ public class ExperimentController : MonoBehaviour
             _papers[i] = strip.GetComponent<MeshRenderer>();
         }
 
-        LabFactory.WorldLabel(papers.transform, "酚酞试纸", new Vector3(0f, 0.08f, 0f));
+        LabFactory.WorldLabel(papers.transform, Loc.Get("world.papers"), new Vector3(0f, 0.08f, 0f));
         _papersRoot.Place(new Vector3(-0.16f, 0f, -0.22f));
         _all.Add(papers);
     }
 
     void BuildNo2()
     {
-        _no2 = MakeBottle("NitrogenDioxide", LabAction.NitrogenDioxide, new Color(0.62f, 0.28f, 0.12f, 0.85f), "二氧化氮");
+        _no2 = MakeBottle("NitrogenDioxide", LabAction.NitrogenDioxide, new Color(0.62f, 0.28f, 0.12f, 0.85f), Loc.Get("world.no2"));
         _no2.Place(new Vector3(0.5f, 0f, -0.22f));
         _no2Ps = MakeSmoke(_no2.transform, new Color(0.62f, 0.3f, 0.12f, 0.75f), 0.02f, 16f, 0.05f, 2.2f, Vector3.zero);
         _cloudMat = LabFactory.Lit(new Color(0.52f, 0.26f, 0.1f, 0.35f), true, 0f, 0.2f, true, new Color(0.45f, 0.2f, 0.08f));
@@ -1529,7 +1530,7 @@ public class ExperimentController : MonoBehaviour
         prop.Lab = this;
         var mat = LabFactory.Lit(new Color(0.9f, 0.95f, 0.98f, 0.14f), true, 0f, 0.96f, true, new Color(0.55f, 0.7f, 0.85f, 0.06f));
         LabFactory.Primitive(PrimitiveType.Cylinder, "Dome", go.transform, new Vector3(0f, 0.06f, 0f), new Vector3(0.24f, 0.06f, 0.24f), mat, false);
-        LabFactory.WorldLabel(go.transform, "玻璃罩", new Vector3(0f, 0.16f, 0f));
+        LabFactory.WorldLabel(go.transform, Loc.Get("world.cover"), new Vector3(0f, 0.16f, 0f));
         _all.Add(go);
         return prop;
     }

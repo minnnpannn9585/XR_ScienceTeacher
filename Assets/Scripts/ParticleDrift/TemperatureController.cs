@@ -76,15 +76,15 @@ public class TemperatureController : MonoBehaviour
     {
         if (band == 0)
         {
-            return "很快";
+            return Loc.Get("band.fast");
         }
 
         if (band == 1)
         {
-            return "中等";
+            return Loc.Get("band.mid");
         }
 
-        return "很慢";
+        return Loc.Get("band.slow");
     }
 
     void Push(float celsius)

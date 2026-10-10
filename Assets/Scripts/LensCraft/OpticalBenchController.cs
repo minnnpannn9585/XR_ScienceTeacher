@@ -37,7 +37,7 @@ public class OpticalBenchController : MonoBehaviour
     public LensStep Step = LensStep.Bench;
     public ImageResult Imaging;
     public float Sharpness;
-    public string Status = "凸透镜对光有会聚作用";
+    public string Status;
     public CandleController Candle;
     public ScreenController ScreenPlate;
     public LensCraftUI UI;
@@ -57,6 +57,7 @@ public class OpticalBenchController : MonoBehaviour
 
     public void Bootstrap(GameMode startMode)
     {
+        Status = Loc.Get("lens.converge");
         LabFactory.UseWorldLabels = startMode != GameMode.Challenge;
         _launch = startMode;
         DOTween.Init();
@@ -151,31 +152,31 @@ public class OpticalBenchController : MonoBehaviour
         }
 
         Focal = Mathf.Clamp(centimeters * 0.01f, 0.1f, 0.28f);
-        Status = "焦距越小，会聚能力越强";
+        Status = Loc.Get("lens.focal.stronger");
     }
 
     public void ToggleLight()
     {
         LightOn = !LightOn;
-        Status = LightOn ? "光源已打开" : "光源已关闭";
+        Status = LightOn ? Loc.Get("lens.light.on") : Loc.Get("lens.light.off");
     }
 
     public void ToggleRays()
     {
         ShowRays = !ShowRays;
-        Status = ShowRays ? "三条特殊光线已显示" : "光路已隐藏";
+        Status = ShowRays ? Loc.Get("lens.rays.on") : Loc.Get("lens.rays.off");
     }
 
     public void ToggleGuides()
     {
         ShowGuides = !ShowGuides;
-        Status = ShowGuides ? "焦点辅助线已显示" : "辅助线已隐藏";
+        Status = ShowGuides ? Loc.Get("lens.guides.on") : Loc.Get("lens.guides.off");
     }
 
     public void ToggleDepth()
     {
         DepthOn = !DepthOn;
-        Status = DepthOn ? "景深模糊已打开" : "景深模糊已关闭";
+        Status = DepthOn ? Loc.Get("lens.dof.on") : Loc.Get("lens.dof.off");
     }
 
     public void ToggleRay(int index)
@@ -184,7 +185,7 @@ public class OpticalBenchController : MonoBehaviour
         else if (index == 1) RayCenter = !RayCenter;
         else RayFocus = !RayFocus;
         ShowRays = true;
-        Status = "可以单独观察每一条特殊光线";
+        Status = Loc.Get("lens.rays.each");
     }
 
     public void Toolbar(string action)
@@ -212,7 +213,7 @@ public class OpticalBenchController : MonoBehaviour
         {
             if (_launch == GameMode.Challenge)
             {
-                Status = "请先完成当前挑战题";
+                Status = Loc.Get("common.finishQuestion");
             }
 
             return;
@@ -220,10 +221,10 @@ public class OpticalBenchController : MonoBehaviour
 
         if (_beat >= 7)
         {
-            Status = "讲解已完成。自由实验和挑战从主菜单进入。";
+            Status = Loc.Get("common.lesson.menu");
             if (UI != null)
             {
-                UI.SetLesson("讲解完成", "八步讲解已完成。想自己拖动蜡烛和光屏，从主菜单进入自由实验。");
+                UI.SetLesson(Loc.Get("drift.lesson.done.title"), Loc.Get("lens.lesson.done.body"));
             }
 
             return;
@@ -299,7 +300,7 @@ public class OpticalBenchController : MonoBehaviour
     {
         if (_launch != GameMode.Learn)
         {
-            Status = "自动演示在讲解关卡中播放";
+            Status = Loc.Get("common.demo.learnOnly");
             return;
         }
 
@@ -358,12 +359,12 @@ public class OpticalBenchController : MonoBehaviour
         {
             string mag = Imaging.HasImage ? Imaging.AbsMagnification.ToString("0.00") : "—";
             UI.Refresh(
-                "物距 u  " + LensMath.Centimeters(ObjectDistance),
-                "像距 v  " + LensMath.Centimeters(Imaging.ImageDistance),
-                "焦距 f  " + LensMath.Centimeters(Focal),
-                "放大率  " + mag,
-                "像的性质  " + Imaging.Nature,
-                "当前规律  " + Imaging.Rule,
+                Loc.Format("lens.u", LensMath.Centimeters(ObjectDistance)),
+                Loc.Format("lens.v", LensMath.Centimeters(Imaging.ImageDistance)),
+                Loc.Format("lens.f", LensMath.Centimeters(Focal)),
+                Loc.Format("lens.mag", mag),
+                Loc.Format("lens.nature.row", Imaging.Nature),
+                Loc.Format("lens.rule.row", Imaging.Rule),
                 Status);
         }
     }
@@ -402,7 +403,7 @@ public class OpticalBenchController : MonoBehaviour
                 ObjectDistance = 0.42f;
                 ScreenDistance = 0.55f;
                 AutoScreen = true;
-                Status = "光屏正在移向清晰的实像";
+                Status = Loc.Get("lens.focusing");
                 ApplyPlacement();
                 yield return new WaitForSeconds(2.4f);
                 break;
@@ -413,23 +414,23 @@ public class OpticalBenchController : MonoBehaviour
                 RayParallel = true;
                 RayCenter = false;
                 RayFocus = false;
-                Status = "红：平行于主光轴，折射后过焦点";
+                Status = Loc.Get("lens.ray.red");
                 ApplyPlacement();
                 yield return new WaitForSeconds(1.7f);
                 if (epoch != _epoch) yield break;
                 RayCenter = true;
-                Status = "绿：通过光心，方向不变";
+                Status = Loc.Get("lens.ray.green");
                 yield return new WaitForSeconds(1.7f);
                 if (epoch != _epoch) yield break;
                 RayFocus = true;
-                Status = "蓝：通过焦点，折射后平行于主光轴";
+                Status = Loc.Get("lens.ray.blue");
                 yield return new WaitForSeconds(1.6f);
                 break;
             case 2:
                 ShowRays = true;
                 AutoScreen = true;
                 ObjectDistance = 0.5f;
-                Status = "u > 2f，倒立缩小的实像";
+                Status = Loc.Get("lens.case.beyond");
                 ApplyPlacement();
                 yield return FocusHold(epoch, 0.46f);
                 break;
@@ -437,7 +438,7 @@ public class OpticalBenchController : MonoBehaviour
                 ShowRays = true;
                 AutoScreen = true;
                 ObjectDistance = 0.3f;
-                Status = "u = 2f，倒立等大的实像";
+                Status = Loc.Get("lens.case.twice");
                 ApplyPlacement();
                 yield return new WaitForSeconds(2.2f);
                 break;
@@ -445,7 +446,7 @@ public class OpticalBenchController : MonoBehaviour
                 ShowRays = true;
                 AutoScreen = true;
                 ObjectDistance = 0.22f;
-                Status = "f < u < 2f，倒立放大的实像";
+                Status = Loc.Get("lens.case.between");
                 ApplyPlacement();
                 yield return new WaitForSeconds(2.2f);
                 break;
@@ -453,7 +454,7 @@ public class OpticalBenchController : MonoBehaviour
                 ShowRays = true;
                 ObjectDistance = 0.15f;
                 ScreenDistance = 0.45f;
-                Status = "u = f，折射光线平行，不成像";
+                Status = Loc.Get("lens.case.focus");
                 ApplyPlacement();
                 yield return new WaitForSeconds(2.4f);
                 break;
@@ -461,7 +462,7 @@ public class OpticalBenchController : MonoBehaviour
                 ShowRays = true;
                 ObjectDistance = 0.09f;
                 ScreenDistance = 0.4f;
-                Status = "u < f，正立放大的虚像";
+                Status = Loc.Get("lens.case.inside");
                 ApplyPlacement();
                 yield return new WaitForSeconds(2.4f);
                 break;
@@ -470,7 +471,7 @@ public class OpticalBenchController : MonoBehaviour
                 AutoScreen = true;
                 ObjectDistance = 0.36f;
                 Focal = 0.24f;
-                Status = "焦距变小，会聚更强";
+                Status = Loc.Get("lens.focal.shrink");
                 ApplyPlacement();
                 float f = 0.24f;
                 while (f > 0.11f)
@@ -481,7 +482,7 @@ public class OpticalBenchController : MonoBehaviour
                     yield return null;
                 }
 
-                Status = "焦距越小，会聚能力越强";
+                Status = Loc.Get("lens.focal.stronger");
                 break;
         }
     }
@@ -502,14 +503,14 @@ public class OpticalBenchController : MonoBehaviour
     {
         switch (index)
         {
-            case 0: return "步骤 1 / 8    认识光具座";
-            case 1: return "步骤 2 / 8    三条特殊光线";
-            case 2: return "步骤 3 / 8    二倍焦距以外";
-            case 3: return "步骤 4 / 8    二倍焦距处";
-            case 4: return "步骤 5 / 8    一倍与二倍之间";
-            case 5: return "步骤 6 / 8    焦点上";
-            case 6: return "步骤 7 / 8    焦点以内";
-            default: return "步骤 8 / 8    焦距的影响";
+            case 0: return Loc.Get("lens.beat1.title");
+            case 1: return Loc.Get("lens.beat2.title");
+            case 2: return Loc.Get("lens.beat3.title");
+            case 3: return Loc.Get("lens.beat4.title");
+            case 4: return Loc.Get("lens.beat5.title");
+            case 5: return Loc.Get("lens.beat6.title");
+            case 6: return Loc.Get("lens.beat7.title");
+            default: return Loc.Get("lens.beat8.title");
         }
     }
 
@@ -518,21 +519,21 @@ public class OpticalBenchController : MonoBehaviour
         switch (index)
         {
             case 0:
-                return "光具座上有蜡烛、凸透镜和光屏。蜡烛是物体，凸透镜把光会聚起来，光屏承接实像。物距 u 是物体到透镜的距离，像距 v 是像到透镜的距离，焦距 f 是焦点到透镜的距离。三者满足 1/f = 1/u + 1/v。光屏对准像时，实像最清晰。";
+                return Loc.Get("lens.beat1.body");
             case 1:
-                return "凸透镜对光有会聚作用。平行于主光轴的光线，折射后通过焦点。通过光心的光线方向不变。通过焦点的光线，折射后平行于主光轴。任意两条特殊光线的交点，就是像的位置。";
+                return Loc.Get("lens.beat2.body");
             case 2:
-                return "物体在二倍焦距以外（u > 2f）时，成倒立、缩小的实像。像在透镜另一侧，落在一倍焦距和二倍焦距之间。照相机就是这样：远处的景物，在底片上成缩小的实像。";
+                return Loc.Get("lens.beat3.body");
             case 3:
-                return "物体正好在二倍焦距处（u = 2f）时，成倒立、等大的实像。像也在另一侧的二倍焦距处，物距和像距相等，放大率是 1。";
+                return Loc.Get("lens.beat4.body");
             case 4:
-                return "物体在一倍焦距和二倍焦距之间（f < u < 2f）时，成倒立、放大的实像。像在二倍焦距以外。投影仪、幻灯机利用的就是这种放大的实像。";
+                return Loc.Get("lens.beat5.body");
             case 5:
-                return "物体放在焦点上（u = f）时，折射光线互相平行，不能相交，所以不成像。光屏移到任何位置，都得不到清晰的像。";
+                return Loc.Get("lens.beat6.body");
             case 6:
-                return "物体放在焦点以内（u < f）时，折射光线是发散的。把它们反向延长，会在物体同侧相交，成正立、放大的虚像。虚像不能呈在光屏上，要透过透镜用眼睛看。放大镜就是这样工作的。";
+                return Loc.Get("lens.beat7.body");
             default:
-                return "焦距 f 越小，凸透镜的会聚能力越强。物体位置不变时，焦距调小，像会更靠近透镜，大小也会跟着变。焦距越大，会聚能力越弱。";
+                return Loc.Get("lens.beat8.body");
         }
     }
 
@@ -553,19 +554,19 @@ public class OpticalBenchController : MonoBehaviour
                 Focal = 0.15f;
                 ScreenDistance = 0.28f;
                 ShowRays = false;
-                Status = "凸透镜对光有会聚作用";
+                Status = Loc.Get("lens.converge");
                 break;
             case LensStep.Rays:
                 ShowRays = true;
                 RayParallel = RayCenter = RayFocus = true;
-                Status = "观察三条特殊光线如何汇聚";
+                Status = Loc.Get("lens.watch.rays");
                 break;
             case LensStep.Distance:
                 ObjectDistance = 0.5f;
                 AutoScreen = true;
                 LockScreen = true;
                 ShowRays = true;
-                Status = "把蜡烛从远处拖向凸透镜";
+                Status = Loc.Get("lens.drag.candle");
                 break;
             default:
                 ObjectDistance = 0.36f;
@@ -573,7 +574,7 @@ public class OpticalBenchController : MonoBehaviour
                 AutoScreen = true;
                 LockScreen = true;
                 ShowRays = true;
-                Status = "焦距越小，会聚能力越强";
+                Status = Loc.Get("lens.focal.stronger");
                 break;
         }
 
@@ -601,7 +602,7 @@ public class OpticalBenchController : MonoBehaviour
         ObjectDistance = 0.4f;
         Focal = 0.15f;
         ScreenDistance = 0.28f;
-        Status = "自由调节蜡烛、焦距和光屏";
+        Status = Loc.Get("lens.free.status");
         ApplyPlacement();
         if (UI != null)
         {
@@ -630,7 +631,7 @@ public class OpticalBenchController : MonoBehaviour
             u -= Time.deltaTime * 0.08f;
             ObjectDistance = u;
             Candle.Place(u);
-            Status = u > Focal ? "物距减小，像的性质在变化" : "u < f，成正立放大虚像";
+            Status = u > Focal ? Loc.Get("lens.drag.changing") : Loc.Get("lens.drag.virtual");
             yield return null;
         }
 
@@ -641,11 +642,11 @@ public class OpticalBenchController : MonoBehaviour
             if (epoch != _epoch) yield break;
             f -= Time.deltaTime * 0.04f;
             Focal = f;
-            Status = "焦距越小，会聚能力越强";
+            Status = Loc.Get("lens.focal.stronger");
             yield return null;
         }
 
-        Status = "自动演示结束。可以自己操作。自由实验和挑战从主菜单进入。";
+        Status = Loc.Get("common.demo.done");
     }
 
     void StopDemo()

@@ -37,7 +37,7 @@ public class LensCraftUI : MonoBehaviour
             _quiz.BindSubmit(lab.SubmitAnswer);
             _guideTitle = _quiz.TitleText;
             _guideBody = _quiz.BodyText;
-            _quiz.BuildNavigation(quizCanvas.transform, "凸透镜成像", () => lab.Toolbar("提示"), lab.RestartChallenge);
+            _quiz.BuildNavigation(quizCanvas.transform, Loc.Get("menu.lens"), () => lab.Toolbar("提示"), lab.RestartChallenge);
             _status = _quiz.BuildStatus(quizCanvas.transform);
             BuildResult(quizCanvas.transform, lab);
             return;
@@ -46,10 +46,10 @@ public class LensCraftUI : MonoBehaviour
         var canvas = UiFactory.CreateOverlay("LensCraftHUD", transform);
         var root = canvas.transform;
         var top = UiFactory.Panel(root, "TopBar", new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(16f, -92f), new Vector2(-16f, -12f), NetFoldTheme.Glass);
-        UiFactory.Label(top.transform, "Title", mode == GameMode.Free ? "LensCraft · 自由实验" : mode == GameMode.Learn ? "LensCraft · 讲解" : "LensCraft · 挑战", 26, TextAlignmentOptions.Left, new Vector2(0f, 0.42f), new Vector2(0.62f, 1f), new Vector2(18f, 0f), new Vector2(-8f, -4f));
-        UiFactory.Label(top.transform, "Sub", "凸透镜成像规律", 18, TextAlignmentOptions.Left, new Vector2(0f, 0f), new Vector2(0.46f, 0.48f), new Vector2(18f, 4f), new Vector2(-8f, 0f), NetFoldTheme.TextDim);
-        _mode = UiFactory.Label(top.transform, "Mode", mode == GameMode.Free ? "自由实验" : mode == GameMode.Learn ? "讲解" : "挑战模式", 20, TextAlignmentOptions.Center, new Vector2(0.62f, 0.18f), new Vector2(0.82f, 0.82f), Vector2.zero, Vector2.zero, NetFoldTheme.Hairline);
-        UiFactory.Button(top.transform, "Back", "返回", new Vector2(0.84f, 0.16f), new Vector2(0.985f, 0.84f), Vector2.zero, Vector2.zero, SceneLoader.LoadMainMenu);
+        UiFactory.Label(top.transform, "Title", Loc.Branded("LensCraft", mode), 26, TextAlignmentOptions.Left, new Vector2(0f, 0.42f), new Vector2(0.62f, 1f), new Vector2(18f, 0f), new Vector2(-8f, -4f));
+        UiFactory.Label(top.transform, "Sub", Loc.Get("lens.sub"), 18, TextAlignmentOptions.Left, new Vector2(0f, 0f), new Vector2(0.46f, 0.48f), new Vector2(18f, 4f), new Vector2(-8f, 0f), NetFoldTheme.TextDim);
+        _mode = UiFactory.Label(top.transform, "Mode", mode == GameMode.Free ? Loc.Get("common.free") : mode == GameMode.Learn ? Loc.Get("common.lesson") : Loc.Get("common.challengeMode"), 20, TextAlignmentOptions.Center, new Vector2(0.62f, 0.18f), new Vector2(0.82f, 0.82f), Vector2.zero, Vector2.zero, NetFoldTheme.Hairline);
+        UiFactory.Button(top.transform, "Back", Loc.Get("common.back"), new Vector2(0.84f, 0.16f), new Vector2(0.985f, 0.84f), Vector2.zero, Vector2.zero, SceneLoader.LoadMainMenu);
 
         if (mode != GameMode.Learn)
         {
@@ -62,25 +62,25 @@ public class LensCraftUI : MonoBehaviour
             {
                 float y = -16f - i * 78f;
                 string action = tools[i];
-                UiFactory.Button(left.transform, action, action, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(12f, y - 64f), new Vector2(-12f, y), () => lab.Toolbar(action));
+                UiFactory.Button(left.transform, action, Loc.Action(action), new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(12f, y - 64f), new Vector2(-12f, y), () => lab.Toolbar(action));
             }
         }
 
         float dataBottom = mode == GameMode.Learn ? -50f : -390f;
         float dataTop = mode == GameMode.Learn ? 250f : 300f;
         var right = UiFactory.Panel(root, "Data", new Vector2(1f, 0.5f), new Vector2(1f, 0.5f), new Vector2(-360f, dataBottom), new Vector2(-16f, dataTop), NetFoldTheme.Glass);
-        _u = Row(right.transform, "U", "物距 u  —", -8f);
-        _v = Row(right.transform, "V", "像距 v  —", -40f);
-        _f = Row(right.transform, "F", "焦距 f  —", -72f);
-        _mag = Row(right.transform, "M", "放大率  —", -104f);
-        _nature = Row(right.transform, "Nature", "像的性质  —", -136f);
-        _rule = Row(right.transform, "Rule", "当前规律  —", -176f);
+        _u = Row(right.transform, "U", Loc.Get("lens.u.empty"), -8f);
+        _v = Row(right.transform, "V", Loc.Get("lens.v.empty"), -40f);
+        _f = Row(right.transform, "F", Loc.Get("lens.f.empty"), -72f);
+        _mag = Row(right.transform, "M", Loc.Get("lens.mag.empty"), -104f);
+        _nature = Row(right.transform, "Nature", Loc.Get("lens.nature.empty"), -136f);
+        _rule = Row(right.transform, "Rule", Loc.Get("lens.rule.empty"), -176f);
         _rule.rectTransform.offsetMin = new Vector2(16f, -230f);
         _rule.rectTransform.offsetMax = new Vector2(-16f, -168f);
         _status = Row(right.transform, "Status", "", -236f);
         if (mode != GameMode.Learn)
         {
-            UiFactory.Label(right.transform, "FCap", "焦距 f（cm）", 18, TextAlignmentOptions.Left, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(16f, -292f), new Vector2(-16f, -268f));
+            UiFactory.Label(right.transform, "FCap", Loc.Get("lens.fcap"), 18, TextAlignmentOptions.Left, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(16f, -292f), new Vector2(-16f, -268f));
             _focal = MakeSlider(right.transform, "Focal", -332f, -292f, 10f, 28f, 15f, cm =>
             {
                 if (!_mute)
@@ -88,28 +88,28 @@ public class LensCraftUI : MonoBehaviour
                     lab.SetFocalFromSlider(cm);
                 }
             });
-            UiFactory.Button(right.transform, "Lamp", "光源开关", new Vector2(0.04f, 1f), new Vector2(0.48f, 1f), new Vector2(0f, -384f), new Vector2(0f, -340f), lab.ToggleLight, new Color(0.55f, 0.32f, 0.08f, 1f));
-            UiFactory.Button(right.transform, "Ray1", "平行光线", new Vector2(0.52f, 1f), new Vector2(0.96f, 1f), new Vector2(0f, -384f), new Vector2(0f, -340f), () => lab.ToggleRay(0), new Color(0.55f, 0.16f, 0.16f, 1f));
-            UiFactory.Button(right.transform, "Ray2", "过光心", new Vector2(0.04f, 1f), new Vector2(0.48f, 1f), new Vector2(0f, -436f), new Vector2(0f, -392f), () => lab.ToggleRay(1), new Color(0.12f, 0.42f, 0.22f, 1f));
-            UiFactory.Button(right.transform, "Ray3", "过焦点", new Vector2(0.52f, 1f), new Vector2(0.96f, 1f), new Vector2(0f, -436f), new Vector2(0f, -392f), () => lab.ToggleRay(2), new Color(0.16f, 0.28f, 0.55f, 1f));
+            UiFactory.Button(right.transform, "Lamp", Loc.Get("lens.lamp"), new Vector2(0.04f, 1f), new Vector2(0.48f, 1f), new Vector2(0f, -384f), new Vector2(0f, -340f), lab.ToggleLight, new Color(0.55f, 0.32f, 0.08f, 1f));
+            UiFactory.Button(right.transform, "Ray1", Loc.Get("lens.ray1"), new Vector2(0.52f, 1f), new Vector2(0.96f, 1f), new Vector2(0f, -384f), new Vector2(0f, -340f), () => lab.ToggleRay(0), new Color(0.55f, 0.16f, 0.16f, 1f));
+            UiFactory.Button(right.transform, "Ray2", Loc.Get("lens.ray2"), new Vector2(0.04f, 1f), new Vector2(0.48f, 1f), new Vector2(0f, -436f), new Vector2(0f, -392f), () => lab.ToggleRay(1), new Color(0.12f, 0.42f, 0.22f, 1f));
+            UiFactory.Button(right.transform, "Ray3", Loc.Get("lens.ray3"), new Vector2(0.52f, 1f), new Vector2(0.96f, 1f), new Vector2(0f, -436f), new Vector2(0f, -392f), () => lab.ToggleRay(2), new Color(0.16f, 0.28f, 0.55f, 1f));
         }
 
         bool guided = mode == GameMode.Learn;
         var bottom = UiFactory.Panel(root, "Guide", new Vector2(0f, 0f), new Vector2(1f, 0f), guided ? new Vector2(16f, 14f) : new Vector2(230f, 14f), guided ? new Vector2(-376f, 248f) : new Vector2(-376f, 168f), NetFoldTheme.Glass);
-        _guideTitle = UiFactory.Label(bottom.transform, "Step", mode == GameMode.Free ? "自由实验" : "步骤 1 / 8    认识光具座", 24, TextAlignmentOptions.Left, new Vector2(0f, guided ? 0.78f : 0.62f), new Vector2(0.72f, 1f), new Vector2(16f, 0f), new Vector2(-8f, -4f));
-        _guideBody = UiFactory.Label(bottom.transform, "Body", mode == GameMode.Free ? "拖动蜡烛、光屏和焦距，观察物距、像距和像的性质。" : "", 18, TextAlignmentOptions.TopLeft, new Vector2(0f, guided ? 0.08f : 0.28f), new Vector2(0.72f, guided ? 0.76f : 0.64f), new Vector2(16f, 0f), new Vector2(-8f, 0f));
+        _guideTitle = UiFactory.Label(bottom.transform, "Step", mode == GameMode.Free ? Loc.Get("common.free") : Loc.Get("lens.beat1.title"), 24, TextAlignmentOptions.Left, new Vector2(0f, guided ? 0.78f : 0.62f), new Vector2(0.72f, 1f), new Vector2(16f, 0f), new Vector2(-8f, -4f));
+        _guideBody = UiFactory.Label(bottom.transform, "Body", mode == GameMode.Free ? Loc.Get("lens.free.body") : "", 18, TextAlignmentOptions.TopLeft, new Vector2(0f, guided ? 0.08f : 0.28f), new Vector2(0.72f, guided ? 0.76f : 0.64f), new Vector2(16f, 0f), new Vector2(-8f, 0f));
         _choices = bottom.transform;
         if (guided)
         {
-            UiFactory.Button(bottom.transform, "Prev", "上一步", new Vector2(0.76f, 0.55f), new Vector2(0.87f, 0.92f), Vector2.zero, Vector2.zero, lab.PrevStep);
-            UiFactory.Button(bottom.transform, "Next", "下一步", new Vector2(0.88f, 0.55f), new Vector2(0.99f, 0.92f), Vector2.zero, Vector2.zero, lab.NextStep);
+            UiFactory.Button(bottom.transform, "Prev", Loc.Get("common.prev"), new Vector2(0.76f, 0.55f), new Vector2(0.87f, 0.92f), Vector2.zero, Vector2.zero, lab.PrevStep);
+            UiFactory.Button(bottom.transform, "Next", Loc.Get("common.next"), new Vector2(0.88f, 0.55f), new Vector2(0.99f, 0.92f), Vector2.zero, Vector2.zero, lab.NextStep);
         }
 
         string keys = mode == GameMode.Challenge
-            ? "拖动蜡烛和光屏    L 光路    Tab 景深    R 重置    Esc 返回"
+            ? Loc.Get("lens.keys.challenge")
             : mode == GameMode.Learn
-                ? "右键旋转视角    滚轮缩放    上一步 / 下一步    Esc 返回"
-                : "拖动蜡烛和光屏    L 光路    R 重置    Esc 返回";
+                ? Loc.Get("common.keys.lesson")
+                : Loc.Get("lens.keys.free");
         UiFactory.Label(bottom.transform, "Keys", keys, 16, TextAlignmentOptions.Left, new Vector2(0f, 0f), new Vector2(0.74f, 0.24f), new Vector2(16f, 4f), new Vector2(-8f, 0f));
         BuildAnswer(bottom.transform);
 
@@ -120,29 +120,29 @@ public class LensCraftUI : MonoBehaviour
     {
         Result = gameObject.AddComponent<ResultPanel>();
         Result.Build(root);
-        Result.Knowledge = "知识卡\n凸透镜对光有会聚作用。\n1/f = 1/u + 1/v。\nu > 2f：倒立缩小实像。\nu = 2f：倒立等大实像。\nf < u < 2f：倒立放大实像。\nu = f：不成像。\nu < f：正立放大虚像。";
+        Result.KnowledgeKey = "knowledge.lens";
         Result.Retry = lab.RestartChallenge;
     }
 
     public void SetLesson(string title, string body)
     {
-        if (_mode != null) _mode.text = "讲解";
+        if (_mode != null) _mode.text = Loc.Get("common.lesson");
         if (_guideTitle != null) _guideTitle.text = title;
         if (_guideBody != null) _guideBody.text = body;
     }
 
     public void SetLearn(LensStep step)
     {
-        if (_mode != null) _mode.text = "讲解";
+        if (_mode != null) _mode.text = Loc.Get("common.lesson");
         if (_guideTitle != null) _guideTitle.text = Title(step);
         if (_guideBody != null) _guideBody.text = Body(step);
     }
 
     public void SetFree()
     {
-        if (_mode != null) _mode.text = "自由实验";
-        if (_guideTitle != null) _guideTitle.text = "自由实验";
-        if (_guideBody != null) _guideBody.text = "拖动蜡烛、光屏和焦距，观察物距、像距和像的性质。";
+        if (_mode != null) _mode.text = Loc.Get("common.free");
+        if (_guideTitle != null) _guideTitle.text = Loc.Get("common.free");
+        if (_guideBody != null) _guideBody.text = Loc.Get("lens.free.body");
     }
 
     public void SetChallenge(string title, string body)
@@ -153,7 +153,7 @@ public class LensCraftUI : MonoBehaviour
             return;
         }
 
-        if (_mode != null) _mode.text = "挑战模式";
+        if (_mode != null) _mode.text = Loc.Get("common.challengeMode");
         if (_guideTitle != null) _guideTitle.text = title;
         if (_guideBody != null) _guideBody.text = body;
     }
@@ -301,10 +301,10 @@ public class LensCraftUI : MonoBehaviour
     {
         switch (step)
         {
-            case LensStep.Bench: return "步骤 1 / 4    认识光具座";
-            case LensStep.Rays: return "步骤 2 / 4    三条特殊光线";
-            case LensStep.Distance: return "步骤 3 / 4    物距与成像规律";
-            default: return "步骤 4 / 4    焦距的影响";
+            case LensStep.Bench: return Loc.Get("lens.ui1.title");
+            case LensStep.Rays: return Loc.Get("lens.ui2.title");
+            case LensStep.Distance: return Loc.Get("lens.ui3.title");
+            default: return Loc.Get("lens.ui4.title");
         }
     }
 
@@ -312,10 +312,10 @@ public class LensCraftUI : MonoBehaviour
     {
         switch (step)
         {
-            case LensStep.Bench: return "拖动蜡烛和光屏。凸透镜对光有会聚作用。右侧可看到 u、v、f。";
-            case LensStep.Rays: return "红色平行于主光轴后过焦点，绿色过光心方向不变，蓝色过焦点后平行于主光轴。";
-            case LensStep.Distance: return "把蜡烛从远处拖向透镜。光屏会自动对焦，观察实像、不成像和虚像。";
-            default: return "拖动焦距滑块。焦距越小，会聚能力越强，像距和像的大小都会变。";
+            case LensStep.Bench: return Loc.Get("lens.ui1.body");
+            case LensStep.Rays: return Loc.Get("lens.ui2.body");
+            case LensStep.Distance: return Loc.Get("lens.ui3.body");
+            default: return Loc.Get("lens.ui4.body");
         }
     }
 
