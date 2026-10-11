@@ -8,6 +8,7 @@ namespace ParticleDrift
         public int Index { get; private set; }
         public bool Running { get; private set; }
         public float GivenTemperature { get; private set; }
+        public const float ReferenceTemperature = 25f;
         public const float TargetMin = 5.5f;
         public const float TargetMax = 8.5f;
 
@@ -42,16 +43,6 @@ namespace ParticleDrift
             Publish();
         }
 
-        public void Hint()
-        {
-            if (!Running || _stars == null)
-            {
-                return;
-            }
-
-            _stars.RegisterHint();
-        }
-
         public bool TryGradeBeaker(BeakerController picked, BeakerController hot, out bool correct)
         {
             correct = false;
@@ -77,13 +68,28 @@ namespace ParticleDrift
                 return false;
             }
 
-            correct = band == TemperatureController.BandFor(GivenTemperature);
+            correct = band == RelativeBandFor(GivenTemperature);
             if (!correct)
             {
                 _stars.RegisterRetry();
             }
 
             return true;
+        }
+
+        public static int RelativeBandFor(float temperature)
+        {
+            if (temperature > ReferenceTemperature + 10f)
+            {
+                return 0;
+            }
+
+            if (temperature < ReferenceTemperature - 10f)
+            {
+                return 2;
+            }
+
+            return 1;
         }
 
         public bool TryGradeTime(float seconds, out string message)
@@ -112,11 +118,11 @@ namespace ParticleDrift
                 return;
             }
 
+            _stars.RegisterSuccess();
             Index++;
             if (Index >= 3)
             {
                 Running = false;
-                _stars.RegisterSuccess();
                 Finished?.Invoke(_stars.EvaluateStars(), _stars.EvaluateReason());
                 return;
             }
@@ -124,25 +130,12 @@ namespace ParticleDrift
             Publish();
         }
 
-        public string HintText()
-        {
-            switch (Index)
-            {
-                case 0:
-                    return Loc.Get("drift.hint1");
-                case 1:
-                    return Loc.Get("drift.hint2");
-                default:
-                    return Loc.Get("drift.hint3");
-            }
-        }
-
         void Publish()
         {
             if (Index == 1 && !_q2Rolled)
             {
                 _q2Rolled = true;
-                float[] temps = { 90f, 48f, 8f };
+                float[] temps = { 75f, ReferenceTemperature, 8f };
                 GivenTemperature = temps[UnityEngine.Random.Range(0, temps.Length)];
             }
 

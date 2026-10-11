@@ -41,13 +41,12 @@ public class ChallengeScreenQuiz : MonoBehaviour
         _submit = submit;
     }
 
-    public void BuildNavigation(Transform canvas, string title, UnityAction hint, UnityAction retry)
+    public void BuildNavigation(Transform canvas, string title, UnityAction retry)
     {
         var top = UiFactory.Panel(canvas, "ChallengeNavigation", new Vector2(0f, 1f), Vector2.one, new Vector2(24f, -100f), new Vector2(-24f, -20f), NetFoldTheme.Glass);
         UiFactory.Label(top.transform, "Module", Loc.Format("quiz.title", title), 26, TextAlignmentOptions.Left, Vector2.zero, new Vector2(0.40f, 1f), new Vector2(24f, 10f), new Vector2(0f, -10f));
-        UiFactory.Label(top.transform, "Scoring", Loc.Get("quiz.scoring"), 18, TextAlignmentOptions.Center, new Vector2(0.35f, 0f), new Vector2(0.63f, 1f), Vector2.zero, Vector2.zero, NetFoldTheme.TextDim);
-        UiFactory.Button(top.transform, "Hint", Loc.Get("common.hint"), new Vector2(0.64f, 0.16f), new Vector2(0.75f, 0.84f), new Vector2(4f, 0f), new Vector2(-4f, 0f), hint);
-        UiFactory.Button(top.transform, "Retry", Loc.Get("common.retryChallenge"), new Vector2(0.75f, 0.16f), new Vector2(0.89f, 0.84f), new Vector2(4f, 0f), new Vector2(-4f, 0f), retry);
+        UiFactory.Label(top.transform, "Scoring", Loc.Get("quiz.scoring"), 18, TextAlignmentOptions.Center, new Vector2(0.35f, 0f), new Vector2(0.73f, 1f), Vector2.zero, Vector2.zero, NetFoldTheme.TextDim);
+        UiFactory.Button(top.transform, "Retry", Loc.Get("common.retryChallenge"), new Vector2(0.74f, 0.16f), new Vector2(0.88f, 0.84f), new Vector2(4f, 0f), new Vector2(-4f, 0f), retry);
         UiFactory.Button(top.transform, "Back", Loc.Get("common.back"), new Vector2(0.89f, 0.16f), new Vector2(1f, 0.84f), new Vector2(4f, 0f), new Vector2(-14f, 0f), SceneLoader.LoadMainMenu);
     }
 

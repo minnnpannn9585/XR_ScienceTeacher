@@ -2,20 +2,14 @@ using UnityEngine;
 
 public class StarRatingController : MonoBehaviour
 {
-    public int HintCount { get; private set; }
+    public int SuccessCount { get; private set; }
     public int RetryCount { get; private set; }
-    public bool PassedOnce { get; private set; }
+    public bool PassedOnce => SuccessCount > 0;
 
     public void ResetRound()
     {
-        HintCount = 0;
+        SuccessCount = 0;
         RetryCount = 0;
-        PassedOnce = false;
-    }
-
-    public void RegisterHint()
-    {
-        HintCount++;
     }
 
     public void RegisterRetry()
@@ -25,27 +19,12 @@ public class StarRatingController : MonoBehaviour
 
     public void RegisterSuccess()
     {
-        PassedOnce = true;
+        SuccessCount = Mathf.Min(3, SuccessCount + 1);
     }
 
     public int EvaluateStars()
     {
-        if (!PassedOnce)
-        {
-            return 0;
-        }
-
-        if (RetryCount == 0 && HintCount == 0)
-        {
-            return 3;
-        }
-
-        if (HintCount == 1 && RetryCount == 0)
-        {
-            return 2;
-        }
-
-        return 1;
+        return Mathf.Clamp(SuccessCount, 0, 3);
     }
 
     public string EvaluateReason()
@@ -61,11 +40,7 @@ public class StarRatingController : MonoBehaviour
             return Loc.Get("stars.2");
         }
 
-        if (stars == 1)
-        {
-            return HintCount >= 2 ? Loc.Get("stars.1.hints") : Loc.Get("stars.1.retry");
-        }
-
+        if (stars == 1) return Loc.Get("stars.1");
         return Loc.Get("stars.0");
     }
 }

@@ -44,13 +44,16 @@ public static class PolishSmokeChecks
             rating.ResetRound();
             Require(rating.EvaluateStars() == 0, "Incomplete challenge has zero stars");
             rating.RegisterSuccess();
-            Require(rating.EvaluateStars() == 3, "Unaided success has three stars");
-            rating.RegisterHint();
-            Require(rating.EvaluateStars() == 2, "One hint has two stars");
+            Require(rating.EvaluateStars() == 1, "One completed question gives one star");
             rating.RegisterRetry();
-            Require(rating.EvaluateStars() == 1, "Retry has one star");
+            Require(rating.EvaluateStars() == 1, "A retry does not remove an earned star");
+            rating.RegisterSuccess();
+            Require(rating.EvaluateStars() == 2, "Two completed questions give two stars");
+            rating.RegisterRetry();
+            rating.RegisterSuccess();
+            Require(rating.EvaluateStars() == 3, "All completed questions give three stars");
             rating.ResetRound();
-            Require(rating.EvaluateStars() == 0 && rating.HintCount == 0 && rating.RetryCount == 0, "Restart clears round state");
+            Require(rating.EvaluateStars() == 0 && rating.SuccessCount == 0 && rating.RetryCount == 0, "Restart clears round state");
 
             var canvas = UiFactory.CreateOverlay("ChecksCanvas", root.transform);
             Require(canvas.GetComponent<CanvasScaler>().screenMatchMode == CanvasScaler.ScreenMatchMode.Expand, "Layout remains inside viewport");

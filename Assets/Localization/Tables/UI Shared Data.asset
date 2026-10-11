@@ -1479,6 +1479,46 @@ MonoBehaviour:
     m_Key: lens.q3.status
     m_Metadata:
       m_Items: []
+  - m_Id: 181504264101888
+    m_Key: common.lessonCompleteMenu
+    m_Metadata:
+      m_Items: []
+  - m_Id: 181504306044928
+    m_Key: drift.q2.faster
+    m_Metadata:
+      m_Items: []
+  - m_Id: 181504306044929
+    m_Key: drift.q2.same
+    m_Metadata:
+      m_Items: []
+  - m_Id: 181504306044930
+    m_Key: drift.q2.slower
+    m_Metadata:
+      m_Items: []
+  - m_Id: 181504306044931
+    m_Key: drift.q2.comparing
+    m_Metadata:
+      m_Items: []
+  - m_Id: 181504306044932
+    m_Key: drift.q3.temperature
+    m_Metadata:
+      m_Items: []
+  - m_Id: 181504314433536
+    m_Key: drift.q3.running
+    m_Metadata:
+      m_Items: []
+  - m_Id: 202663177216000
+    m_Key: lens.choice.distance
+    m_Metadata:
+      m_Items: []
+  - m_Id: 202663185604608
+    m_Key: lens.q1.again
+    m_Metadata:
+      m_Items: []
+  - m_Id: 203851700363264
+    m_Key: stars.1
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

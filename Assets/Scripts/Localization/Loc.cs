@@ -102,7 +102,6 @@ public static class Loc
         {
             case "重置": key = "common.reset"; break;
             case "自动演示": key = "common.demo"; break;
-            case "提示": key = "common.hint"; break;
             case "旋转": key = "tool.rotate"; break;
             case "缩放": key = "tool.scale"; break;
             case "展开": key = "tool.unfold"; break;

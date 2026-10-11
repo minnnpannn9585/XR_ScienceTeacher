@@ -153,7 +153,7 @@ MonoBehaviour:
       m_Items:
       - rid: 1134318009864945691
   - m_Id: 1891455006
-    m_Localized: 'Three stars: no hints and no wrong answers'
+    m_Localized: One star per completed question; wrong answers can be retried
     m_Metadata:
       m_Items: []
   - m_Id: 1891455007
@@ -525,11 +525,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 1891455092
-    m_Localized: Cleared on the first try, with no hints
+    m_Localized: Completed all three questions
     m_Metadata:
       m_Items: []
   - m_Id: 1891455093
-    m_Localized: Used 1 hint
+    m_Localized: Completed two questions
     m_Metadata:
       m_Items: []
   - m_Id: 1891455094
@@ -537,7 +537,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 1891455095
-    m_Localized: Retried
+    m_Localized: Cleared after multiple wrong answers
     m_Metadata:
       m_Items: []
   - m_Id: 1891455096
@@ -1036,12 +1036,13 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 1891455200
-    m_Localized: "Predict how fast it spreads at {0} \xB0C"
+    m_Localized: "Using 25 \xB0C as the reference, compare diffusion at {0} \xB0C"
     m_Metadata:
       m_Items:
       - rid: 1134318009864945691
   - m_Id: 1891455201
-    m_Localized: "Set the temperature so the color evens out in 5.5\u20138.5 s"
+    m_Localized: "Choose a temperature that gives a diffusion time of 5.5\u20138.5
+      s"
     m_Metadata:
       m_Items: []
   - m_Id: 1891455202
@@ -1054,7 +1055,8 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 1891455204
-    m_Localized: 'Look at the temperature again: high is fast, low is slow'
+    m_Localized: "Compare with 25 \xB0C again: above it is faster and below it is
+      slower"
     m_Metadata:
       m_Items: []
   - m_Id: 1891455205
@@ -1072,7 +1074,7 @@ MonoBehaviour:
       m_Items:
       - rid: 1134318009864945691
   - m_Id: 1891455208
-    m_Localized: "Measured {0} s, matching \u201C{1}\u201D"
+    m_Localized: "Test beaker: {0} s; 25 \xB0C reference: about {1} s"
     m_Metadata:
       m_Items:
       - rid: 1134318009864945691
@@ -1133,11 +1135,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 1891455221
-    m_Localized: Challenge 2 / 3    Predict the time
+    m_Localized: Challenge 2 / 3    Compare with a reference
     m_Metadata:
       m_Items: []
   - m_Id: 1891455222
-    m_Localized: Challenge 3 / 3    Hit the time
+    m_Localized: Challenge 3 / 3    Choose a temperature
     m_Metadata:
       m_Items: []
   - m_Id: 1891455223
@@ -1146,13 +1148,14 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 1891455224
-    m_Localized: "The water is {0} \xB0C. Predict how fast the fuchsin becomes even."
+    m_Localized: "The reference beaker is 25 \xB0C and the test beaker is {0} \xB0C.
+      Predict its speed relative to the reference; both will run afterward."
     m_Metadata:
       m_Items:
       - rid: 1134318009864945691
   - m_Id: 1891455225
-    m_Localized: "Set the temperature so the fuchsin evens out in 5.5\u20138.5 seconds,
-      then start diffusion."
+    m_Localized: "Goal: become even in 5.5\u20138.5 s. Low temperatures are slower
+      and high temperatures faster. Choose 20, 50, or 80 \xB0C and test it."
     m_Metadata:
       m_Items: []
   - m_Id: 1891455226
@@ -1617,15 +1620,16 @@ MonoBehaviour:
       m_Items:
       - rid: 1134318009864945691
   - m_Id: 1895649297
-    m_Localized: Challenge 1 / 3    Find the sharp image
+    m_Localized: Challenge 1 / 3    Choose the screen position
     m_Metadata:
       m_Items: []
   - m_Id: 1895649298
-    m_Localized: Drag the screen until the inverted real image is sharp.
+    m_Localized: Given u = 42 cm and f = 16 cm, choose the image distance. The screen
+      will move there for verification.
     m_Metadata:
       m_Items: []
   - m_Id: 1895649299
-    m_Localized: Drag the screen until the image is sharp
+    m_Localized: Choose the screen position below
     m_Metadata:
       m_Items: []
   - m_Id: 1895649300
@@ -1633,7 +1637,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 1895649301
-    m_Localized: Use the object distance and focal length to choose the kind of image.
+    m_Localized: Given u = 22 cm and f = 15 cm, choose the kind of image.
     m_Metadata:
       m_Items: []
   - m_Id: 1895649302
@@ -1645,12 +1649,55 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 1895649304
-    m_Localized: u = 40 cm, f = 16 cm. Find the image distance v in centimeters,
-      then press Enter.
+    m_Localized: Given u = 40 cm and f = 16 cm, use 1/f = 1/u + 1/v and choose the
+      correct image distance.
     m_Metadata:
       m_Items: []
   - m_Id: 1895649305
-    m_Localized: Enter v in centimeters
+    m_Localized: Calculate, then choose an option
+    m_Metadata:
+      m_Items: []
+  - m_Id: 181504264101888
+    m_Localized: Finish & Return
+    m_Metadata:
+      m_Items: []
+  - m_Id: 181504306044928
+    m_Localized: "Faster than 25 \xB0C"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 181504306044929
+    m_Localized: "About the same as 25 \xB0C"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 181504306044930
+    m_Localized: "Slower than 25 \xB0C"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 181504306044931
+    m_Localized: "Playing the test and 25 \xB0C reference beakers together"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 181504306044932
+    m_Localized: "{0} \xB0C"
+    m_Metadata:
+      m_Items:
+      - rid: 1134318009864945691
+  - m_Id: 181504314433536
+    m_Localized: "Testing {0} \xB0C; watch the diffusion time"
+    m_Metadata:
+      m_Items:
+      - rid: 1134318009864945691
+  - m_Id: 202663177216000
+    m_Localized: '{0} cm'
+    m_Metadata:
+      m_Items:
+      - rid: 1134318009864945691
+  - m_Id: 202663185604608
+    m_Localized: That position does not produce a sharp image; choose again
+    m_Metadata:
+      m_Items: []
+  - m_Id: 203851700363264
+    m_Localized: Completed one question
     m_Metadata:
       m_Items: []
   references:
@@ -1659,4 +1706,4 @@ MonoBehaviour:
     - rid: 1134318009864945691
       type: {class: SmartFormatTag, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
-        m_Entries: 0050bd6e000000001d50bd70000000002750bd70000000002a50bd70000000005350bd70000000005750bd70000000005950bd70000000005b50bd70000000005d50bd70000000005e50bd70000000006050bd70000000007950bd70000000007a50bd70000000008e50bd70000000008f50bd70000000009050bd70000000009250bd70000000009350bd70000000009550bd70000000009650bd70000000009750bd70000000009b50bd70000000009c50bd70000000009e50bd7000000000e050bd7000000000e550bd7000000000e750bd7000000000e850bd7000000000ea50bd7000000000ed50bd7000000000ee50bd7000000000f850bd7000000000fe50bd7000000000ff50bd70000000000051bd70000000000151bd70000000000251bd70000000000351bd70000000001a51bd70000000000950fd70000000000a50fd70000000000b50fd70000000000d50fd70000000000f50fd70000000001050fd7000000000
+        m_Entries: 0050bd6e000000001d50bd70000000002750bd70000000002a50bd70000000005350bd70000000005750bd70000000005950bd70000000005b50bd70000000005d50bd70000000005e50bd70000000006050bd70000000007950bd70000000007a50bd70000000008e50bd70000000008f50bd70000000009050bd70000000009250bd70000000009350bd70000000009550bd70000000009650bd70000000009750bd70000000009b50bd70000000009c50bd70000000009e50bd7000000000e050bd7000000000e550bd7000000000e750bd7000000000e850bd7000000000ea50bd7000000000ed50bd7000000000ee50bd7000000000f850bd7000000000fe50bd7000000000ff50bd70000000000051bd70000000000151bd70000000000251bd70000000000351bd70000000001a51bd70000000000950fd70000000000a50fd70000000000b50fd70000000000d50fd70000000000f50fd70000000001050fd700000000004e0afc313a5000000e02fc413a5000000e0af3252b80000

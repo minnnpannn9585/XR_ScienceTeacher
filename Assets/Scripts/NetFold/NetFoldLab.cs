@@ -501,14 +501,6 @@ public class NetFoldLab : MonoBehaviour
         UI.DataPanel?.SetProjection(Projection.FrontRays, Projection.TopRays, Projection.SideRays);
     }
 
-    public void Hint()
-    {
-        if (Modes.Mode == GameMode.Challenge)
-        {
-            Challenge.UseHint();
-        }
-    }
-
     public void RestartChallenge()
     {
         Modes.SetMode(GameMode.Challenge);

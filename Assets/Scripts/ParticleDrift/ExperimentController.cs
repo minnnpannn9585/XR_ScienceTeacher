@@ -256,9 +256,6 @@ public class ExperimentController : MonoBehaviour
             case "温度曲线":
                 if (_launchMode == GameMode.Challenge) ToggleCurve();
                 break;
-            case "提示":
-                if (_launchMode == GameMode.Challenge) Hint();
-                break;
         }
     }
 
@@ -393,15 +390,6 @@ public class ExperimentController : MonoBehaviour
         UI.SetCurveVisible(Temperature.CurveVisible);
     }
 
-    public void Hint()
-    {
-        if (_challenge && Quiz.Running)
-        {
-            Quiz.Hint();
-            _state = Quiz.HintText();
-        }
-    }
-
     public void HeatSelected()
     {
         Nudge(8f);
@@ -528,11 +516,6 @@ public class ExperimentController : MonoBehaviour
             case LabAction.Beaker:
                 var beaker = prop as BeakerController;
                 SelectBeaker(beaker);
-                if (_challenge && Quiz.Index == 0)
-                {
-                    AnswerQ1(beaker);
-                }
-
                 break;
             case LabAction.Heat:
                 HeatSelected();
@@ -606,6 +589,7 @@ public class ExperimentController : MonoBehaviour
         if (UI != null)
         {
             UI.SetLesson(DriftTitle(_beat), DriftBody(_beat));
+            UI.SetLessonComplete(_beat >= 4);
             UI.ClearChoices();
         }
 
@@ -828,18 +812,24 @@ public class ExperimentController : MonoBehaviour
         }
         else if (index == 1)
         {
-            ShowOnly(Single.gameObject, _thermo);
+            ShowOnly(Single.gameObject, Cold.gameObject, _thermo);
             Single.SetTemperature(Quiz.GivenTemperature);
+            Cold.SetTemperature(DriftQuiz.ReferenceTemperature);
             SelectBeaker(Single);
-            UI.ShowChoices(new[] { Loc.Get("band.fast"), Loc.Get("band.mid"), Loc.Get("band.slow") }, AnswerQ2);
+            UI.ShowChoices(new[]
+            {
+                Loc.Get("drift.q2.faster"),
+                Loc.Get("drift.q2.same"),
+                Loc.Get("drift.q2.slower")
+            }, AnswerQ2);
             _state = Loc.Format("drift.q2.predict", Quiz.GivenTemperature.ToString("0"));
         }
         else
         {
-            ShowOnly(Single.gameObject, _thermo, _heat.gameObject, _cool.gameObject);
-            Single.SetTemperature(15f);
+            ShowOnly(Single.gameObject, _thermo);
+            Single.SetTemperature(50f);
             SelectBeaker(Single);
-            UI.ShowChoices(new[] { Loc.Get("drift.run") }, _ => StartJudged());
+            ShowQ3TemperatureChoices();
             _state = Loc.Get("drift.q3.adjust");
         }
 
@@ -926,6 +916,7 @@ public class ExperimentController : MonoBehaviour
 
         _sealed = true;
         Diffusion.Drop(Single, 0.75f);
+        Diffusion.Drop(Cold, 0.75f);
         if (FeedbackService.Instance != null)
         {
             FeedbackService.Instance.Success(Single.transform.position);
@@ -933,7 +924,32 @@ public class ExperimentController : MonoBehaviour
 
         UI.ClearChoices();
         _awaitQ2 = true;
-        _state = Loc.Format("drift.q2.ok", TemperatureController.BandName(TemperatureController.BandFor(Quiz.GivenTemperature)));
+        _state = Loc.Get("drift.q2.comparing");
+    }
+
+    void ShowQ3TemperatureChoices()
+    {
+        UI.ShowChoices(new[]
+        {
+            Loc.Format("drift.q3.temperature", 20),
+            Loc.Format("drift.q3.temperature", 50),
+            Loc.Format("drift.q3.temperature", 80)
+        }, SelectQ3Temperature);
+    }
+
+    void SelectQ3Temperature(int index)
+    {
+        if (!_challenge || Quiz.Index != 2 || _q3Running || _sealed)
+        {
+            return;
+        }
+
+        float temperature = index == 0 ? 20f : index == 1 ? 50f : 80f;
+        Single.SetTemperature(temperature);
+        SyncSlider();
+        UI.ClearChoices();
+        _state = Loc.Format("drift.q3.running", temperature.ToString("0"));
+        StartJudged();
     }
 
     void StartJudged()
@@ -948,7 +964,7 @@ public class ExperimentController : MonoBehaviour
         Single.SetGreen(false);
         Single.ClearDye();
         Single.BeginDiffusion(22);
-        _state = Loc.Get("drift.started");
+        _state = Loc.Format("drift.q3.running", Single.Temperature.ToString("0"));
     }
 
     void OnUniform(BeakerController beaker)
@@ -969,7 +985,10 @@ public class ExperimentController : MonoBehaviour
         if (_awaitQ2 && beaker == Single)
         {
             _awaitQ2 = false;
-            _state = Loc.Format("drift.q2.measured", beaker.DiffusionElapsed.ToString("0.0"), TemperatureController.BandName(TemperatureController.BandFor(Quiz.GivenTemperature)));
+            _state = Loc.Format(
+                "drift.q2.measured",
+                beaker.DiffusionElapsed.ToString("0.0"),
+                TemperatureController.DurationFor(DriftQuiz.ReferenceTemperature).ToString("0.0"));
             StartCoroutine(AdvanceSoon());
             return;
         }
@@ -1001,6 +1020,7 @@ public class ExperimentController : MonoBehaviour
             }
 
             _lockTemp = false;
+            ShowQ3TemperatureChoices();
             PulseOutline(Single);
             if (FeedbackService.Instance != null)
             {

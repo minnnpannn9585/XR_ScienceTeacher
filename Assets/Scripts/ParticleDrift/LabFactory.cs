@@ -92,6 +92,7 @@ public class FaceCamera : MonoBehaviour
             return;
         }
 
-        transform.rotation = Quaternion.LookRotation(to);
+        // World-space Canvas content faces along its negative Z axis.
+        transform.rotation = Quaternion.LookRotation(-to);
     }
 }

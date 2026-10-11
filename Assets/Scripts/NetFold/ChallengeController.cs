@@ -44,35 +44,6 @@ public class ChallengeController : MonoBehaviour
         ClearSpawned();
     }
 
-    public void UseHint()
-    {
-        if (!IsRunning || _waiting)
-        {
-            return;
-        }
-
-        Stars.RegisterHint();
-        string hint;
-        switch (QuestionIndex)
-        {
-            case 0:
-                hint = Loc.Get("netfold.hint1");
-                HighlightCorrect();
-                break;
-            case 1:
-                hint = Loc.Get("netfold.hint2");
-                HighlightCorrect();
-                break;
-            default:
-                hint = Loc.Get("netfold.hint3");
-                HighlightCorrect();
-                break;
-        }
-
-        LastPick = -1;
-        Answered?.Invoke(false, hint);
-    }
-
     public void SubmitChoice(int index)
     {
         if (!IsRunning || _waiting)
@@ -108,7 +79,6 @@ public class ChallengeController : MonoBehaviour
         {
             Stars.RegisterRetry();
             FeedbackService.Instance?.Error(_stage.position + Vector3.up * 0.2f, _stage);
-            MarkWrong(index);
             Answered?.Invoke(false, Loc.Get("netfold.wrong"));
         }
     }
@@ -170,9 +140,9 @@ public class ChallengeController : MonoBehaviour
         CreateViewBoard(ShapeType.Cube, ViewKind.Front, Loc.Get("viewname.front"), new Vector3(-0.36f, 0.2f, 0.28f));
         CreateViewBoard(ShapeType.Cube, ViewKind.Top, Loc.Get("viewname.top"), new Vector3(0f, 0.2f, 0.28f));
         CreateViewBoard(ShapeType.Cube, ViewKind.Side, Loc.Get("viewname.side"), new Vector3(0.36f, 0.2f, 0.28f));
-        SpawnChoiceShape(ShapeType.Cube, new Vector3(-0.38f, 0f, -0.16f), 0);
-        SpawnChoiceShape(ShapeType.Cylinder, new Vector3(0f, 0f, -0.16f), 1);
-        SpawnChoiceShape(ShapeType.Cone, new Vector3(0.38f, 0f, -0.16f), 2);
+        SpawnChoiceShape(ShapeType.Cube, new Vector3(-0.38f, 0f, -0.16f));
+        SpawnChoiceShape(ShapeType.Cylinder, new Vector3(0f, 0f, -0.16f));
+        SpawnChoiceShape(ShapeType.Cone, new Vector3(0.38f, 0f, -0.16f));
     }
 
     void BuildQuestion2()
@@ -180,9 +150,9 @@ public class ChallengeController : MonoBehaviour
         var shape = GeometryFactory.Create(ShapeType.TriangularPrism, _stage, new Vector3(0f, 0f, -0.16f), 0.34f, false);
         shape.AllowIdleSpin = true;
         _spawned.Add(shape.gameObject);
-        CreateViewSet(0, ShapeType.TriangularPrism, Loc.Get("option.a"), new Vector3(-0.42f, 0.2f, 0.3f));
-        CreateViewSet(1, ShapeType.Cube, Loc.Get("option.b"), new Vector3(0f, 0.2f, 0.3f));
-        CreateViewSet(2, ShapeType.Cylinder, Loc.Get("option.c"), new Vector3(0.42f, 0.2f, 0.3f));
+        CreateViewSet(ShapeType.TriangularPrism, Loc.Get("option.a"), new Vector3(-0.42f, 0.2f, 0.3f));
+        CreateViewSet(ShapeType.Cube, Loc.Get("option.b"), new Vector3(0f, 0.2f, 0.3f));
+        CreateViewSet(ShapeType.Cylinder, Loc.Get("option.c"), new Vector3(0.42f, 0.2f, 0.3f));
     }
 
     void BuildQuestion3()
@@ -211,26 +181,26 @@ public class ChallengeController : MonoBehaviour
         for (int i = 0; i < labels.Length; i++)
         {
             float x = (i - 1.5f) * 0.3f;
-            var card = CreateBoard(labels[i], new Vector3(x, 0.2f, 0.32f), new Vector2(0.26f, 0.34f), true, i);
+            var card = CreateBoard(labels[i], new Vector3(x, 0.2f, 0.32f), new Vector2(0.26f, 0.34f));
             AddSilhouette(card.transform, shapes[i], new Vector3(0f, 0.04f, 0.012f), 1.2f, new Color(1f, 0.86f, 0.35f, 1f));
         }
     }
 
     void CreateViewBoard(ShapeType type, ViewKind kind, string caption, Vector3 pos)
     {
-        var card = CreateBoard(caption, pos, new Vector2(0.28f, 0.34f), false, -1);
+        var card = CreateBoard(caption, pos, new Vector2(0.28f, 0.34f));
         AddSilhouette(card.transform, ViewSilhouette.Create(type, kind), new Vector3(0f, 0.04f, 0.012f), 1.15f, ColorOf(kind));
     }
 
-    void CreateViewSet(int index, ShapeType type, string caption, Vector3 pos)
+    void CreateViewSet(ShapeType type, string caption, Vector3 pos)
     {
-        var card = CreateBoard(caption, pos, new Vector2(0.36f, 0.34f), true, index);
+        var card = CreateBoard(caption, pos, new Vector2(0.36f, 0.34f));
         AddSilhouette(card.transform, ViewSilhouette.Create(type, ViewKind.Front), new Vector3(-0.11f, 0.04f, 0.012f), 0.62f, NetFoldTheme.FrontView);
         AddSilhouette(card.transform, ViewSilhouette.Create(type, ViewKind.Top), new Vector3(0f, 0.04f, 0.012f), 0.62f, NetFoldTheme.TopView);
         AddSilhouette(card.transform, ViewSilhouette.Create(type, ViewKind.Side), new Vector3(0.11f, 0.04f, 0.012f), 0.62f, NetFoldTheme.SideView);
     }
 
-    GameObject CreateBoard(string name, Vector3 pos, Vector2 size, bool choice, int index)
+    GameObject CreateBoard(string name, Vector3 pos, Vector2 size)
     {
         var go = new GameObject(name);
         go.transform.SetParent(_stage, false);
@@ -241,13 +211,6 @@ public class ChallengeController : MonoBehaviour
         plate.transform.SetParent(go.transform, false);
         plate.transform.localScale = new Vector3(size.x, size.y, 1f);
         plate.GetComponent<MeshRenderer>().sharedMaterial = BoardMat(new Color(0.07f, 0.13f, 0.24f, 1f), false);
-        if (choice)
-        {
-            var pick = go.AddComponent<ChallengeChoice>();
-            pick.Index = index;
-            pick.Owner = this;
-        }
-
         _spawned.Add(go);
         return go;
     }
@@ -262,14 +225,11 @@ public class ChallengeController : MonoBehaviour
         go.AddComponent<MeshRenderer>().sharedMaterial = BoardMat(color, false);
     }
 
-    void SpawnChoiceShape(ShapeType type, Vector3 pos, int index)
+    void SpawnChoiceShape(ShapeType type, Vector3 pos)
     {
-        var shape = GeometryFactory.Create(type, _stage, pos, 0.3f);
+        var shape = GeometryFactory.Create(type, _stage, pos, 0.3f, false);
         shape.AllowIdleSpin = true;
-        var choice = shape.gameObject.AddComponent<ChallengeChoice>();
-        choice.Index = index;
-        choice.Owner = this;
-        choice.HostShape = shape;
+        shape.CanDrag = false;
         _spawned.Add(shape.gameObject);
     }
 
@@ -399,31 +359,6 @@ public class ChallengeController : MonoBehaviour
         }
     }
 
-    void MarkWrong(int index)
-    {
-        for (int i = 0; i < _spawned.Count; i++)
-        {
-            var choice = _spawned[i].GetComponent<ChallengeChoice>();
-            if (choice != null && choice.Index == index)
-            {
-                choice.SetError();
-            }
-        }
-    }
-
-    void HighlightCorrect()
-    {
-        int correct = QuestionIndex == 0 ? (int)_q1Answer : QuestionIndex == 1 ? _q2Answer : _q3Answer;
-        for (int i = 0; i < _spawned.Count; i++)
-        {
-            var choice = _spawned[i].GetComponent<ChallengeChoice>();
-            if (choice != null && choice.Index == correct)
-            {
-                choice.transform.DOPunchScale(Vector3.one * 0.12f, 0.35f, 6, 0.5f);
-            }
-        }
-    }
-
     void ClearSpawned()
     {
         for (int i = 0; i < _spawned.Count; i++)
@@ -436,39 +371,5 @@ public class ChallengeController : MonoBehaviour
         }
 
         _spawned.Clear();
-    }
-}
-
-public class ChallengeChoice : MonoBehaviour, IInteractable
-{
-    public int Index;
-    public ChallengeController Owner;
-    public ShapeController HostShape;
-    public bool IsSelected { get; private set; }
-    public bool CanDrag => false;
-    public Transform Transform => transform;
-    public GameObject GameObject => gameObject;
-
-    public void OnSelect()
-    {
-        IsSelected = true;
-        Owner?.SubmitChoice(Index);
-    }
-
-    public void OnDeselect() => IsSelected = false;
-    public void OnDragStart(Vector3 worldPoint, Ray pointerRay) { }
-    public void OnDrag(Vector3 worldPoint, Ray pointerRay) { }
-    public void OnDragEnd() { }
-    public void Rotate(Vector2 delta) => HostShape?.Rotate(delta);
-    public void Scale(float delta) => HostShape?.Scale(delta);
-
-    public void SetError()
-    {
-        var rends = GetComponentsInChildren<MeshRenderer>();
-        for (int i = 0; i < rends.Length; i++)
-        {
-            UrpMaterialUtil.SetColor(rends[i].material, NetFoldTheme.Error);
-            UrpMaterialUtil.SetEmission(rends[i].material, NetFoldTheme.Error);
-        }
     }
 }

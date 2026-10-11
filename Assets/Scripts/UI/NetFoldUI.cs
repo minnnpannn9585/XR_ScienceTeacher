@@ -15,6 +15,8 @@ public class NetFoldUI : MonoBehaviour
 
     ChallengeScreenQuiz _quiz;
     Image[] _shapeButtons;
+    Button _nextButton;
+    bool _lessonComplete;
     readonly ShapeType[] _shapeOrder = { ShapeType.Cube, ShapeType.Cylinder, ShapeType.Cone, ShapeType.TriangularPrism };
 
     public void Build(NetFoldLab lab, GameMode mode)
@@ -26,7 +28,7 @@ public class NetFoldUI : MonoBehaviour
             _quiz.Build(quizCanvas.transform);
             GuideTitle = _quiz.TitleText;
             GuideBody = _quiz.BodyText;
-            _quiz.BuildNavigation(quizCanvas.transform, Loc.Get("menu.netfold"), lab.Hint, lab.RestartChallenge);
+            _quiz.BuildNavigation(quizCanvas.transform, Loc.Get("menu.netfold"), lab.RestartChallenge);
             BuildResult(quizCanvas.transform, lab);
             return;
         }
@@ -64,7 +66,11 @@ public class NetFoldUI : MonoBehaviour
         if (mode == GameMode.Learn)
         {
             UiFactory.Button(bottom.transform, "Prev", Loc.Get("common.prev"), new Vector2(0.76f, 0.55f), new Vector2(0.87f, 0.92f), Vector2.zero, Vector2.zero, lab.PrevStep);
-            UiFactory.Button(bottom.transform, "Next", Loc.Get("common.next"), new Vector2(0.88f, 0.55f), new Vector2(0.99f, 0.92f), Vector2.zero, Vector2.zero, lab.NextStep);
+            _nextButton = UiFactory.Button(bottom.transform, "Next", Loc.Get("common.next"), new Vector2(0.88f, 0.55f), new Vector2(0.99f, 0.92f), Vector2.zero, Vector2.zero, () =>
+            {
+                if (_lessonComplete) SceneLoader.LoadMainMenu();
+                else lab.NextStep();
+            });
             UiFactory.Label(bottom.transform, "Keys", Loc.Get("netfold.keys"), 16, TextAlignmentOptions.Left, new Vector2(0f, 0f), new Vector2(0.72f, 0.12f), new Vector2(20, 6), new Vector2(-8, 0));
         }
 
@@ -119,6 +125,16 @@ public class NetFoldUI : MonoBehaviour
         if (GuideTitle != null) GuideTitle.text = GameModeController.StepTitle(step);
         if (GuideBody != null) GuideBody.text = GameModeController.StepHint(step);
         if (ModeLabel != null) ModeLabel.text = Loc.Get("common.lesson");
+        SetLessonComplete(step == LearnStep.Section);
+    }
+
+    void SetLessonComplete(bool complete)
+    {
+        _lessonComplete = complete;
+        if (_nextButton == null) return;
+        var label = _nextButton.GetComponentInChildren<TMP_Text>();
+        if (label != null) label.text = Loc.Get(complete ? "common.lessonCompleteMenu" : "common.next");
+        UiFactory.SetButtonColor(_nextButton, complete ? NetFoldTheme.Success : NetFoldTheme.AccentDeep);
     }
 
     public void SetChallengeGuide(string title, string body)

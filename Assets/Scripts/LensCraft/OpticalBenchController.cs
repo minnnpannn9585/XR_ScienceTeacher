@@ -104,7 +104,6 @@ public class OpticalBenchController : MonoBehaviour
         {
             hub.ViewToggled += ToggleDepth;
         }
-        hub.ConfirmRequested += SubmitAnswer;
         ApplyPlacement();
         if (startMode == GameMode.Challenge)
         {
@@ -201,9 +200,6 @@ public class OpticalBenchController : MonoBehaviour
             case "景深":
                 if (_launch == GameMode.Challenge) ToggleDepth();
                 break;
-            case "提示":
-                if (_launch == GameMode.Challenge) Hint();
-                break;
         }
     }
 
@@ -270,22 +266,6 @@ public class OpticalBenchController : MonoBehaviour
         ApplyBeat(_beat);
     }
 
-    public void Hint()
-    {
-        if (_launch == GameMode.Challenge && Quiz.Running)
-        {
-            Quiz.Hint();
-        }
-    }
-
-    public void SubmitAnswer()
-    {
-        if (_launch == GameMode.Challenge)
-        {
-            Quiz.Submit();
-        }
-    }
-
     public void RestartChallenge()
     {
         if (UI != null && UI.Result != null)
@@ -350,11 +330,6 @@ public class OpticalBenchController : MonoBehaviour
         {
             _dof.Apply(this, _cam);
         }
-        if (Quiz != null)
-        {
-            Quiz.Tick();
-        }
-
         if (UI != null)
         {
             string mag = Imaging.HasImage ? Imaging.AbsMagnification.ToString("0.00") : "—";
@@ -386,6 +361,7 @@ public class OpticalBenchController : MonoBehaviour
         if (UI != null)
         {
             UI.SetLesson(BeatTitle(_beat), BeatBody(_beat));
+            UI.SetLessonComplete(_beat >= 7);
             UI.ClearChoices();
             UI.SetAnswerVisible(false);
         }

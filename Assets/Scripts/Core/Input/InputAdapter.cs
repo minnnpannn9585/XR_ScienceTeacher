@@ -196,8 +196,7 @@ public class InputAdapter : MonoBehaviour
         IDraggable draggable = null;
         if (hitInteractable)
         {
-            var choice = hit.collider.GetComponentInParent<ChallengeChoice>();
-            hovered = choice != null ? choice : hit.collider.GetComponentInParent<IInteractable>();
+            hovered = hit.collider.GetComponentInParent<IInteractable>();
             draggable = hit.collider.GetComponentInParent<IDraggable>();
         }
 

@@ -20,6 +20,7 @@ public class SectionController : MonoBehaviour, IDraggable, ISelectable, IRotata
     Plane _desk = new Plane(Vector3.up, Vector3.zero);
     Vector3 _grab;
     readonly List<Vector3> _points = new List<Vector3>(32);
+    readonly Dictionary<Material, Color> _targetColors = new Dictionary<Material, Color>();
 
     public void SetAnchor(Transform anchor)
     {
@@ -32,9 +33,15 @@ public class SectionController : MonoBehaviour, IDraggable, ISelectable, IRotata
 
     public void Bind(ShapeController shape)
     {
+        if (_target != shape)
+        {
+            RestoreTargetMaterials();
+        }
+
         _target = shape;
         if (IsActive)
         {
+            ApplyTargetTransparency();
             Recenter();
             Rebuild();
         }
@@ -51,6 +58,7 @@ public class SectionController : MonoBehaviour, IDraggable, ISelectable, IRotata
         _root.gameObject.SetActive(on);
         if (on)
         {
+            ApplyTargetTransparency();
             Recenter();
             _root.localScale = Vector3.one * 0.05f;
             _root.DOScale(1f, 0.35f).SetEase(Ease.OutBack);
@@ -58,6 +66,7 @@ public class SectionController : MonoBehaviour, IDraggable, ISelectable, IRotata
         }
         else
         {
+            RestoreTargetMaterials();
             EdgeCount = 0;
             EdgeCountChanged?.Invoke(0);
         }
@@ -107,6 +116,50 @@ public class SectionController : MonoBehaviour, IDraggable, ISelectable, IRotata
         {
             Rebuild();
         }
+    }
+
+    void ApplyTargetTransparency()
+    {
+        if (_target == null)
+        {
+            return;
+        }
+
+        var renderers = _target.GetComponentsInChildren<MeshRenderer>(true);
+        for (int i = 0; i < renderers.Length; i++)
+        {
+            Material material = renderers[i].sharedMaterial;
+            if (material == null)
+            {
+                continue;
+            }
+
+            if (!_targetColors.ContainsKey(material))
+            {
+                Color original = material.HasProperty("_BaseColor")
+                    ? material.GetColor("_BaseColor")
+                    : material.color;
+                _targetColors.Add(material, original);
+            }
+
+            Color transparent = _targetColors[material];
+            transparent.a = Mathf.Min(transparent.a, 0.32f);
+            UrpMaterialUtil.SetTransparent(material);
+            UrpMaterialUtil.SetColor(material, transparent);
+        }
+    }
+
+    void RestoreTargetMaterials()
+    {
+        foreach (var entry in _targetColors)
+        {
+            if (entry.Key != null)
+            {
+                UrpMaterialUtil.SetColor(entry.Key, entry.Value);
+            }
+        }
+
+        _targetColors.Clear();
     }
 
     void Recenter()

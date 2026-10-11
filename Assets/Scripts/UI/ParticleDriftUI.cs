@@ -22,6 +22,8 @@ public class ParticleDriftUI : MonoBehaviour
     GameObject _curveGo;
     Transform _choices;
     ChallengeScreenQuiz _quiz;
+    Button _nextButton;
+    bool _lessonComplete;
     bool _mute;
 
     public void Build(ExperimentController lab, Texture curve, GameMode mode)
@@ -33,7 +35,7 @@ public class ParticleDriftUI : MonoBehaviour
             _quiz.Build(quizCanvas.transform);
             GuideTitle = _quiz.TitleText;
             GuideBody = _quiz.BodyText;
-            _quiz.BuildNavigation(quizCanvas.transform, Loc.Get("menu.drift"), () => lab.Toolbar("提示"), lab.RestartChallenge);
+            _quiz.BuildNavigation(quizCanvas.transform, Loc.Get("menu.drift"), lab.RestartChallenge);
             _state = _quiz.BuildStatus(quizCanvas.transform);
             BuildResult(quizCanvas.transform, lab);
             return;
@@ -52,7 +54,7 @@ public class ParticleDriftUI : MonoBehaviour
         {
             string[] tools = mode == GameMode.Free
                 ? new[] { "重置", "宏观/微观", "浓度热力图" }
-                : new[] { "重置", "自动演示", "宏观/微观", "浓度热力图", "温度曲线", "提示" };
+                : new[] { "重置", "自动演示", "宏观/微观", "浓度热力图", "温度曲线" };
             float half = mode == GameMode.Free ? 130f : 250f;
             var left = UiFactory.Panel(root, "Toolbar", new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(16f, -half), new Vector2(210f, half), NetFoldTheme.Glass);
             for (int i = 0; i < tools.Length; i++)
@@ -122,7 +124,11 @@ public class ParticleDriftUI : MonoBehaviour
         if (guided)
         {
             UiFactory.Button(bottom.transform, "Prev", Loc.Get("common.prev"), new Vector2(0.76f, 0.55f), new Vector2(0.87f, 0.92f), Vector2.zero, Vector2.zero, lab.PrevStep);
-            UiFactory.Button(bottom.transform, "Next", Loc.Get("common.next"), new Vector2(0.88f, 0.55f), new Vector2(0.99f, 0.92f), Vector2.zero, Vector2.zero, lab.NextStep);
+            _nextButton = UiFactory.Button(bottom.transform, "Next", Loc.Get("common.next"), new Vector2(0.88f, 0.55f), new Vector2(0.99f, 0.92f), Vector2.zero, Vector2.zero, () =>
+            {
+                if (_lessonComplete) SceneLoader.LoadMainMenu();
+                else lab.NextStep();
+            });
         }
 
         string keys = guided
@@ -156,6 +162,15 @@ public class ParticleDriftUI : MonoBehaviour
         if (GuideBody != null) GuideBody.text = body;
     }
 
+    public void SetLessonComplete(bool complete)
+    {
+        _lessonComplete = complete;
+        if (_nextButton == null) return;
+        var label = _nextButton.GetComponentInChildren<TMP_Text>();
+        if (label != null) label.text = Loc.Get(complete ? "common.lessonCompleteMenu" : "common.next");
+        UiFactory.SetButtonColor(_nextButton, complete ? NetFoldTheme.Success : NetFoldTheme.AccentDeep);
+    }
+
     public void SetLearn(DriftStep step)
     {
         SetMode(Loc.Get("common.lesson"));
@@ -168,6 +183,8 @@ public class ParticleDriftUI : MonoBehaviour
         {
             GuideBody.text = Body(step);
         }
+
+        SetLessonComplete(step == DriftStep.Gaps);
     }
 
     public void SetFree()

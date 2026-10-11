@@ -24,6 +24,8 @@ public class LensCraftUI : MonoBehaviour
     GameObject _answerRoot;
     Transform _choices;
     ChallengeScreenQuiz _quiz;
+    Button _nextButton;
+    bool _lessonComplete;
     readonly List<Button> _choiceButtons = new List<Button>();
     bool _mute;
 
@@ -34,10 +36,9 @@ public class LensCraftUI : MonoBehaviour
             var quizCanvas = UiFactory.CreateOverlay("LensCraftHUD", transform);
             _quiz = gameObject.AddComponent<ChallengeScreenQuiz>();
             _quiz.Build(quizCanvas.transform);
-            _quiz.BindSubmit(lab.SubmitAnswer);
             _guideTitle = _quiz.TitleText;
             _guideBody = _quiz.BodyText;
-            _quiz.BuildNavigation(quizCanvas.transform, Loc.Get("menu.lens"), () => lab.Toolbar("提示"), lab.RestartChallenge);
+            _quiz.BuildNavigation(quizCanvas.transform, Loc.Get("menu.lens"), lab.RestartChallenge);
             _status = _quiz.BuildStatus(quizCanvas.transform);
             BuildResult(quizCanvas.transform, lab);
             return;
@@ -55,7 +56,7 @@ public class LensCraftUI : MonoBehaviour
         {
             string[] tools = mode == GameMode.Free
                 ? new[] { "重置", "显示光路" }
-                : new[] { "重置", "自动演示", "显示光路", "辅助线", "景深", "提示" };
+                : new[] { "重置", "自动演示", "显示光路", "辅助线", "景深" };
             float half = tools.Length <= 2 ? 100f : tools.Length <= 3 ? 130f : 250f;
             var left = UiFactory.Panel(root, "Toolbar", new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(16f, -half), new Vector2(210f, half), NetFoldTheme.Glass);
             for (int i = 0; i < tools.Length; i++)
@@ -102,7 +103,11 @@ public class LensCraftUI : MonoBehaviour
         if (guided)
         {
             UiFactory.Button(bottom.transform, "Prev", Loc.Get("common.prev"), new Vector2(0.76f, 0.55f), new Vector2(0.87f, 0.92f), Vector2.zero, Vector2.zero, lab.PrevStep);
-            UiFactory.Button(bottom.transform, "Next", Loc.Get("common.next"), new Vector2(0.88f, 0.55f), new Vector2(0.99f, 0.92f), Vector2.zero, Vector2.zero, lab.NextStep);
+            _nextButton = UiFactory.Button(bottom.transform, "Next", Loc.Get("common.next"), new Vector2(0.88f, 0.55f), new Vector2(0.99f, 0.92f), Vector2.zero, Vector2.zero, () =>
+            {
+                if (_lessonComplete) SceneLoader.LoadMainMenu();
+                else lab.NextStep();
+            });
         }
 
         string keys = mode == GameMode.Challenge
@@ -131,11 +136,21 @@ public class LensCraftUI : MonoBehaviour
         if (_guideBody != null) _guideBody.text = body;
     }
 
+    public void SetLessonComplete(bool complete)
+    {
+        _lessonComplete = complete;
+        if (_nextButton == null) return;
+        var label = _nextButton.GetComponentInChildren<TMP_Text>();
+        if (label != null) label.text = Loc.Get(complete ? "common.lessonCompleteMenu" : "common.next");
+        UiFactory.SetButtonColor(_nextButton, complete ? NetFoldTheme.Success : NetFoldTheme.AccentDeep);
+    }
+
     public void SetLearn(LensStep step)
     {
         if (_mode != null) _mode.text = Loc.Get("common.lesson");
         if (_guideTitle != null) _guideTitle.text = Title(step);
         if (_guideBody != null) _guideBody.text = Body(step);
+        SetLessonComplete(step == LensStep.Focal);
     }
 
     public void SetFree()

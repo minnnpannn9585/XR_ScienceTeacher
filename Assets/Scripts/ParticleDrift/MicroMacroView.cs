@@ -1,4 +1,5 @@
 using System;
+using DG.Tweening;
 using UnityEngine;
 
 public class MicroMacroView : MonoBehaviour
@@ -38,10 +39,22 @@ public class MicroMacroView : MonoBehaviour
         IsMicro = micro;
         if (_orbit != null)
         {
-            _orbit.Distance = micro ? 0.62f : 1.42f;
-            _orbit.Pitch = micro ? 42f : 32f;
+            DOTween.Kill(this);
+            float distance = micro ? 0.62f : 1.42f;
+            float pitch = micro ? 42f : 32f;
+            DOTween.To(() => _orbit.Distance, value => _orbit.Distance = value, distance, 0.65f)
+                .SetEase(Ease.InOutCubic)
+                .SetTarget(this);
+            DOTween.To(() => _orbit.Pitch, value => _orbit.Pitch = value, pitch, 0.65f)
+                .SetEase(Ease.InOutCubic)
+                .SetTarget(this);
         }
 
         Changed?.Invoke(IsMicro);
+    }
+
+    void OnDestroy()
+    {
+        DOTween.Kill(this);
     }
 }

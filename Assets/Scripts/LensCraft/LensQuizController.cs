@@ -1,4 +1,3 @@
-using System.Globalization;
 using UnityEngine;
 
 public class LensQuizController : MonoBehaviour
@@ -8,10 +7,10 @@ public class LensQuizController : MonoBehaviour
     int _index;
     bool _running;
     bool _waiting;
-    float _hold;
     int _correct;
     float _answerCm;
-    bool _notedBlur;
+    readonly float[] _screenChoices = { 0.18f, 0.26f, 0.42f };
+    readonly float[] _answerChoices = { 20f, 26.7f, 40f, 64f };
     Coroutine _advance;
 
     public bool Running => _running;
@@ -39,108 +38,48 @@ public class LensQuizController : MonoBehaviour
         }
     }
 
-    public void Tick()
-    {
-        if (!_running || _waiting || _index != 0)
-        {
-            return;
-        }
-
-        if (_bench.Sharpness > 0.78f)
-        {
-            _hold += Time.deltaTime;
-            _bench.Status = Loc.Get("lens.near.sharp");
-            if (_hold > 0.45f)
-            {
-                _bench.ScreenPlate.Flash();
-                FeedbackService.Instance?.Success(_bench.ScreenPlate.transform.position);
-                _bench.Status = Loc.Get("lens.sharp");
-                Advance();
-            }
-        }
-        else
-        {
-            _hold = 0f;
-            if (_bench.Sharpness < 0.35f && !_notedBlur)
-            {
-                _notedBlur = true;
-                _bench.Status = Loc.Get("lens.blur");
-            }
-        }
-    }
-
-    public void Hint()
+    public void Pick(int choice)
     {
         if (!_running || _waiting)
         {
             return;
         }
 
-        _stars.RegisterHint();
-        switch (_index)
+        if (choice == _correct)
         {
-            case 0:
-                _bench.Status = Loc.Format("lens.hint.v", LensMath.Centimeters(_bench.Imaging.ImageDistance));
-                break;
-            case 1:
-                _bench.Status = Loc.Format("lens.hint.rule", _bench.Imaging.Rule);
-                break;
-            default:
-                _bench.Status = Loc.Format("lens.hint.calc", _answerCm.ToString("0.0"));
-                break;
-        }
-    }
-
-    public void Submit()
-    {
-        if (!_running || _waiting || _index != 2 || _bench.UI == null)
-        {
-            return;
-        }
-
-        string text = _bench.UI.AnswerText.Trim();
-        if (!float.TryParse(text, NumberStyles.Float, CultureInfo.InvariantCulture, out float value)
-            && !float.TryParse(text, NumberStyles.Float, CultureInfo.CurrentCulture, out value))
-        {
-            _bench.Status = Loc.Get("lens.need.number");
-            return;
-        }
-
-        if (Mathf.Abs(value - _answerCm) <= Mathf.Max(1.2f, _answerCm * 0.08f))
-        {
-            FeedbackService.Instance?.Success(_bench.ScreenPlate.transform.position);
-            _bench.Status = Loc.Format("lens.calc.ok", _answerCm.ToString("0.0"));
             _stars.RegisterSuccess();
-            Finish();
-        }
-        else
-        {
-            _stars.RegisterRetry();
-            FeedbackService.Instance?.Error(_bench.ScreenPlate.transform.position, _bench.ScreenPlate.transform);
-            _bench.Status = Loc.Get("lens.calc.again");
-        }
-    }
-
-    public void Pick(int index)
-    {
-        if (!_running || _waiting || _index != 1)
-        {
-            return;
-        }
-
-        if (index == _correct)
-        {
             FeedbackService.Instance?.Success(_bench.transform.position + Vector3.up * 0.2f);
-            _bench.Status = Loc.Format("lens.correct.nature", _bench.Imaging.Nature);
+            if (_index == 0)
+            {
+                _bench.ScreenDistance = _screenChoices[choice];
+                _bench.ApplyPlacement();
+                _bench.ScreenPlate.Flash();
+                _bench.Status = Loc.Get("lens.sharp");
+            }
+            else if (_index == 1)
+            {
+                _bench.Status = Loc.Format("lens.correct.nature", _bench.Imaging.Nature);
+            }
+            else
+            {
+                _bench.Status = Loc.Format("lens.calc.ok", _answerCm.ToString("0.0"));
+                Finish();
+                return;
+            }
+
             _bench.UI.ClearChoices();
             Advance();
         }
         else
         {
             _stars.RegisterRetry();
-            _bench.UI.MarkChoice(index);
+            _bench.UI.MarkChoice(choice);
             FeedbackService.Instance?.Error(_bench.transform.position + Vector3.up * 0.2f, _bench.transform);
-            _bench.Status = Loc.Format("lens.wrong.rule", _bench.Imaging.Rule);
+            _bench.Status = _index == 0
+                ? Loc.Get("lens.q1.again")
+                : _index == 1
+                    ? Loc.Format("lens.wrong.rule", _bench.Imaging.Rule)
+                    : Loc.Get("lens.calc.again");
         }
     }
 
@@ -148,8 +87,6 @@ public class LensQuizController : MonoBehaviour
     {
         _index = index;
         _waiting = false;
-        _hold = 0f;
-        _notedBlur = false;
         _bench.UI.ClearChoices();
         _bench.UI.SetAnswerVisible(false);
         _bench.LightOn = true;
@@ -164,7 +101,14 @@ public class LensQuizController : MonoBehaviour
                 _bench.Focal = 0.16f;
                 _bench.ScreenDistance = 0.55f;
                 _bench.LockCandle = true;
-                _bench.LockScreen = false;
+                _bench.LockScreen = true;
+                _correct = 1;
+                _bench.UI.ShowChoices(new[]
+                {
+                    Loc.Format("lens.choice.distance", 18),
+                    Loc.Format("lens.choice.distance", 26),
+                    Loc.Format("lens.choice.distance", 42)
+                }, Pick);
                 _bench.Status = Loc.Get("lens.q1.status");
                 break;
             case 1:
@@ -186,7 +130,14 @@ public class LensQuizController : MonoBehaviour
                 _bench.LockScreen = true;
                 _bench.AutoScreen = true;
                 _answerCm = 100f * (0.4f * 0.16f) / (0.4f - 0.16f);
-                _bench.UI.SetAnswerVisible(true);
+                _correct = 1;
+                _bench.UI.ShowChoices(new[]
+                {
+                    Loc.Format("lens.choice.distance", _answerChoices[0].ToString("0")),
+                    Loc.Format("lens.choice.distance", _answerChoices[1].ToString("0.0")),
+                    Loc.Format("lens.choice.distance", _answerChoices[2].ToString("0")),
+                    Loc.Format("lens.choice.distance", _answerChoices[3].ToString("0"))
+                }, Pick);
                 _bench.Status = Loc.Get("lens.q3.status");
                 break;
         }
@@ -231,7 +182,6 @@ public class LensQuizController : MonoBehaviour
         _waiting = false;
         _bench.UI.ClearChoices();
         _bench.UI.SetAnswerVisible(false);
-        _stars.RegisterSuccess();
         if (_bench.UI.Result != null)
         {
             _bench.UI.Result.Show(_stars.EvaluateStars(), _stars.EvaluateReason());
