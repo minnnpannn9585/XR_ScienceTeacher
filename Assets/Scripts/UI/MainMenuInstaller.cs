@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 
 public class MainMenuInstaller : MonoBehaviour
 {
@@ -9,27 +10,29 @@ public class MainMenuInstaller : MonoBehaviour
             return;
         }
 
-        if (FindObjectOfType<Camera>() == null)
-        {
-            var cam = new GameObject("MenuCamera").AddComponent<Camera>();
-            cam.clearFlags = CameraClearFlags.SolidColor;
-            cam.backgroundColor = NetFoldTheme.Void;
-            cam.gameObject.AddComponent<AudioListener>();
-        }
-
-        if (FindObjectOfType<UnityEngine.EventSystems.EventSystem>() == null)
-        {
-            var es = new GameObject("EventSystem");
-            es.AddComponent<UnityEngine.EventSystems.EventSystem>();
-            es.AddComponent<UnityEngine.InputSystem.UI.InputSystemUIInputModule>();
-        }
-
+        XRExperience.ConfigureEventSystem();
         if (FindObjectOfType<FeedbackService>() == null)
         {
             new GameObject("Feedback").AddComponent<FeedbackService>();
         }
 
+        var pcRig = new GameObject("PC Rig");
+        var camGo = new GameObject("MenuCamera");
+        camGo.transform.SetParent(pcRig.transform, false);
+        var cam = camGo.AddComponent<Camera>();
+        cam.clearFlags = CameraClearFlags.SolidColor;
+        cam.backgroundColor = NetFoldTheme.Void;
+        cam.nearClipPlane = 0.05f;
+        camGo.tag = "MainCamera";
+        camGo.AddComponent<UniversalAdditionalCameraData>();
+        camGo.AddComponent<AudioListener>();
+
+        var input = gameObject.AddComponent<InputAdapter>();
+        input.PcCamera = cam;
+        input.PcRig = pcRig;
+
         var ui = new GameObject("MainMenuUI").AddComponent<MainMenuUI>();
         ui.Build();
+        XRExperience.Attach(input, transform, new Vector3(0.1f, 0f, -2.4f));
     }
 }

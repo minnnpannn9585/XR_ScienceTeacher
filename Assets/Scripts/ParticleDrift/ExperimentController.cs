@@ -3,10 +3,7 @@ using System.Collections.Generic;
 using DG.Tweening;
 using DriftQuiz = ParticleDrift.ChallengeController;
 using UnityEngine;
-using UnityEngine.EventSystems;
-using UnityEngine.InputSystem.UI;
 using UnityEngine.Rendering.Universal;
-using UnityEngine.XR.Interaction.Toolkit.UI;
 
 public enum DriftStep
 {
@@ -152,20 +149,7 @@ public class ExperimentController : MonoBehaviour
 
     void EnsureSystems()
     {
-        if (FindObjectOfType<EventSystem>() == null)
-        {
-            var es = new GameObject("EventSystem");
-            var system = es.AddComponent<EventSystem>();
-            system.sendNavigationEvents = false;
-            if (InputAdapter.DetectXR())
-            {
-                es.AddComponent<XRUIInputModule>();
-            }
-            else
-            {
-                es.AddComponent<InputSystemUIInputModule>();
-            }
-        }
+        XRExperience.ConfigureEventSystem();
 
         if (FindObjectOfType<FeedbackService>() == null)
         {
@@ -243,6 +227,7 @@ public class ExperimentController : MonoBehaviour
         Input.PcRig = pcRig;
 
         StudioSet.Install(transform, cam, _desk.position);
+        XRExperience.Attach(Input, transform, new Vector3(0f, 0f, -0.7f));
     }
 
     public void Toolbar(string action)

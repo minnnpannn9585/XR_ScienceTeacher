@@ -1,7 +1,6 @@
 using System;
 using UnityEngine;
 using UnityEngine.XR;
-using UnityEngine.XR.Management;
 
 public enum InteractTool
 {
@@ -35,18 +34,13 @@ public class InputAdapter : MonoBehaviour
     bool _dragging;
     PCInputProvider _pc;
     XRInputProvider _xr;
+    readonly Collider[] _nearHits = new Collider[12];
 
     public static bool DetectXR()
     {
-        if (XRSettings.isDeviceActive)
+        if (XRSession.IsActive || XRSettings.isDeviceActive)
         {
             return true;
-        }
-
-        var general = XRGeneralSettings.Instance;
-        if (general != null && general.Manager != null && general.Manager.activeLoader != null)
-        {
-            return XRSettings.isDeviceActive;
         }
 
         return false;
@@ -155,10 +149,20 @@ public class InputAdapter : MonoBehaviour
         {
             if (Provider.TwoHandActive)
             {
-                Current.Rotate(Provider.TwoHandRotateDelta);
+                if (!UseXR)
+                {
+                    Current.Rotate(Provider.TwoHandRotateDelta);
+                }
+
                 Current.Scale(Provider.TwoHandScaleDelta * 2.2f);
+                if (_dragging && _drag != null)
+                {
+                    _drag.OnDragEnd();
+                    _dragging = false;
+                    _drag = null;
+                }
             }
-            else if (ActiveTool == InteractTool.Rotate && Provider.SelectHeld && !Provider.IsPointerOverUi)
+            else if (!UseXR && ActiveTool == InteractTool.Rotate && Provider.SelectHeld && !Provider.IsPointerOverUi)
             {
                 Current.Rotate(Provider.LookDelta.sqrMagnitude > 0.01f
                     ? Provider.LookDelta * 0.12f
@@ -194,10 +198,24 @@ public class InputAdapter : MonoBehaviour
         bool hitInteractable = Physics.Raycast(ray, out RaycastHit hit, 30f, InteractMask, QueryTriggerInteraction.Ignore);
         IInteractable hovered = null;
         IDraggable draggable = null;
-        if (hitInteractable)
+        if (Provider.NearContact)
+        {
+            hovered = ClosestInteractable(Provider.NearPoint, out draggable);
+            hitInteractable = hovered != null || draggable != null;
+            if (hitInteractable)
+            {
+                hit.point = Provider.NearPoint;
+            }
+        }
+        else if (hitInteractable)
         {
             hovered = hit.collider.GetComponentInParent<IInteractable>();
             draggable = hit.collider.GetComponentInParent<IDraggable>();
+        }
+
+        if (Provider.TwoHandActive)
+        {
+            return;
         }
 
         if (Provider.SelectPressed)
@@ -208,23 +226,24 @@ public class InputAdapter : MonoBehaviour
             }
 
             IDraggable dragTarget = ActiveTool == InteractTool.Select ? (hovered as IDraggable ?? draggable) : null;
-            if (dragTarget != null && dragTarget.CanDrag)
+            if (dragTarget != null && dragTarget.CanDrag && Provider.ManipulateHeld)
             {
                 _drag = dragTarget;
                 _dragging = true;
-                _drag.OnDragStart(hit.point, ray);
+                Vector3 start = hitInteractable ? hit.point : ray.origin + ray.direction * 1.2f;
+                _drag.OnDragStart(start, ray);
             }
         }
 
         if (_dragging && _drag != null)
         {
             Vector3 point = hitInteractable ? hit.point : ray.origin + ray.direction * 1.6f;
-            if (Provider.SelectHeld)
+            if (Provider.ManipulateHeld)
             {
                 _drag.OnDrag(point, ray);
             }
 
-            if (Provider.SelectReleased)
+            if (!Provider.ManipulateHeld || Provider.SelectReleased)
             {
                 _drag.OnDragEnd();
                 _dragging = false;
@@ -236,6 +255,39 @@ public class InputAdapter : MonoBehaviour
             _dragging = false;
             _drag = null;
         }
+    }
+
+    IInteractable ClosestInteractable(Vector3 point, out IDraggable draggable)
+    {
+        draggable = null;
+        IInteractable best = null;
+        float bestSqr = 0.08f * 0.08f;
+        int count = Physics.OverlapSphereNonAlloc(point, 0.08f, _nearHits, InteractMask, QueryTriggerInteraction.Ignore);
+        for (int i = 0; i < count; i++)
+        {
+            if (_nearHits[i] == null)
+            {
+                continue;
+            }
+
+            var candidate = _nearHits[i].GetComponentInParent<IInteractable>();
+            if (candidate == null)
+            {
+                continue;
+            }
+
+            float sqr = (_nearHits[i].ClosestPoint(point) - point).sqrMagnitude;
+            if (sqr > bestSqr)
+            {
+                continue;
+            }
+
+            bestSqr = sqr;
+            best = candidate;
+            draggable = candidate as IDraggable ?? _nearHits[i].GetComponentInParent<IDraggable>();
+        }
+
+        return best;
     }
 
     public void Select(IInteractable target)

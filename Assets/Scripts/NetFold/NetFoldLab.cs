@@ -2,11 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
-using UnityEngine.EventSystems;
-using UnityEngine.InputSystem.UI;
 using UnityEngine.Rendering.Universal;
-using UnityEngine.XR.Interaction.Toolkit;
-using UnityEngine.XR.Interaction.Toolkit.UI;
 
 public class NetFoldLab : MonoBehaviour
 {
@@ -90,19 +86,7 @@ public class NetFoldLab : MonoBehaviour
 
     void EnsureSystems()
     {
-        if (FindObjectOfType<EventSystem>() == null)
-        {
-            var es = new GameObject("EventSystem");
-            es.AddComponent<EventSystem>();
-            if (InputAdapter.DetectXR())
-            {
-                es.AddComponent<XRUIInputModule>();
-            }
-            else
-            {
-                es.AddComponent<InputSystemUIInputModule>();
-            }
-        }
+        XRExperience.ConfigureEventSystem();
 
         if (FindObjectOfType<FeedbackService>() == null)
         {
@@ -157,28 +141,11 @@ public class NetFoldLab : MonoBehaviour
         orbit.Yaw = 34f;
         orbit.Pitch = 32f;
         orbit.Distance = 2.55f;
-
-        StudioSet.Install(transform, cam, DeskAnchor.position);
-
-        var xr = XRRigBuilder.Build(transform, new Vector3(0f, 0f, -0.55f));
         Input.PcCamera = cam;
         Input.PcRig = pcRig;
-        Input.XrOrigin = xr.gameObject;
-        Input.XrHead = xr.Camera != null ? xr.Camera.transform : null;
-        var rays = xr.GetComponentsInChildren<XRRayInteractor>(true);
-        for (int i = 0; i < rays.Length; i++)
-        {
-            if (rays[i].name.Contains("Right"))
-            {
-                Input.RightRay = rays[i];
-            }
-            else
-            {
-                Input.LeftRay = rays[i];
-            }
-        }
 
-        Input.ApplyPlatform();
+        StudioSet.Install(transform, cam, DeskAnchor.position);
+        XRExperience.Attach(Input, transform, new Vector3(0f, 0f, -0.55f));
     }
 
     void OnModeChanged(GameMode mode)

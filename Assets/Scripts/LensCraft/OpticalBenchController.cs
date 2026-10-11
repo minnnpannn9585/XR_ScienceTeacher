@@ -1,11 +1,7 @@
 using System.Collections;
 using DG.Tweening;
 using UnityEngine;
-using UnityEngine.EventSystems;
-using UnityEngine.InputSystem.UI;
 using UnityEngine.Rendering.Universal;
-using UnityEngine.XR.Interaction.Toolkit;
-using UnityEngine.XR.Interaction.Toolkit.UI;
 
 public enum LensStep
 {
@@ -74,6 +70,13 @@ public class OpticalBenchController : MonoBehaviour
         ScreenPlate.Build();
         _lens = gameObject.AddComponent<LensController>();
         _lens.Build(this);
+        var lensGrab = new GameObject("LensGrab");
+        lensGrab.transform.SetParent(transform, false);
+        lensGrab.transform.localPosition = new Vector3(0f, AxisY, 0f);
+        var lensBox = lensGrab.AddComponent<BoxCollider>();
+        lensBox.size = new Vector3(0.05f, 0.26f, 0.26f);
+        var barrel = lensGrab.AddComponent<LensBarrelGrab>();
+        barrel.Bench = this;
         _rays = gameObject.AddComponent<LightRayController>();
         _rays.Build(this);
         _images = gameObject.AddComponent<ImageFormationController>();
@@ -151,6 +154,17 @@ public class OpticalBenchController : MonoBehaviour
         }
 
         Focal = Mathf.Clamp(centimeters * 0.01f, 0.1f, 0.28f);
+        Status = Loc.Get("lens.focal.stronger");
+    }
+
+    public void SetFocalMeters(float meters)
+    {
+        if (LockFocal)
+        {
+            return;
+        }
+
+        Focal = Mathf.Clamp(meters, 0.1f, 0.28f);
         Status = Loc.Get("lens.focal.stronger");
     }
 
@@ -636,13 +650,7 @@ public class OpticalBenchController : MonoBehaviour
 
     void EnsureSystems()
     {
-        if (FindObjectOfType<EventSystem>() == null)
-        {
-            var es = new GameObject("EventSystem");
-            var system = es.AddComponent<EventSystem>();
-            system.sendNavigationEvents = false;
-            es.AddComponent<InputSystemUIInputModule>();
-        }
+        XRExperience.ConfigureEventSystem();
 
         if (FindObjectOfType<FeedbackService>() == null)
         {
@@ -705,19 +713,9 @@ public class OpticalBenchController : MonoBehaviour
         var look = new GameObject("LookTarget");
         look.transform.SetParent(transform, false);
         orbit.Bind(_input, look.transform);
-        StudioSet.Install(transform, _cam, transform.position);
-        var xr = XRRigBuilder.Build(transform, new Vector3(0f, 0f, -0.6f));
         _input.PcCamera = _cam;
         _input.PcRig = pcRig;
-        _input.XrOrigin = xr.gameObject;
-        _input.XrHead = xr.Camera != null ? xr.Camera.transform : null;
-        var rays = xr.GetComponentsInChildren<XRRayInteractor>(true);
-        for (int i = 0; i < rays.Length; i++)
-        {
-            if (rays[i].name.Contains("Right")) _input.RightRay = rays[i];
-            else _input.LeftRay = rays[i];
-        }
-
-        _input.ApplyPlatform();
+        StudioSet.Install(transform, _cam, transform.position);
+        XRExperience.Attach(_input, transform, new Vector3(0f, 0f, -0.6f));
     }
 }

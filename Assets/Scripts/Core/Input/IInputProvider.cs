@@ -21,4 +21,7 @@ public interface IInputProvider
     float TwoHandScaleDelta { get; }
     Vector2 TwoHandRotateDelta { get; }
     bool IsPointerOverUi { get; }
+    bool NearContact { get; }
+    Vector3 NearPoint { get; }
+    bool ManipulateHeld { get; }
 }

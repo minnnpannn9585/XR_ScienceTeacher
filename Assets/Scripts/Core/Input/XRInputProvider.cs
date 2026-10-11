@@ -1,28 +1,13 @@
 using UnityEngine;
-using UnityEngine.EventSystems;
-using UnityEngine.InputSystem;
-using UnityEngine.XR;
-using UnityEngine.XR.Interaction.Toolkit;
-using UnityEngine.XR.Interaction.Toolkit.UI;
 
+[DefaultExecutionOrder(-100)]
 public class XRInputProvider : MonoBehaviour, IInputProvider
 {
     InputAdapter _adapter;
-    XRRayInteractor _rightRay;
-    XRRayInteractor _leftRay;
-    InputAction _leftStick;
-    InputAction _rightStick;
-    InputAction _rightTrigger;
-    InputAction _leftTrigger;
-    InputAction _rightGrip;
-    InputAction _leftGrip;
-    InputAction _menu;
-    InputAction _rightPos;
-    InputAction _leftPos;
-    bool _selectHeld;
-    bool _wasSelect;
-    float _prevTwoHandDist = -1f;
-    Vector3 _prevTwoHandDir;
+    XRHandCursor[] _hands = System.Array.Empty<XRHandCursor>();
+    XRHandCursor _active;
+    bool _manipulate;
+    bool _nearGrab;
 
     public Ray PointerRay { get; private set; }
     public bool SelectPressed { get; private set; }
@@ -33,143 +18,158 @@ public class XRInputProvider : MonoBehaviour, IInputProvider
     public Vector2 MoveAxis { get; private set; }
     public float ZoomDelta { get; private set; }
     public bool BackPressed { get; private set; }
-    public bool ConfirmPressed => false;
-    public bool ResetPressed => false;
-    public bool ViewTogglePressed => false;
-    public bool RayTogglePressed => false;
+    public bool ConfirmPressed { get; private set; }
+    public bool ResetPressed { get; private set; }
+    public bool ViewTogglePressed { get; private set; }
+    public bool RayTogglePressed { get; private set; }
     public bool TwoHandActive { get; private set; }
     public float TwoHandScaleDelta { get; private set; }
     public Vector2 TwoHandRotateDelta { get; private set; }
     public bool IsPointerOverUi { get; private set; }
+    public bool NearContact { get; private set; }
+    public Vector3 NearPoint { get; private set; }
+    public bool ManipulateHeld { get; private set; }
+
+    float _prevSpan = -1f;
 
     public void Initialize(InputAdapter adapter)
     {
         _adapter = adapter;
-        _rightRay = adapter.RightRay;
-        _leftRay = adapter.LeftRay;
-        BuildActions();
+        _hands = adapter != null && adapter.XrOrigin != null
+            ? adapter.XrOrigin.GetComponentsInChildren<XRHandCursor>(true)
+            : System.Array.Empty<XRHandCursor>();
         enabled = true;
     }
 
     public void Shutdown()
     {
-        DisposeActions();
         enabled = false;
-    }
-
-    void OnDestroy()
-    {
-        DisposeActions();
-    }
-
-    void BuildActions()
-    {
-        _leftStick = NewAction("<XRController>{LeftHand}/thumbstick", "<XRController>{LeftHand}/primary2DAxis", "<XRController>{LeftHand}/joystick");
-        _rightStick = NewAction("<XRController>{RightHand}/thumbstick", "<XRController>{RightHand}/primary2DAxis", "<XRController>{RightHand}/joystick");
-        _rightTrigger = NewAction("<XRController>{RightHand}/trigger", "<XRController>{RightHand}/triggerButton", "<XRHandDevice>{RightHand}/pinchReady");
-        _leftTrigger = NewAction("<XRController>{LeftHand}/trigger", "<XRController>{LeftHand}/triggerButton", "<XRHandDevice>{LeftHand}/pinchReady");
-        _rightGrip = NewAction("<XRController>{RightHand}/grip", "<XRController>{RightHand}/gripButton");
-        _leftGrip = NewAction("<XRController>{LeftHand}/grip", "<XRController>{LeftHand}/gripButton");
-        _menu = NewAction("<XRController>{LeftHand}/menu", "<XRController>{RightHand}/menu", "<XRController>/menuButton");
-        _rightPos = NewAction("<XRController>{RightHand}/devicePosition");
-        _leftPos = NewAction("<XRController>{LeftHand}/devicePosition");
-    }
-
-    static InputAction NewAction(params string[] bindings)
-    {
-        var action = new InputAction(type: InputActionType.Value);
-        for (int i = 0; i < bindings.Length; i++)
-        {
-            action.AddBinding(bindings[i]);
-        }
-
-        action.Enable();
-        return action;
-    }
-
-    void DisposeActions()
-    {
-        Dispose(_leftStick);
-        Dispose(_rightStick);
-        Dispose(_rightTrigger);
-        Dispose(_leftTrigger);
-        Dispose(_rightGrip);
-        Dispose(_leftGrip);
-        Dispose(_menu);
-        Dispose(_rightPos);
-        Dispose(_leftPos);
-    }
-
-    static void Dispose(InputAction action)
-    {
-        if (action == null)
-        {
-            return;
-        }
-
-        action.Disable();
-        action.Dispose();
     }
 
     void Update()
     {
-        UpdatePointer();
-        bool trigger = ReadPressed(_rightTrigger) || ReadPressed(_leftTrigger);
-        SelectPressed = trigger && !_wasSelect;
-        SelectHeld = trigger;
-        SelectReleased = !trigger && _wasSelect;
-        _wasSelect = trigger;
-        _selectHeld = trigger;
+        _active = ChooseHand();
+        ReadButtons();
+        ReadGesture();
+        ReadPointer();
+    }
 
-        bool leftGrip = ReadPressed(_leftGrip);
-        bool rightGrip = ReadPressed(_rightGrip);
-        TwoHandActive = leftGrip && rightGrip;
-        TwoHandScaleDelta = 0f;
-        TwoHandRotateDelta = Vector2.zero;
-
-        if (TwoHandActive && _leftPos != null && _rightPos != null)
+    XRHandCursor ChooseHand()
+    {
+        XRHandCursor best = null;
+        int bestScore = -1;
+        for (int i = 0; i < _hands.Length; i++)
         {
-            Vector3 a = _leftPos.ReadValue<Vector3>();
-            Vector3 b = _rightPos.ReadValue<Vector3>();
-            float dist = Vector3.Distance(a, b);
-            Vector3 dir = b - a;
-            if (_prevTwoHandDist > 0f)
+            var hand = _hands[i];
+            if (hand == null || !hand.Tracked)
             {
-                TwoHandScaleDelta = dist - _prevTwoHandDist;
-                Vector3 delta = Vector3.Cross(_prevTwoHandDir.normalized, dir.normalized);
-                TwoHandRotateDelta = new Vector2(delta.y, -delta.x) * 80f;
+                continue;
             }
 
-            _prevTwoHandDist = dist;
-            _prevTwoHandDir = dir;
+            int score = hand.Right ? 1 : 0;
+            if (hand.Manipulate) score += 4;
+            if (hand.PokeHoveringUi || hand.RayHoveringUi()) score += 3;
+            if (hand.NearHit) score += 2;
+            if (score > bestScore)
+            {
+                best = hand;
+                bestScore = score;
+            }
+        }
+
+        return best;
+    }
+
+    void ReadButtons()
+    {
+        BackPressed = false;
+        ConfirmPressed = false;
+        ResetPressed = false;
+        ViewTogglePressed = false;
+        RayTogglePressed = false;
+        var right = XRPoseReader.FindController(true);
+        var left = XRPoseReader.FindController(false);
+        BackPressed = XRPoseReader.WasPressed(left, "menu") || XRPoseReader.WasPressed(right, "menu");
+        ConfirmPressed = XRPoseReader.WasPressed(right, "primaryButton");
+        ViewTogglePressed = XRPoseReader.WasPressed(right, "secondaryButton");
+        ResetPressed = XRPoseReader.WasPressed(left, "primaryButton");
+        RayTogglePressed = XRPoseReader.WasPressed(left, "secondaryButton");
+        MoveAxis = Vector2.zero;
+        LookDelta = Vector2.zero;
+        ZoomDelta = 0f;
+        TwoHandRotateDelta = Vector2.zero;
+    }
+
+    void ReadGesture()
+    {
+        bool leftGrab = Grabbing(false);
+        bool rightGrab = Grabbing(true);
+        TwoHandActive = leftGrab && rightGrab;
+        TwoHandScaleDelta = 0f;
+        if (TwoHandActive && TryPoint(false, out Vector3 a) && TryPoint(true, out Vector3 b))
+        {
+            float span = Vector3.Distance(a, b);
+            if (_prevSpan > 0f)
+            {
+                TwoHandScaleDelta = span - _prevSpan;
+            }
+
+            _prevSpan = span;
         }
         else
         {
-            _prevTwoHandDist = -1f;
+            _prevSpan = -1f;
         }
 
-        Vector2 right = _rightStick != null ? _rightStick.ReadValue<Vector2>() : Vector2.zero;
-        Vector2 left = _leftStick != null ? _leftStick.ReadValue<Vector2>() : Vector2.zero;
-        MoveAxis = left.sqrMagnitude > 0.01f ? left : right;
-        LookDelta = right;
-        ZoomDelta = right.y * (rightGrip ? 1f : 0f);
-        SecondaryHeld = rightGrip && !leftGrip;
-        BackPressed = _menu != null && _menu.WasPressedThisFrame();
-        IsPointerOverUi = EventSystem.current != null && EventSystem.current.IsPointerOverGameObject();
+        bool manipulate = _active != null && _active.Manipulate && !TwoHandActive;
+        bool tap = _active != null && _active.ConsumeTap();
+        if (manipulate && !_manipulate)
+        {
+            _nearGrab = _active.NearHit;
+        }
+
+        if (!manipulate)
+        {
+            _nearGrab = false;
+        }
+
+        SelectPressed = (manipulate && !_manipulate) || tap;
+        SelectHeld = manipulate;
+        SelectReleased = !manipulate && _manipulate;
+        _manipulate = manipulate;
+        ManipulateHeld = manipulate;
+        NearContact = _nearGrab;
+        NearPoint = _active != null ? _active.PokePosition : Vector3.zero;
+        SecondaryHeld = false;
     }
 
-    void UpdatePointer()
+    void ReadPointer()
     {
-        if (_rightRay != null && _rightRay.TryGetCurrent3DRaycastHit(out var hit))
+        IsPointerOverUi = false;
+        for (int i = 0; i < _hands.Length; i++)
         {
-            PointerRay = new Ray(_rightRay.rayOriginTransform.position, (hit.point - _rightRay.rayOriginTransform.position).normalized);
-            return;
+            if (_hands[i] != null && _hands[i].Tracked && (_hands[i].PokeHoveringUi || _hands[i].RayHoveringUi()))
+            {
+                IsPointerOverUi = true;
+                break;
+            }
         }
 
-        if (_rightRay != null)
+        if (_active != null && _active.Tracked)
         {
-            Transform origin = _rightRay.rayOriginTransform != null ? _rightRay.rayOriginTransform : _rightRay.transform;
-            PointerRay = new Ray(origin.position, origin.forward);
+            if (_nearGrab)
+            {
+                PointerRay = new Ray(_active.PokePosition + Vector3.up * 0.25f, Vector3.down);
+                return;
+            }
+
+            Vector3 forward = _active.Sample.AimRotation * Vector3.forward;
+            if (forward.sqrMagnitude < 0.001f)
+            {
+                forward = Vector3.forward;
+            }
+
+            PointerRay = new Ray(_active.Sample.AimOrigin, forward.normalized);
             return;
         }
 
@@ -183,18 +183,40 @@ public class XRInputProvider : MonoBehaviour, IInputProvider
         PointerRay = cam != null ? new Ray(cam.transform.position, cam.transform.forward) : new Ray(Vector3.zero, Vector3.forward);
     }
 
-    static bool ReadPressed(InputAction action)
+    bool Grabbing(bool right)
     {
-        if (action == null)
+        for (int i = 0; i < _hands.Length; i++)
         {
-            return false;
+            var hand = _hands[i];
+            if (hand == null || hand.Right != right || !hand.Tracked)
+            {
+                continue;
+            }
+
+            if (hand.UsingController)
+            {
+                return hand.Sample.Grip > 0.55f || hand.Sample.Trigger > 0.55f;
+            }
+
+            return hand.Pinching;
         }
 
-        if (action.expectedControlType == "Button")
+        return false;
+    }
+
+    bool TryPoint(bool right, out Vector3 point)
+    {
+        for (int i = 0; i < _hands.Length; i++)
         {
-            return action.IsPressed();
+            var hand = _hands[i];
+            if (hand != null && hand.Right == right && hand.Tracked)
+            {
+                point = hand.PokePosition;
+                return true;
+            }
         }
 
-        return action.ReadValue<float>() > 0.7f || action.IsPressed();
+        point = Vector3.zero;
+        return false;
     }
 }

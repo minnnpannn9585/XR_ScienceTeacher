@@ -316,8 +316,8 @@ public class ParticleDriftUI : MonoBehaviour
         var bg = new GameObject("Background", typeof(RectTransform), typeof(Image));
         var bgRt = bg.GetComponent<RectTransform>();
         bgRt.SetParent(rt, false);
-        bgRt.anchorMin = new Vector2(0f, 0.3f);
-        bgRt.anchorMax = new Vector2(1f, 0.7f);
+        bgRt.anchorMin = new Vector2(0f, 0.08f);
+        bgRt.anchorMax = new Vector2(1f, 0.92f);
         bgRt.offsetMin = Vector2.zero;
         bgRt.offsetMax = Vector2.zero;
         var bgImg = bg.GetComponent<Image>();

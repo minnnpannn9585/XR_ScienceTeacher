@@ -196,6 +196,7 @@ public static class UiFactory
         scaler.referenceResolution = new Vector2(1920, 1080);
         // Keep the entire authored layout visible on narrow and ultrawide screens.
         scaler.screenMatchMode = CanvasScaler.ScreenMatchMode.Expand;
+        go.AddComponent<XROverlayCanvas>();
         return canvas;
     }
 

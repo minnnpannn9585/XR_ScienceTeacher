@@ -29,6 +29,9 @@ public class PCInputProvider : MonoBehaviour, IInputProvider
     public float TwoHandScaleDelta => 0f;
     public Vector2 TwoHandRotateDelta => Vector2.zero;
     public bool IsPointerOverUi { get; private set; }
+    public bool NearContact => false;
+    public Vector3 NearPoint => PointerRay.origin;
+    public bool ManipulateHeld => SelectHeld;
 
     public void Initialize(InputAdapter adapter)
     {
