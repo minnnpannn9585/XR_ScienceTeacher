@@ -162,7 +162,7 @@ public class LensCraftUI : MonoBehaviour
     {
         if (_quiz != null)
         {
-            _quiz.ShowChoices(labels, picked, new Color(0.12f, 0.28f, 0.48f, 0.96f));
+            _quiz.ShowChoices(labels, picked);
             return;
         }
 
@@ -190,11 +190,7 @@ public class LensCraftUI : MonoBehaviour
             return;
         }
 
-        var image = _choiceButtons[index].GetComponent<Image>();
-        if (image != null)
-        {
-            image.color = NetFoldTheme.Error;
-        }
+        UiFactory.SetButtonColor(_choiceButtons[index], NetFoldTheme.Error);
     }
 
     public void ClearChoices()

@@ -4,6 +4,7 @@ using UnityEngine;
 public static class GeometryFactory
 {
     public const float DefaultSize = 0.42f;
+    public const float SurfaceGap = 0.04f;
 
     public static ShapeController Create(ShapeType type, Transform parent, Vector3 localPosition, float size = DefaultSize, bool withCollider = true)
     {
@@ -33,8 +34,57 @@ public static class GeometryFactory
                 break;
         }
 
+        CenterPivotAndRaise(root.transform);
         controller.Initialize(type, faceMat, hiMat);
         return controller;
+    }
+
+    static void CenterPivotAndRaise(Transform root)
+    {
+        var faces = root.GetComponentsInChildren<ShapeFace>(true);
+        Bounds bounds = default;
+        bool hasBounds = false;
+        for (int i = 0; i < faces.Length; i++)
+        {
+            MeshFilter filter = faces[i].GetComponent<MeshFilter>();
+            if (filter == null || filter.sharedMesh == null)
+            {
+                continue;
+            }
+
+            Vector3[] vertices = filter.sharedMesh.vertices;
+            for (int j = 0; j < vertices.Length; j++)
+            {
+                Vector3 point = root.InverseTransformPoint(filter.transform.TransformPoint(vertices[j]));
+                if (!hasBounds)
+                {
+                    bounds = new Bounds(point, Vector3.zero);
+                    hasBounds = true;
+                }
+                else
+                {
+                    bounds.Encapsulate(point);
+                }
+            }
+        }
+
+        if (!hasBounds)
+        {
+            root.localPosition += Vector3.up * SurfaceGap;
+            return;
+        }
+
+        Vector3 center = bounds.center;
+        for (int i = 0; i < faces.Length; i++)
+        {
+            ShapeFace face = faces[i];
+            face.transform.localPosition -= center;
+            face.FoldedLocalPos -= center;
+            face.UnfoldedLocalPos -= center;
+            face.HingePoint -= center;
+        }
+
+        root.localPosition += center + Vector3.up * SurfaceGap;
     }
 
     static ShapeFace AddFace(Transform parent, string name, int index, Mesh mesh, Material faceMat, Material hiMat, Material edgeMat, Vector3 foldedPos, Quaternion foldedRot, Vector3 unfoldedPos, Quaternion unfoldedRot, bool withCollider)

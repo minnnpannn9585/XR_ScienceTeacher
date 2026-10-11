@@ -138,7 +138,7 @@ public class NetFoldUI : MonoBehaviour
     {
         if (_quiz != null)
         {
-            _quiz.ShowChoices(labels, picked, new Color(0.12f, 0.32f, 0.55f, 0.96f));
+            _quiz.ShowChoices(labels, picked);
         }
     }
 

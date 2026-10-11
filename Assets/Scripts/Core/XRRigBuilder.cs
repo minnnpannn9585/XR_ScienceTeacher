@@ -11,6 +11,9 @@ public static class XRRigBuilder
     public static XROrigin Build(Transform parent, Vector3 originPos)
     {
         var originGo = new GameObject("XR Origin");
+        // Keep the XR camera (and its listener) inactive while the rig is assembled.
+        // InputAdapter activates exactly one platform rig after both cameras exist.
+        originGo.SetActive(false);
         originGo.transform.SetParent(parent, false);
         originGo.transform.position = originPos;
         var origin = originGo.AddComponent<XROrigin>();
@@ -44,7 +47,6 @@ public static class XRRigBuilder
 
         var right = CreateController(offset.transform, "Right Controller", true);
         var left = CreateController(offset.transform, "Left Controller", false);
-        originGo.SetActive(false);
         return origin;
     }
 

@@ -79,6 +79,8 @@ public class InputAdapter : MonoBehaviour
             XrOrigin.SetActive(UseXR);
         }
 
+        SyncAudioListener();
+
         if (_pc != null)
         {
             _pc.Shutdown();
@@ -111,6 +113,30 @@ public class InputAdapter : MonoBehaviour
         }
 
         Provider.Initialize(this);
+    }
+
+    void SyncAudioListener()
+    {
+        Camera activeCamera = UseXR
+            ? (XrHead != null ? XrHead.GetComponent<Camera>() : null)
+            : PcCamera;
+
+        if (activeCamera == null)
+        {
+            return;
+        }
+
+        AudioListener activeListener = activeCamera.GetComponent<AudioListener>();
+        if (activeListener == null)
+        {
+            activeListener = activeCamera.gameObject.AddComponent<AudioListener>();
+        }
+
+        AudioListener[] listeners = FindObjectsOfType<AudioListener>(true);
+        for (int i = 0; i < listeners.Length; i++)
+        {
+            listeners[i].enabled = listeners[i] == activeListener;
+        }
     }
 
     void Update()

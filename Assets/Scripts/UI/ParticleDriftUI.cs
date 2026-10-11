@@ -208,7 +208,7 @@ public class ParticleDriftUI : MonoBehaviour
     {
         if (_quiz != null)
         {
-            _quiz.ShowChoices(labels, picked, new Color(0.42f, 0.12f, 0.28f, 0.96f));
+            _quiz.ShowChoices(labels, picked);
             return;
         }
 

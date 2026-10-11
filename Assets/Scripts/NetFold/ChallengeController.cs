@@ -394,7 +394,7 @@ public class ChallengeController : MonoBehaviour
             var grow = GeometryFactory.Create(ShapeType.Cube, _stage, new Vector3(0f, 0.02f, 0.48f), 0.08f, false);
             grow.AllowIdleSpin = false;
             _spawned.Add(grow.gameObject);
-            grow.transform.DOLocalMove(Vector3.zero, 0.7f).SetEase(Ease.OutCubic);
+            grow.transform.DOLocalMove(Vector3.up * (GeometryFactory.SurfaceGap + 0.04f), 0.7f).SetEase(Ease.OutCubic);
             grow.transform.DOScale(1.4f, 0.7f).SetEase(Ease.OutBack);
         }
     }

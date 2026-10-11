@@ -46,9 +46,9 @@ public class ChallengeScreenQuiz : MonoBehaviour
         var top = UiFactory.Panel(canvas, "ChallengeNavigation", new Vector2(0f, 1f), Vector2.one, new Vector2(24f, -100f), new Vector2(-24f, -20f), NetFoldTheme.Glass);
         UiFactory.Label(top.transform, "Module", Loc.Format("quiz.title", title), 26, TextAlignmentOptions.Left, Vector2.zero, new Vector2(0.40f, 1f), new Vector2(24f, 10f), new Vector2(0f, -10f));
         UiFactory.Label(top.transform, "Scoring", Loc.Get("quiz.scoring"), 18, TextAlignmentOptions.Center, new Vector2(0.35f, 0f), new Vector2(0.63f, 1f), Vector2.zero, Vector2.zero, NetFoldTheme.TextDim);
-        UiFactory.Button(top.transform, "Hint", Loc.Get("common.hint"), new Vector2(0.64f, 0f), new Vector2(0.75f, 1f), new Vector2(4f, 14f), new Vector2(-4f, -14f), hint);
-        UiFactory.Button(top.transform, "Retry", Loc.Get("common.retryChallenge"), new Vector2(0.75f, 0f), new Vector2(0.89f, 1f), new Vector2(4f, 14f), new Vector2(-4f, -14f), retry);
-        UiFactory.Button(top.transform, "Back", Loc.Get("common.back"), new Vector2(0.89f, 0f), new Vector2(1f, 1f), new Vector2(4f, 14f), new Vector2(-14f, -14f), SceneLoader.LoadMainMenu);
+        UiFactory.Button(top.transform, "Hint", Loc.Get("common.hint"), new Vector2(0.64f, 0.16f), new Vector2(0.75f, 0.84f), new Vector2(4f, 0f), new Vector2(-4f, 0f), hint);
+        UiFactory.Button(top.transform, "Retry", Loc.Get("common.retryChallenge"), new Vector2(0.75f, 0.16f), new Vector2(0.89f, 0.84f), new Vector2(4f, 0f), new Vector2(-4f, 0f), retry);
+        UiFactory.Button(top.transform, "Back", Loc.Get("common.back"), new Vector2(0.89f, 0.16f), new Vector2(1f, 0.84f), new Vector2(4f, 0f), new Vector2(-14f, 0f), SceneLoader.LoadMainMenu);
     }
 
     public TMP_Text BuildStatus(Transform canvas)
@@ -90,7 +90,7 @@ public class ChallengeScreenQuiz : MonoBehaviour
         {
             int index = i;
             float x = pad + i * (width + pad);
-            Button button = UiFactory.Button(_choiceRoot, "Choice" + i, labels[i], new Vector2(x, 0.08f), new Vector2(x + width, 0.92f), Vector2.zero, Vector2.zero, () => picked?.Invoke(index), buttonColor);
+            Button button = UiFactory.Button(_choiceRoot, "Choice" + i, labels[i], new Vector2(x, 0.18f), new Vector2(x + width, 0.82f), Vector2.zero, Vector2.zero, () => picked?.Invoke(index), buttonColor);
             _choiceButtons.Add(button);
         }
     }
