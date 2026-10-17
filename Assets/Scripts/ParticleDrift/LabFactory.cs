@@ -69,6 +69,13 @@ public class FaceCamera : MonoBehaviour
 {
     void LateUpdate()
     {
+        if (XRSession.IsActive && GetComponent<Canvas>() != null)
+        {
+            // Desk labels have a fixed reading angle in XR, like physical cards.
+            transform.rotation = Quaternion.Euler(20f, 0f, 0f);
+            enabled = false;
+            return;
+        }
         var cam = Camera.main;
         if (cam == null)
         {

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-[DefaultExecutionOrder(-100)]
+[DefaultExecutionOrder(-80)]
 public class XRInputProvider : MonoBehaviour, IInputProvider
 {
     InputAdapter _adapter;
@@ -52,6 +52,16 @@ public class XRInputProvider : MonoBehaviour, IInputProvider
         ReadButtons();
         ReadGesture();
         ReadPointer();
+        if (ResultPanel.HasOpenPanel)
+        {
+            SelectPressed = SelectHeld = ManipulateHeld = false;
+            SelectReleased |= _manipulate;
+            _manipulate = false;
+            _nearGrab = false;
+            TwoHandActive = false;
+            TwoHandScaleDelta = 0f;
+            BackPressed = ConfirmPressed = ResetPressed = ViewTogglePressed = RayTogglePressed = false;
+        }
     }
 
     XRHandCursor ChooseHand()
@@ -163,13 +173,7 @@ public class XRInputProvider : MonoBehaviour, IInputProvider
                 return;
             }
 
-            Vector3 forward = _active.Sample.AimRotation * Vector3.forward;
-            if (forward.sqrMagnitude < 0.001f)
-            {
-                forward = Vector3.forward;
-            }
-
-            PointerRay = new Ray(_active.Sample.AimOrigin, forward.normalized);
+            PointerRay = _active.PointerRay;
             return;
         }
 
@@ -193,12 +197,7 @@ public class XRInputProvider : MonoBehaviour, IInputProvider
                 continue;
             }
 
-            if (hand.UsingController)
-            {
-                return hand.Sample.Grip > 0.55f || hand.Sample.Trigger > 0.55f;
-            }
-
-            return hand.Pinching;
+            return hand.Manipulate;
         }
 
         return false;

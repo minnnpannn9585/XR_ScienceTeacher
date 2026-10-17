@@ -106,7 +106,7 @@ public class NetFoldLab : MonoBehaviour
     {
         DeskAnchor = new GameObject("DeskAnchor").transform;
         DeskAnchor.SetParent(transform, false);
-        DeskAnchor.position = new Vector3(0f, 0.78f, 0.35f);
+        DeskAnchor.position = new Vector3(0f, XRDeskStation.SurfaceHeight - XRDeskStation.TopThickness * 0.5f, 0.35f);
 
         var desk = LabFactory.Primitive(PrimitiveType.Cube, "VirtualDesk", DeskAnchor, Vector3.zero, new Vector3(1.8f, 0.045f, 1.15f), StudioSet.Stone(), true);
         StudioSet.DressDesk(desk.transform);
@@ -145,7 +145,7 @@ public class NetFoldLab : MonoBehaviour
         Input.PcRig = pcRig;
 
         StudioSet.Install(transform, cam, DeskAnchor.position);
-        XRExperience.Attach(Input, transform, new Vector3(0f, 0f, -0.55f));
+        XRExperience.Attach(Input, transform, new Vector3(DeskAnchor.position.x, XRDeskStation.SurfaceHeight, DeskAnchor.position.z), 1.15f);
     }
 
     void OnModeChanged(GameMode mode)

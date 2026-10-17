@@ -48,10 +48,13 @@ public static class XRExperience
         }
     }
 
-    public static XROrigin Attach(InputAdapter input, Transform parent, Vector3 originPos)
+    public static XROrigin Attach(InputAdapter input, Transform parent, Vector3 tableSurface, float deskDepth)
     {
         ConfigureEventSystem();
+        var originPos = new Vector3(tableSurface.x, 0f, tableSurface.z - deskDepth * 0.5f - XRDeskStation.FrontClearance);
         var origin = XRRigBuilder.Build(parent, originPos);
+        var station = parent.gameObject.AddComponent<XRDeskStation>();
+        station.Configure(origin, tableSurface, deskDepth);
         if (input == null)
         {
             return origin;
@@ -61,17 +64,12 @@ public static class XRExperience
         input.XrHead = origin.Camera != null ? origin.Camera.transform : null;
         input.RightRay = null;
         input.LeftRay = null;
-        var rays = origin.GetComponentsInChildren<XRRayInteractor>(true);
-        for (int i = 0; i < rays.Length; i++)
+        var cursors = origin.GetComponentsInChildren<XRHandCursor>(true);
+        for (int i = 0; i < cursors.Length; i++)
         {
-            if (rays[i].name.Contains("Right"))
-            {
-                input.RightRay = rays[i];
-            }
-            else if (rays[i].name.Contains("Left"))
-            {
-                input.LeftRay = rays[i];
-            }
+            if (!cursors[i].UsingController) continue;
+            if (cursors[i].Right) input.RightRay = cursors[i].RayInteractor;
+            else input.LeftRay = cursors[i].RayInteractor;
         }
 
         input.ApplyPlatform();

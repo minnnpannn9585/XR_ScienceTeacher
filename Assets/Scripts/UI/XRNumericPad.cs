@@ -15,7 +15,7 @@ public class XRNumericPad : MonoBehaviour
 
     void Update()
     {
-        if (!XRSession.IsActive)
+        if (!XRSession.IsActive || ResultPanel.HasOpenPanel)
         {
             Hide();
             return;
@@ -39,7 +39,9 @@ public class XRNumericPad : MonoBehaviour
             return;
         }
 
-        if (_root == null || !_root.activeSelf || field != _field)
+        var canvas = field.GetComponentInParent<Canvas>();
+        if (_root == null || !_root.activeSelf || field != _field ||
+            (canvas != null && _root.transform.parent != canvas.transform))
         {
             Show(field);
         }
@@ -89,7 +91,8 @@ public class XRNumericPad : MonoBehaviour
 
     void Build(Transform parent)
     {
-        var panel = UiFactory.Panel(parent, "XRNumericPad", new Vector2(1f, 0.5f), new Vector2(1f, 0.5f), new Vector2(-430f, -250f), new Vector2(-24f, 250f), NetFoldTheme.Glass);
+        var panel = UiFactory.Panel(parent, "XRNumericPad", Vector2.zero, Vector2.zero,
+            new Vector2(24f, 100f), new Vector2(576f, 516f), NetFoldTheme.Glass);
         _root = panel.gameObject;
         string[] keys = { "7", "8", "9", "4", "5", "6", "1", "2", "3", ".", "0", "⌫" };
         for (int i = 0; i < keys.Length; i++)
@@ -97,12 +100,13 @@ public class XRNumericPad : MonoBehaviour
             int column = i % 3;
             int row = i / 3;
             string key = keys[i];
-            float x0 = 16f + column * 122f;
-            float y1 = -16f - row * 86f;
-            UiFactory.Button(panel.transform, "Key" + i, key, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(x0, y1 - 74f), new Vector2(x0 + 110f, y1), () => Press(key));
+            float x0 = 16f + column * 176f;
+            float y1 = -16f - row * 80f;
+            UiFactory.Button(panel.transform, "Key" + i, key, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(x0, y1 - 68f), new Vector2(x0 + 164f, y1), () => Press(key));
         }
 
-        UiFactory.Button(panel.transform, "ClosePad", "OK", new Vector2(0f, 0f), new Vector2(1f, 0f), new Vector2(16f, 16f), new Vector2(-16f, 78f), ClosePad);
+        var done = UiFactory.Button(panel.transform, "ClosePad", Loc.Get("xr.keyboardDone"), Vector2.zero, new Vector2(1f, 0f), new Vector2(16f, 16f), new Vector2(-16f, 80f), ClosePad);
+        LocalizedBinding.Bind(done.GetComponentInChildren<TMP_Text>(), "xr.keyboardDone");
     }
 
     void Press(string key)

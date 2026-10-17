@@ -31,7 +31,7 @@ public class MainMenuInstaller : MonoBehaviour
         input.PcCamera = cam;
         input.PcRig = pcRig;
 
-        XRExperience.Attach(input, transform, new Vector3(0.1f, 0f, -2.4f));
+        XRExperience.Attach(input, transform, new Vector3(1.05f, XRDeskStation.SurfaceHeight, 0.15f), 0.78f);
         var ui = new GameObject("MainMenuUI").AddComponent<MainMenuUI>();
         ui.Build();
         Debug.Log("[XR Startup] Main menu built.");

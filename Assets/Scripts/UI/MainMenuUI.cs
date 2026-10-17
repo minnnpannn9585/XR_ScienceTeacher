@@ -179,9 +179,9 @@ public class MainMenuUI : MonoBehaviour
 
         var root = new GameObject("MenuStudio").transform;
         StudioSet.Install(root, cam, hero);
-        var desk = LabFactory.Primitive(PrimitiveType.Cube, "MenuPlinth", root, new Vector3(hero.x, 0.78f, hero.z), new Vector3(0.78f, 0.045f, 0.78f), StudioSet.Stone(), false);
+        var desk = LabFactory.Primitive(PrimitiveType.Cube, "MenuPlinth", root, new Vector3(hero.x, XRDeskStation.SurfaceHeight - XRDeskStation.TopThickness * 0.5f, hero.z), new Vector3(0.78f, XRDeskStation.TopThickness, 0.78f), StudioSet.Stone(), false);
         StudioSet.DressDesk(desk.transform);
-        var shape = GeometryFactory.Create(ShapeType.Cube, root, new Vector3(hero.x, 0.805f, hero.z), 0.36f, false);
+        var shape = GeometryFactory.Create(ShapeType.Cube, root, new Vector3(hero.x, XRDeskStation.SurfaceHeight + 0.0025f, hero.z), 0.36f, false);
         shape.AllowIdleSpin = true;
         shape.IdleSpinSpeed = 8f;
     }

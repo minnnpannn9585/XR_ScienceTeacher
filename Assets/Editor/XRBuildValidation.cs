@@ -91,6 +91,14 @@ public class XRBuildValidation : IPreprocessBuildWithReport, IPostprocessBuildWi
         BuildQuest("hand-interaction-fix");
     }
 
+    [MenuItem("XR/Build Android Official Interactions")]
+    public static void BuildOfficialInteractions()
+    {
+        OfficialXRSetup.Prepare();
+        XRInteractionChecks.Run();
+        BuildQuest("official-interactions");
+    }
+
     static void BuildQuest(string suffix)
     {
         RuntimeMaterialSetup.EnsureAssets();

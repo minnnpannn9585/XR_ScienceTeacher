@@ -6,7 +6,7 @@ using System.Collections.Generic;
 /// </summary>
 public static class UiCopy
 {
-    public const int Revision = 4;
+    public const int Revision = 5;
 
     public readonly struct Entry
     {
@@ -24,6 +24,16 @@ public static class UiCopy
 
     public static readonly Entry[] All =
     {
+        new Entry("xr.controls", "操作台", "Controls"),
+        new Entry("xr.guide", "讲解", "Guide"),
+        new Entry("xr.data", "实验数据", "Data"),
+        new Entry("xr.answers", "作答区", "Answers"),
+        new Entry("xr.recenter", "回到桌前", "Return to desk"),
+        new Entry("xr.welcome", "桌前实验室", "Your experiment desk"),
+        new Entry("xr.keyboardDone", "收起键盘", "Close keypad"),
+        new Entry("xr.netfoldFree", "在右侧选择几何体，再使用展开、折叠、三视图或截面按钮。左侧“实验数据”可以查看面、棱、顶点和截面信息。", "Choose a solid on the right, then unfold, fold, show its views or explore a section. Open Data on the left to inspect faces, edges, vertices and sections."),
+        new Entry("xr.answerHint", "阅读左侧题目，在这里选择答案。", "Read the question on your left, then choose an answer here."),
+        new Entry("xr.interactionHint", "近处：伸出食指轻触按钮。\n远处：瞄准后捏合，或按手柄扳机。\n面板固定在桌边，转头查看即可。", "Nearby: touch a button with your index finger.\nFarther away: aim and pinch, or press the controller trigger.\nPanels stay beside the desk; turn your head to see them."),
         new Entry("title.branded", "{0} · {1}", "{0} · {1}"),
 
         new Entry("common.back", "返回", "Back"),

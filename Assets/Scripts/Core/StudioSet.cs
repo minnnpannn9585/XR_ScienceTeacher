@@ -26,10 +26,15 @@ public static class StudioSet
     {
         ApplyAtmosphere();
         ApplyCamera(cam);
-        BuildRoom(root, focus, cam);
-        BuildLights(root);
-        BuildVolume(root);
-        BuildProbe(root, focus);
+        // Room geometry is authored in world coordinates. LensCraft's root is
+        // raised to the tabletop, so inheriting it would also raise the floor.
+        var environment = new GameObject("Studio Environment").transform;
+        environment.SetParent(root, false);
+        environment.SetPositionAndRotation(Vector3.zero, Quaternion.identity);
+        BuildRoom(environment, focus, cam);
+        BuildLights(environment);
+        BuildVolume(environment);
+        BuildProbe(environment, focus);
     }
 
     public static bool MobileHeadset

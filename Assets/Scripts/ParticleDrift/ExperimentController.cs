@@ -170,7 +170,7 @@ public class ExperimentController : MonoBehaviour
     {
         var anchor = new GameObject("DeskAnchor").transform;
         anchor.SetParent(transform, false);
-        anchor.position = new Vector3(0f, 0.4f, 0f);
+        anchor.position = new Vector3(0f, XRDeskStation.SurfaceHeight + 0.02f - XRDeskStation.TopThickness * 0.5f, 0f);
         _desk = anchor;
 
         var desk = LabFactory.Primitive(PrimitiveType.Cube, "VirtualDesk", anchor, new Vector3(0f, -0.02f, 0f), new Vector3(1.7f, 0.045f, 1.05f), StudioSet.Stone(), true);
@@ -227,7 +227,7 @@ public class ExperimentController : MonoBehaviour
         Input.PcRig = pcRig;
 
         StudioSet.Install(transform, cam, _desk.position);
-        XRExperience.Attach(Input, transform, new Vector3(0f, 0f, -0.7f));
+        XRExperience.Attach(Input, transform, new Vector3(_desk.position.x, XRDeskStation.SurfaceHeight, _desk.position.z), 1.05f);
     }
 
     public void Toolbar(string action)

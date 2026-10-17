@@ -664,7 +664,7 @@ public class OpticalBenchController : MonoBehaviour
 
     void BuildDesk()
     {
-        transform.position = new Vector3(0f, 0.4f, 0f);
+        transform.position = new Vector3(0f, XRDeskStation.SurfaceHeight + 0.02f - XRDeskStation.TopThickness * 0.5f, 0f);
         var desk = LabFactory.Primitive(PrimitiveType.Cube, "Desk", transform, new Vector3(0f, -0.02f, 0f), new Vector3(1.9f, 0.045f, 0.72f), StudioSet.Stone(), true);
         StudioSet.DressDesk(desk.transform);
         LabFactory.Primitive(PrimitiveType.Cube, "Rail", transform, new Vector3(0f, 0.02f, 0f), new Vector3(1.7f, 0.012f, 0.028f), StudioSet.Brass(), false);
@@ -716,6 +716,6 @@ public class OpticalBenchController : MonoBehaviour
         _input.PcCamera = _cam;
         _input.PcRig = pcRig;
         StudioSet.Install(transform, _cam, transform.position);
-        XRExperience.Attach(_input, transform, new Vector3(0f, 0f, -0.6f));
+        XRExperience.Attach(_input, transform, new Vector3(transform.position.x, XRDeskStation.SurfaceHeight, transform.position.z), 0.72f);
     }
 }
