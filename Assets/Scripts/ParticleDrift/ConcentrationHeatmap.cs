@@ -25,13 +25,7 @@ public class ConcentrationHeatmap : MonoBehaviour
         _cols = new Color[Res * Res];
         _weights = new float[Res * Res];
 
-        Shader shader = Shader.Find("Universal Render Pipeline/Unlit");
-        if (shader == null)
-        {
-            shader = Shader.Find("Unlit/Transparent");
-        }
-
-        var mat = new Material(shader);
+        var mat = RuntimeMaterials.Unlit(true);
         if (mat.HasProperty("_BaseMap"))
         {
             mat.SetTexture("_BaseMap", _tex);

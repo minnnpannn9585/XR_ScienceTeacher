@@ -32,6 +32,18 @@ public static class StudioSet
         BuildProbe(root, focus);
     }
 
+    public static bool MobileHeadset
+    {
+        get
+        {
+#if UNITY_ANDROID && !UNITY_EDITOR
+            return true;
+#else
+            return false;
+#endif
+        }
+    }
+
     public static void ApplyCamera(Camera cam)
     {
         if (cam == null)
@@ -47,10 +59,21 @@ public static class StudioSet
             data = cam.gameObject.AddComponent<UniversalAdditionalCameraData>();
         }
 
-        data.renderPostProcessing = true;
         data.renderShadows = true;
-        data.antialiasing = AntialiasingMode.SubpixelMorphologicalAntiAliasing;
-        data.antialiasingQuality = AntialiasingQuality.High;
+        if (MobileHeadset)
+        {
+            // MSAA comes from the Android URP asset. SMAA is a second full-screen pass per eye.
+            data.renderPostProcessing = false;
+            data.antialiasing = AntialiasingMode.None;
+            cam.farClipPlane = 24f;
+            cam.allowMSAA = true;
+        }
+        else
+        {
+            data.renderPostProcessing = true;
+            data.antialiasing = AntialiasingMode.SubpixelMorphologicalAntiAliasing;
+            data.antialiasingQuality = AntialiasingQuality.High;
+        }
     }
 
     public static void DressDesk(Transform desk)
@@ -156,7 +179,7 @@ public static class StudioSet
         key.type = LightType.Directional;
         key.color = new Color(1f, 0.93f, 0.84f);
         key.intensity = 2.1f;
-        key.shadows = LightShadows.Soft;
+        key.shadows = MobileHeadset ? LightShadows.Hard : LightShadows.Soft;
         key.shadowStrength = 0.78f;
         key.shadowBias = 0.02f;
         key.shadowNormalBias = 0.18f;
@@ -181,6 +204,11 @@ public static class StudioSet
 
     static void BuildVolume(Transform root)
     {
+        if (MobileHeadset)
+        {
+            return;
+        }
+
         var go = new GameObject("StudioVolume");
         go.transform.SetParent(root, false);
         var volume = go.AddComponent<Volume>();
@@ -227,10 +255,10 @@ public static class StudioSet
         probe.center = Vector3.zero;
         probe.intensity = 0.8f;
         probe.boxProjection = true;
-        probe.resolution = 128;
+        probe.resolution = MobileHeadset ? 64 : 128;
         probe.clearFlags = ReflectionProbeClearFlags.SolidColor;
         probe.backgroundColor = NetFoldTheme.Horizon;
-        probe.hdr = true;
+        probe.hdr = !MobileHeadset;
         go.AddComponent<StudioProbeKick>().Probe = probe;
     }
 
@@ -289,13 +317,7 @@ public static class StudioSet
 
     static Material Unlit(Texture tex, Color tint, bool transparent, bool additive)
     {
-        Shader shader = Shader.Find("Universal Render Pipeline/Unlit");
-        if (shader == null)
-        {
-            shader = Shader.Find(transparent ? "Unlit/Transparent" : "Unlit/Texture");
-        }
-
-        var mat = new Material(shader);
+        var mat = RuntimeMaterials.Unlit(transparent);
         if (tex != null && mat.HasProperty("_BaseMap"))
         {
             mat.SetTexture("_BaseMap", tex);

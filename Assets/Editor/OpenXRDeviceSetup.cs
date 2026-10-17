@@ -1,4 +1,5 @@
 using UnityEditor;
+using UnityEditor.XR.OpenXR.Features;
 using UnityEngine;
 using UnityEngine.XR.OpenXR;
 using UnityEngine.XR.OpenXR.Features.Interactions;
@@ -27,6 +28,7 @@ static class OpenXRDeviceSetup
 
     static bool Enable(BuildTargetGroup group)
     {
+        FeatureHelpers.RefreshFeatures(group);
         var settings = OpenXRSettings.GetSettingsForBuildTargetGroup(group);
         if (settings == null)
         {

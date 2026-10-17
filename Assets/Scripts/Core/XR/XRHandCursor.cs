@@ -15,6 +15,7 @@ using UnityEngine.XR.Interaction.Toolkit.UI;
 public class XRHandCursor : MonoBehaviour
 {
     public bool Right { get; private set; }
+    public Transform TrackingSpace { get; private set; }
     public bool Tracked => _sample.Tracked;
     public bool UsingController => _sample.UsingController;
     public bool Pinching => _sample.Pinching;
@@ -44,9 +45,10 @@ public class XRHandCursor : MonoBehaviour
     int _rayGrace;
     readonly Collider[] _hits = new Collider[16];
 
-    public void Configure(bool right, ActionBasedController controller, XRRayInteractor ray, XRInteractorLineVisual line, XRPokeInteractor poke, Transform aim, Transform pokePoint)
+    public void Configure(bool right, Transform trackingSpace, ActionBasedController controller, XRRayInteractor ray, XRInteractorLineVisual line, XRPokeInteractor poke, Transform aim, Transform pokePoint)
     {
         Right = right;
+        TrackingSpace = trackingSpace;
         _controller = controller;
         _ray = ray;
         _line = line;
@@ -91,7 +93,7 @@ public class XRHandCursor : MonoBehaviour
 
     void Update()
     {
-        _sample = XRPoseReader.Read(Right);
+        _sample = XRPoseReader.Read(Right).ToWorldSpace(TrackingSpace);
         if (!_sample.Tracked)
         {
             NearHit = false;
@@ -236,6 +238,7 @@ public class XRHandCursor : MonoBehaviour
         {
             _controller.selectAction = new InputActionProperty(_select);
             _controller.activateAction = new InputActionProperty(_select);
+            _controller.uiPressAction = new InputActionProperty(_select);
         }
     }
 

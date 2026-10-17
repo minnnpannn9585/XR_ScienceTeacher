@@ -170,9 +170,12 @@ public class MainMenuUI : MonoBehaviour
         }
 
         Vector3 hero = new Vector3(1.05f, 1.02f, 0.15f);
-        cam.fieldOfView = 32f;
-        cam.transform.position = new Vector3(0.1f, 1.42f, -2.5f);
-        cam.transform.LookAt(new Vector3(0.28f, 1.12f, 0.55f));
+        if (!InputAdapter.DetectXR())
+        {
+            cam.fieldOfView = 32f;
+            cam.transform.position = new Vector3(0.1f, 1.42f, -2.5f);
+            cam.transform.LookAt(new Vector3(0.28f, 1.12f, 0.55f));
+        }
 
         var root = new GameObject("MenuStudio").transform;
         StudioSet.Install(root, cam, hero);

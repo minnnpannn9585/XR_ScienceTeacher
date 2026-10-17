@@ -232,6 +232,11 @@ public class MolecularMotionController : MonoBehaviour
 
     void SetupVfx(Transform parent)
     {
+        if (StudioSet.MobileHeadset)
+        {
+            return;
+        }
+
         var asset = Resources.Load<VisualEffectAsset>("VFX/MoleculeMotion");
         if (asset == null)
         {

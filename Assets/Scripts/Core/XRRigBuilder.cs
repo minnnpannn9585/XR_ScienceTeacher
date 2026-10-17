@@ -66,7 +66,9 @@ public static class XRRigBuilder
         var ray = go.AddComponent<XRRayInteractor>();
         ray.rayOriginTransform = aim.transform;
         ray.maxRaycastDistance = 12f;
-        ray.raycastMask = 0;
+        // XRI also uses this mask for Canvas graphics, so zero disables all UI hits.
+        ray.raycastMask = ~0;
+        ray.interactionLayers = 0; // World objects are handled by InputAdapter.
         ray.enableUIInteraction = false;
         ray.lineType = XRRayInteractor.LineType.StraightLine;
 
@@ -85,7 +87,7 @@ public static class XRRigBuilder
         poke.enableUIInteraction = true;
 
         var cursor = go.AddComponent<XRHandCursor>();
-        cursor.Configure(right, controller, ray, line, poke, aim.transform, pokeGo.transform);
+        cursor.Configure(right, parent, controller, ray, line, poke, aim.transform, pokeGo.transform);
     }
 
     static Gradient Solid(Color c)

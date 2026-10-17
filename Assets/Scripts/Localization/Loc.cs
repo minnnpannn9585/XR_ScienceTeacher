@@ -1,7 +1,9 @@
 using System;
 using UnityEngine;
+using UnityEngine.Localization;
 using UnityEngine.Localization.Settings;
 using UnityEngine.Localization.Tables;
+using UnityEngine.ResourceManagement.AsyncOperations;
 
 /// <summary>
 /// Reads the Unity Localization "UI" string table and falls back to <see cref="UiCopy"/>
@@ -15,6 +17,7 @@ public static class Loc
     const string PrefKey = "ScienceStudio.Locale";
 
     static bool _tablesUnavailable;
+    static bool _tableRequested;
     static StringTable _table;
     static string _tableLocale;
 
@@ -137,16 +140,36 @@ public static class Loc
     {
         try
         {
-            if (LocalizationSettings.AvailableLocales == null)
+            var provider = LocalizationSettings.AvailableLocales;
+            if (provider == null)
             {
                 return;
             }
 
-            var locale = LocalizationSettings.AvailableLocales.GetLocale(PreferredCode());
-            if (locale != null && LocalizationSettings.SelectedLocale != locale)
+            // Locales.GetLocale waits on Addressables. On Quest that wait never
+            // returns from the main thread, so the system loading screen stays up.
+            if (provider is IPreloadRequired preload)
             {
-                LocalizationSettings.SelectedLocale = locale;
+                var operation = preload.PreloadOperation;
+                if (!operation.IsValid() || !operation.IsDone)
+                {
+                    return;
+                }
             }
+
+            var locale = provider.GetLocale(PreferredCode());
+            if (locale == null)
+            {
+                return;
+            }
+
+            var current = LocalizationSettings.SelectedLocaleAsync;
+            if (current.IsValid() && current.IsDone && current.Result == locale)
+            {
+                return;
+            }
+
+            LocalizationSettings.SelectedLocale = locale;
         }
         catch (Exception)
         {
@@ -169,12 +192,13 @@ public static class Loc
                 return false;
             }
 
-            var locale = LocalizationSettings.SelectedLocale;
-            if (locale == null)
+            var localeOp = LocalizationSettings.SelectedLocaleAsync;
+            if (!localeOp.IsValid() || !localeOp.IsDone || localeOp.Result == null)
             {
                 return false;
             }
 
+            Locale locale = localeOp.Result;
             string code = locale.Identifier.Code;
             if (IsEnglish)
             {
@@ -187,12 +211,16 @@ public static class Loc
 
             if (_table == null || _tableLocale != code)
             {
-                var handle = LocalizationSettings.StringDatabase.GetTableAsync(Table);
-                _table = handle.WaitForCompletion();
-                _tableLocale = code;
-                if (_table == null)
+                if (!_tableRequested)
                 {
-                    _tablesUnavailable = true;
+                    _tableRequested = true;
+                    string requested = code;
+                    var handle = LocalizationSettings.StringDatabase.GetTableAsync(Table);
+                    handle.Completed += operation => FinishTableLoad(operation, requested);
+                }
+
+                if (_table == null || _tableLocale != code)
+                {
                     return false;
                 }
             }
@@ -210,6 +238,27 @@ public static class Loc
         {
             _tablesUnavailable = true;
             return false;
+        }
+    }
+
+    static void FinishTableLoad(AsyncOperationHandle<StringTable> operation, string requested)
+    {
+        _tableRequested = false;
+        try
+        {
+            if (operation.Status != AsyncOperationStatus.Succeeded || operation.Result == null)
+            {
+                _tablesUnavailable = true;
+                return;
+            }
+
+            _table = operation.Result;
+            _tableLocale = requested;
+            Changed?.Invoke();
+        }
+        catch (Exception)
+        {
+            _tablesUnavailable = true;
         }
     }
 }

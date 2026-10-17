@@ -29,16 +29,49 @@ public class DepthOfFieldController : MonoBehaviour
             return;
         }
 
-        _volume.weight = bench.DepthOn ? 1f : 0f;
-        if (!bench.DepthOn || camera == null || bench.ScreenPlate == null)
+        bool on = bench.DepthOn;
+        _volume.weight = on ? 1f : 0f;
+        if (StudioSet.MobileHeadset)
+        {
+            SetPost(camera, on);
+            if (Camera.main != null && Camera.main != camera)
+            {
+                SetPost(Camera.main, on);
+            }
+        }
+
+        if (!on || camera == null || bench.ScreenPlate == null)
         {
             return;
         }
 
         float focus = Vector3.Distance(camera.transform.position, bench.ScreenPlate.transform.position);
+        if (StudioSet.MobileHeadset)
+        {
+            float mobileBlur = Mathf.Lerp(0.15f, 0.4f, 1f - bench.Sharpness);
+            _dof.gaussianStart.Override(Mathf.Max(0.2f, focus * 0.75f));
+            _dof.gaussianEnd.Override(focus + mobileBlur);
+            _dof.gaussianMaxRadius.Override(Mathf.Lerp(0.2f, 0.45f, 1f - bench.Sharpness));
+            return;
+        }
+
         float blur = Mathf.Lerp(0.25f, 1.3f, 1f - bench.Sharpness);
         _dof.gaussianStart.Override(Mathf.Max(0.2f, focus * 0.65f));
         _dof.gaussianEnd.Override(focus + blur);
         _dof.gaussianMaxRadius.Override(Mathf.Lerp(0.6f, 1.35f, 1f - bench.Sharpness));
+    }
+
+    static void SetPost(Camera camera, bool enabled)
+    {
+        if (camera == null)
+        {
+            return;
+        }
+
+        var data = camera.GetComponent<UniversalAdditionalCameraData>();
+        if (data != null)
+        {
+            data.renderPostProcessing = enabled;
+        }
     }
 }

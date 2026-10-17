@@ -1,6 +1,5 @@
 using System;
 using UnityEngine;
-using UnityEngine.XR;
 
 public enum InteractTool
 {
@@ -38,7 +37,7 @@ public class InputAdapter : MonoBehaviour
 
     public static bool DetectXR()
     {
-        if (XRSession.IsActive || XRSettings.isDeviceActive)
+        if (XRSession.IsActive || XRSession.HasRunningDisplay)
         {
             return true;
         }

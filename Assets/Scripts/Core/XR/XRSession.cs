@@ -1,18 +1,38 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.XR;
 using UnityEngine.XR.Management;
 
 /// <summary>
-/// Starts the OpenXR loader and tells the labs when a headset is actually running.
-/// Detection in Awake is too early: the loader finishes a frame or two later.
+/// Observes XR Management startup and switches the scene once its display is running.
+/// Headset presence/focus is not a reliable startup or camera-selection signal.
 /// </summary>
 public class XRSession : MonoBehaviour
 {
     public static XRSession Instance { get; private set; }
     public static bool IsActive { get; private set; }
     public static event Action Ready;
+
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+    static void ResetStatics()
+    {
+        Instance = null;
+        IsActive = false;
+        Ready = null;
+    }
+
+    public static bool HasRunningDisplay
+    {
+        get
+        {
+            var settings = XRGeneralSettings.Instance;
+            var loader = settings != null && settings.Manager != null ? settings.Manager.activeLoader : null;
+            var display = loader != null ? loader.GetLoadedSubsystem<XRDisplaySubsystem>() : null;
+            return display != null && display.running;
+        }
+    }
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
     static void Bootstrap()
@@ -36,40 +56,53 @@ public class XRSession : MonoBehaviour
         }
 
         Instance = this;
+#if UNITY_ANDROID && !UNITY_EDITOR
+        ApplyHeadsetBudget();
+#endif
     }
 
     IEnumerator Start()
     {
-        var manager = XRGeneralSettings.Instance != null ? XRGeneralSettings.Instance.Manager : null;
-        float waited = 0f;
-        while (manager != null && !manager.isInitializationComplete && waited < 5f)
-        {
-            waited += Time.unscaledDeltaTime;
-            yield return null;
-        }
-
-        if (manager != null && manager.activeLoader == null && !manager.isInitializationComplete)
+        // Automatic XR initialization runs before scene load. Only initialize here
+        // when automatic startup was explicitly disabled; never race/restart it.
+        yield return null;
+        var settings = XRGeneralSettings.Instance;
+        var manager = settings != null ? settings.Manager : null;
+        if (manager != null && !settings.InitManagerOnStart && manager.activeLoader == null)
         {
             yield return manager.InitializeLoader();
+            if (manager.activeLoader != null)
+            {
+                manager.StartSubsystems();
+            }
         }
 
-        if (manager != null && manager.activeLoader != null)
+        if (manager == null || manager.activeLoader == null)
         {
-            manager.StartSubsystems();
+#if UNITY_ANDROID && !UNITY_EDITOR
+            Debug.LogError("[XR Startup] OpenXR loader failed. Check native loader packaging and the earlier OpenXR diagnostic log.");
+#endif
+            yield break;
         }
 
-        waited = 0f;
-        while (!XRSettings.isDeviceActive && waited < 2f)
+        Debug.Log("[XR Startup] Loader ready: " + manager.activeLoader.name);
+        float deadline = Time.realtimeSinceStartup + 10f;
+        bool reported = false;
+        while (!HasRunningDisplay)
         {
-            waited += Time.unscaledDeltaTime;
+            if (!reported && Time.realtimeSinceStartup >= deadline)
+            {
+                Debug.LogWarning("[XR Startup] Still waiting for the XR display; will activate when the headset session is ready.");
+                reported = true;
+            }
+
             yield return null;
         }
 
-        IsActive = XRSettings.isDeviceActive;
-        if (!IsActive)
-        {
-            yield break;
-        }
+        IsActive = true;
+#if UNITY_ANDROID && !UNITY_EDITOR
+        ApplyHeadsetBudget();
+#endif
 
         XRExperience.ConfigureEventSystem();
         var adapters = FindObjectsOfType<InputAdapter>(true);
@@ -90,5 +123,27 @@ public class XRSession : MonoBehaviour
         }
 
         Ready?.Invoke();
+        Debug.Log("[XR Startup] XR display running; camera, input and world UI activated.");
     }
+
+#if UNITY_ANDROID && !UNITY_EDITOR
+    static void ApplyHeadsetBudget()
+    {
+        // Quest compositing owns the refresh. vSync here fights 72 Hz and shows up as judder.
+        QualitySettings.vSyncCount = 0;
+        Application.targetFrameRate = 72;
+        var displays = new List<XRDisplaySubsystem>();
+        SubsystemManager.GetSubsystems(displays);
+        for (int i = 0; i < displays.Count; i++)
+        {
+            if (!displays[i].running)
+            {
+                continue;
+            }
+
+            // About Quest "High" fixed foveation. Gaze foveation stays off.
+            displays[i].foveatedRenderingLevel = 0.75f;
+        }
+    }
+#endif
 }

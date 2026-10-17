@@ -37,18 +37,7 @@ public static class LabFactory
 
     public static Material ParticleMat(Color color)
     {
-        Shader shader = Shader.Find("Universal Render Pipeline/Particles/Unlit");
-        if (shader == null)
-        {
-            shader = Shader.Find("Particles/Standard Unlit");
-        }
-
-        if (shader == null)
-        {
-            shader = Shader.Find("Universal Render Pipeline/Unlit");
-        }
-
-        var mat = new Material(shader);
+        var mat = RuntimeMaterials.Particle();
         if (mat.HasProperty("_BaseColor"))
         {
             mat.SetColor("_BaseColor", color);

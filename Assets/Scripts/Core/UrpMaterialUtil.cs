@@ -5,13 +5,9 @@ public static class UrpMaterialUtil
 {
     public static Material CreateLit(Color color, bool transparent, float metallic = 0.15f, float smoothness = 0.72f, bool emission = false, Color emissionColor = default)
     {
-        Shader shader = Shader.Find("Universal Render Pipeline/Lit");
-        if (shader == null)
-        {
-            shader = Shader.Find("Standard");
-        }
-
-        var mat = new Material(shader) { name = "NetFoldLit", color = color };
+        var mat = RuntimeMaterials.Lit(transparent, emission);
+        mat.name = "NetFoldLit";
+        mat.color = color;
         if (mat.HasProperty("_BaseColor"))
         {
             mat.SetColor("_BaseColor", color);
@@ -65,6 +61,13 @@ public static class UrpMaterialUtil
         if (mat.HasProperty("_Blend"))
         {
             mat.SetFloat("_Blend", 0f);
+        }
+
+        // Match the straight-alpha keyword variant retained by the templates.
+        // Otherwise URP's material importer re-enables premultiplication on disk.
+        if (mat.HasProperty("_BlendModePreserveSpecular"))
+        {
+            mat.SetFloat("_BlendModePreserveSpecular", 0f);
         }
 
         if (mat.HasProperty("_ZWrite"))

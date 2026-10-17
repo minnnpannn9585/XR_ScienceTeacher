@@ -6,8 +6,8 @@ using UnityEngine.XR.Hands;
 using UnityEngine.XR.OpenXR.Features.Interactions;
 
 /// <summary>
-/// One sample of a hand or controller. Controllers win when that side is tracked,
-/// otherwise OpenXR hand joints and the hand-interaction profile are used.
+/// One sample of a hand or controller. Read returns tracking-space poses;
+/// convert once with ToWorldSpace before using them for scene interaction.
 /// </summary>
 public struct XRHandSample
 {
@@ -24,6 +24,30 @@ public struct XRHandSample
     public float Trigger;
     public float Grip;
     public bool Pinching;
+
+    public XRHandSample ToWorldSpace(Transform trackingSpace)
+    {
+        if (!Tracked)
+        {
+            return this;
+        }
+
+        // Use the camera's tracking parent, including the floor/device height
+        // offset. Parenting the hand does not transform raw world-position writes.
+        var world = this;
+        world.PokePosition = trackingSpace.TransformPoint(PokePosition);
+        world.PokeRotation = trackingSpace.rotation * PokeRotation;
+        world.AimOrigin = trackingSpace.TransformPoint(AimOrigin);
+        world.AimRotation = trackingSpace.rotation * AimRotation;
+        world.GripPosition = trackingSpace.TransformPoint(GripPosition);
+        world.GripRotation = trackingSpace.rotation * GripRotation;
+        if (HasThumb)
+        {
+            world.ThumbPosition = trackingSpace.TransformPoint(ThumbPosition);
+        }
+
+        return world;
+    }
 }
 
 public static class XRPoseReader
@@ -50,8 +74,9 @@ public static class XRPoseReader
 
         bool joints = TryJoints(right, out Pose indexTip, out Pose indexDistal, out Pose thumbTip, out Pose palm);
         InputDevice hand = FindHand(right);
+        MetaAimHand metaAim = FindMetaAimHand(right);
         bool profile = hand != null;
-        if (!joints && !profile)
+        if (!joints && !profile && metaAim == null)
         {
             SetPinch(right, false);
             return sample;
@@ -79,8 +104,19 @@ public static class XRPoseReader
                 sample.GripRotation = grip.rotation;
             }
 
-            sample.Trigger = Mathf.Max(Axis(hand, "pinchValue"), Button(hand, "pinchReady"));
-            sample.Grip = Mathf.Max(Axis(hand, "graspValue"), Button(hand, "graspReady"));
+            // Ready means a gesture can be recognized, not that it is pressed.
+            sample.Trigger = Axis(hand, "pinchValue");
+            sample.Grip = Axis(hand, "graspValue");
+        }
+
+        if (metaAim != null)
+        {
+            if (TryPose(metaAim, "devicePosition", "deviceRotation", out Pose aim))
+            {
+                sample.AimOrigin = aim.position;
+                sample.AimRotation = aim.rotation;
+            }
+            sample.Trigger = Mathf.Max(sample.Trigger, metaAim.pinchStrengthIndex.ReadValue(), metaAim.indexPressed.isPressed ? 1f : 0f);
         }
 
         if (joints)
@@ -140,7 +176,10 @@ public static class XRPoseReader
         string usage = right ? "RightHand" : "LeftHand";
         foreach (var device in InputSystem.devices)
         {
-            if (device is HandInteractionProfile.HandInteraction || device.layout.ToString().IndexOf("HandInteraction") >= 0)
+            // MetaAimHand and XRHandDevice also expose devicePosition. They are
+            // hand tracking, not physical controllers, and have no trigger axis.
+            if (!(device is UnityEngine.InputSystem.XR.XRController) ||
+                device is HandInteractionProfile.HandInteraction || device.layout.ToString().IndexOf("HandInteraction") >= 0)
             {
                 continue;
             }
@@ -198,6 +237,20 @@ public static class XRPoseReader
             }
         }
 
+        return null;
+    }
+
+    static MetaAimHand FindMetaAimHand(bool right)
+    {
+        string usage = right ? "RightHand" : "LeftHand";
+        foreach (var device in InputSystem.devices)
+        {
+            if (device is MetaAimHand aim && HasUsage(device, usage) && IsTracked(device) &&
+                ((MetaAimFlags)aim.aimFlags.ReadValue() & (MetaAimFlags.Valid | MetaAimFlags.SystemGesture)) == MetaAimFlags.Valid)
+            {
+                return aim;
+            }
+        }
         return null;
     }
 
