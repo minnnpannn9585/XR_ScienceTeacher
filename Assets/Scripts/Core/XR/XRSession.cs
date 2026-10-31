@@ -56,6 +56,8 @@ public class XRSession : MonoBehaviour
         }
 
         Instance = this;
+        if (GetComponent<XRRealityMode>() == null)
+            gameObject.AddComponent<XRRealityMode>();
 #if UNITY_ANDROID && !UNITY_EDITOR
         ApplyHeadsetBudget();
 #endif

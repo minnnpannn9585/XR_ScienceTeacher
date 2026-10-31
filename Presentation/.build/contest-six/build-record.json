@@ -1,0 +1,76 @@
+{
+  "source": "C:\\Users\\minpa\\Documents\\GitHub\\XR_ScienceTeacher\\Presentation\\output\\XR_ScienceTeacher_理科教具项目介绍.pptx",
+  "sourceHash": "362d5dc3aca169f8dc13c7c978ed61cf5c6573b898db43d8d4f403650b70deb1",
+  "slides": 10,
+  "used": [
+    {
+      "file": "C:\\Users\\minpa\\Documents\\GitHub\\XR_ScienceTeacher\\Presentation\\assets\\block-decoration.png",
+      "alt": "沿用原稿深蓝与青色块面装饰"
+    },
+    {
+      "file": "C:\\Users\\minpa\\Documents\\GitHub\\XR_ScienceTeacher\\Presentation\\assets\\logos\\XR_ScienceTeacher_logo.png",
+      "alt": "XR ScienceTeacher 已确认 Logo"
+    },
+    {
+      "file": "C:\\Users\\minpa\\Documents\\GitHub\\XR_ScienceTeacher\\Presentation\\.build\\screenshots\\05_netfold_projection.png",
+      "alt": "空间关系难想象，项目Unity截图"
+    },
+    {
+      "file": "C:\\Users\\minpa\\Documents\\GitHub\\XR_ScienceTeacher\\Presentation\\.build\\screenshots\\15_lens_virtual.png",
+      "alt": "实验规律难建立，项目Unity截图"
+    },
+    {
+      "file": "C:\\Users\\minpa\\Documents\\GitHub\\XR_ScienceTeacher\\Presentation\\.build\\screenshots\\11_drift_diffusion.png",
+      "alt": "微观过程难看见，项目Unity截图"
+    },
+    {
+      "file": "C:\\Users\\minpa\\Documents\\GitHub\\XR_ScienceTeacher\\Logs\\MiniLabs\\menu.png",
+      "alt": "新版学科菜单：数学、物理、化学，每科两个关卡"
+    },
+    {
+      "file": "C:\\Users\\minpa\\Documents\\GitHub\\XR_ScienceTeacher\\Presentation\\.build\\screenshots\\04_netfold_unfold.png",
+      "alt": "立体几何关卡，正方体展开为平面图"
+    },
+    {
+      "file": "C:\\Users\\minpa\\Documents\\GitHub\\XR_ScienceTeacher\\Logs\\MiniLabs\\triangle.png",
+      "alt": "三角形内角和轻实验真实运行画面局部"
+    },
+    {
+      "file": "C:\\Users\\minpa\\Documents\\GitHub\\XR_ScienceTeacher\\Presentation\\.build\\screenshots\\12_lens_bench.png",
+      "alt": "凸透镜自由实验，实时光路与成像参数"
+    },
+    {
+      "file": "C:\\Users\\minpa\\Documents\\GitHub\\XR_ScienceTeacher\\Logs\\MiniLabs\\lever.png",
+      "alt": "杠杆平衡轻实验局部，右侧砝码40厘米处达到平衡"
+    },
+    {
+      "file": "C:\\Users\\minpa\\Documents\\GitHub\\XR_ScienceTeacher\\Presentation\\.build\\screenshots\\09_drift_micro.png",
+      "alt": "分子运动与扩散关卡，宏观微观对照"
+    },
+    {
+      "file": "C:\\Users\\minpa\\Documents\\GitHub\\XR_ScienceTeacher\\Logs\\MiniLabs\\indicator.png",
+      "alt": "酸碱探色轻实验局部，紫甘蓝指示剂和三种样品"
+    },
+    {
+      "file": "C:\\Users\\minpa\\Documents\\GitHub\\XR_ScienceTeacher\\Presentation\\.build\\visual-extra\\22_lens_lesson.png",
+      "alt": "现有凸透镜讲解模式真实运行画面"
+    },
+    {
+      "file": "C:\\Users\\minpa\\Documents\\GitHub\\XR_ScienceTeacher\\Presentation\\assets\\block-decoration.png",
+      "alt": "沿用原稿深蓝与青色块面装饰"
+    },
+    {
+      "file": "C:\\Users\\minpa\\Documents\\GitHub\\XR_ScienceTeacher\\Presentation\\assets\\logos\\XR_ScienceTeacher_logo.png",
+      "alt": "XR ScienceTeacher 已确认 Logo"
+    },
+    {
+      "file": "C:\\Users\\minpa\\Documents\\GitHub\\XR_ScienceTeacher\\Presentation\\.build\\visual-extra\\21_challenge_result.png",
+      "alt": "现有主题关卡结果反馈局部，展示完成后的知识总结"
+    },
+    {
+      "file": "C:\\Users\\minpa\\Documents\\GitHub\\XR_ScienceTeacher\\Presentation\\assets\\context\\china\\tianjin-classroom-pexels.jpg",
+      "alt": "中国天津课堂真实照片，仅作课堂应用场景参考"
+    }
+  ],
+  "createdAt": "2026-10-31T18:03:31.447Z"
+}

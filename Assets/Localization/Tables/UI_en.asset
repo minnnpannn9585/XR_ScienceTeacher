@@ -1700,6 +1700,54 @@ MonoBehaviour:
     m_Localized: Completed one question
     m_Metadata:
       m_Items: []
+  - m_Id: 2568373674004480
+    m_Localized: Controls
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2568373707558912
+    m_Localized: Guide
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2568373707558913
+    m_Localized: Data
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2568373707558914
+    m_Localized: Answers
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2568373707558915
+    m_Localized: Return to desk
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2568373707558916
+    m_Localized: Your experiment desk
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2568373707558917
+    m_Localized: Close keypad
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2568373707558918
+    m_Localized: Choose a solid on the right, then unfold, fold, show its views or
+      explore a section. Open Data on the left to inspect faces, edges, vertices
+      and sections.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2568373707558919
+    m_Localized: Read the question on your left, then choose an answer here.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2568373707558920
+    m_Localized: 'Nearby: touch a button with your index finger.
+
+      Farther away:
+      aim and pinch, or press the controller trigger.
+
+      Panels stay beside the
+      desk; turn your head to see them.'
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds:

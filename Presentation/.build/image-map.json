@@ -1,0 +1,12 @@
+{
+  "cover": "screenshots/03_netfold_hero.png",
+  "menu": "screenshots/01_main_menu.png",
+  "net_unfold": "screenshots/04_netfold_unfold.png",
+  "net_projection": "screenshots/05_netfold_projection.png",
+  "net_section": "screenshots/06_netfold_section.png",
+  "drift_lab": "screenshots/08_drift_lab.png",
+  "drift_micro": "screenshots/09_drift_micro.png",
+  "lens_lab": "screenshots/12_lens_bench.png",
+  "lens_rays": "screenshots/14_lens_magnification.png",
+  "challenge": "screenshots/16_challenge.png"
+}

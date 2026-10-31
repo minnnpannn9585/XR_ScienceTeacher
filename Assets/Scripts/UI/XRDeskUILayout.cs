@@ -195,45 +195,8 @@ public class XRDeskUILayout : MonoBehaviour
 
     void BuildMenu()
     {
-        Hide(_left.Find("Wash"));
-        Box(_left.Find("Eyebrow"), _left, 24f, 18f, 552f, 32f);
-        Box(_left.Find("Title"), _left, 24f, 52f, 552f, 64f);
-        Box(_left.Find("Sub"), _left, 24f, 120f, 552f, 70f);
-        FitText(_left.Find("Title"), 48f);
-        FitText(_left.Find("Sub"), 26f);
-        string[] modules = { "NetFold", "ParticleDrift", "LensCraft" };
-        for (int i = 0; i < modules.Length; i++)
-        {
-            var card = _left.Find(modules[i]);
-            Box(card, _left, 16f, 204f + i * 170f, 568f, 160f);
-            Box(card.Find("Name"), card, 16f, 12f, 536f, 36f);
-            Box(card.Find("Blurb"), card, 16f, 50f, 536f, 36f);
-            FitText(card.Find("Blurb"), 22f);
-            Hide(card.Find("Best"));
-            string[] actions = { "Learn", "Free", "Challenge" };
-            for (int a = 0; a < actions.Length; a++) Box(card.Find(actions[a]), card, 16f + a * 180f, 90f, 172f, 60f);
-        }
-        Title(_right, "xr.welcome", 24f, 24f, 552f, 64f, 32);
-        Box(_left.Find("Hint"), _right, 24f, 110f, 552f, 212f);
-        var hint = _right.Find("Hint").GetComponent<TMP_Text>();
-        LocalizedBinding.Bind(hint, "xr.interactionHint");
-        FitText(hint.transform, 28f);
-        Box(_left.Find("Progress"), _right, 24f, 338f, 552f, 64f);
-        Box(_left.Find("Settings"), _right, 24f, 416f, 552f, 80f);
-        Box(_left.Find("Quit"), _right, 24f, 548f, 552f, 80f);
-        var settings = _left.Find("SettingsBlocker");
-        Box(settings, _right, 0f, 0f, 600f, 740f);
-        var panel = settings.Find("SettingsPanel");
-        Box(panel, settings, 12f, 12f, 576f, 716f);
-        Box(panel.Find("Title"), panel, 24f, 24f, 528f, 72f);
-        Box(panel.Find("Language"), panel, 24f, 112f, 528f, 56f);
-        Box(panel.Find("Chinese"), panel, 24f, 184f, 528f, 80f);
-        Box(panel.Find("English"), panel, 24f, 280f, 528f, 80f);
-        Box(panel.Find("Current"), panel, 24f, 384f, 528f, 64f);
-        Box(panel.Find("Hint"), panel, 24f, 464f, 528f, 124f);
-        Box(panel.Find("Close"), panel, 24f, 620f, 528f, 72f);
-        // Settings must cover the right panel's footer too when opened.
-        settings.SetAsLastSibling();
+        var menu = _left.GetComponentInParent<MainMenuUI>();
+        if (menu != null) menu.LayoutForXR(_left, _right);
     }
 
     void LayoutResult()

@@ -188,13 +188,16 @@ public class InputAdapter : MonoBehaviour
             return;
         }
 
-        if (Provider.IsPointerOverUi && !_dragging)
+        var pcPress = !UseXR && Provider.SelectPressed ? Provider as PCInputProvider : null;
+        bool pointerOverUi = pcPress != null ? pcPress.PressStartedOverUi : Provider.IsPointerOverUi;
+        if (pointerOverUi && !_dragging)
         {
             return;
         }
 
         Ray ray = Provider.PointerRay;
-        bool hitInteractable = Physics.Raycast(ray, out RaycastHit hit, 30f, InteractMask, QueryTriggerInteraction.Ignore);
+        Ray selectionRay = pcPress != null ? pcPress.PressRay : ray;
+        bool hitInteractable = Physics.Raycast(selectionRay, out RaycastHit hit, 30f, InteractMask, QueryTriggerInteraction.Ignore);
         IInteractable hovered = null;
         IDraggable draggable = null;
         if (Provider.NearContact)
@@ -225,19 +228,23 @@ public class InputAdapter : MonoBehaviour
             }
 
             IDraggable dragTarget = ActiveTool == InteractTool.Select ? (hovered as IDraggable ?? draggable) : null;
-            if (dragTarget != null && dragTarget.CanDrag && Provider.ManipulateHeld)
+            if (dragTarget != null && dragTarget.CanDrag && (Provider.ManipulateHeld || pcPress != null))
             {
                 _drag = dragTarget;
                 _dragging = true;
-                Vector3 start = hitInteractable ? hit.point : ray.origin + ray.direction * 1.2f;
-                _drag.OnDragStart(start, ray);
+                Vector3 start = hitInteractable ? hit.point : selectionRay.origin + selectionRay.direction * 1.2f;
+                _drag.OnDragStart(start, selectionRay);
             }
         }
 
         if (_dragging && _drag != null)
         {
+            // Only initial picking uses the press location. Move and release use
+            // the latest ray, including a complete drag received in one frame.
+            if (pcPress != null)
+                hitInteractable = Physics.Raycast(ray, out hit, 30f, InteractMask, QueryTriggerInteraction.Ignore);
             Vector3 point = hitInteractable ? hit.point : ray.origin + ray.direction * 1.6f;
-            if (Provider.ManipulateHeld)
+            if (Provider.ManipulateHeld || pcPress != null)
             {
                 _drag.OnDrag(point, ray);
             }

@@ -1519,6 +1519,46 @@ MonoBehaviour:
     m_Key: stars.1
     m_Metadata:
       m_Items: []
+  - m_Id: 2568373674004480
+    m_Key: xr.controls
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2568373707558912
+    m_Key: xr.guide
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2568373707558913
+    m_Key: xr.data
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2568373707558914
+    m_Key: xr.answers
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2568373707558915
+    m_Key: xr.recenter
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2568373707558916
+    m_Key: xr.welcome
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2568373707558917
+    m_Key: xr.keyboardDone
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2568373707558918
+    m_Key: xr.netfoldFree
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2568373707558919
+    m_Key: xr.answerHint
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2568373707558920
+    m_Key: xr.interactionHint
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

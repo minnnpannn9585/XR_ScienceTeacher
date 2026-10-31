@@ -11,8 +11,17 @@ public class PCInputProvider : MonoBehaviour, IInputProvider
     readonly List<RaycastResult> _uiHits = new List<RaycastResult>();
     PointerEventData _pointerData;
     EventSystem _pointerEventSystem;
+    InputAction _selectAction;
+    Vector2 _pendingPressPosition;
+    bool _hasPendingPress;
+    bool _ownsUnmergedEvents;
+    static int _unmergedEventUsers;
+    static InputSettings _mergeSettings;
+    static bool _previousMergingDisabled;
 
     public Ray PointerRay { get; private set; }
+    public Ray PressRay { get; private set; }
+    public bool PressStartedOverUi { get; private set; }
     public bool SelectPressed { get; private set; }
     public bool SelectHeld { get; private set; }
     public bool SelectReleased { get; private set; }
@@ -38,11 +47,64 @@ public class PCInputProvider : MonoBehaviour, IInputProvider
         _adapter = adapter;
         _camera = adapter.PcCamera != null ? adapter.PcCamera : Camera.main;
         enabled = true;
+        AcquireUnmergedEvents();
+        if (_selectAction == null)
+        {
+            _selectAction = new InputAction("PC pointer press", InputActionType.Button, "<Mouse>/leftButton");
+            _selectAction.performed += CapturePress;
+        }
+        _selectAction.Enable();
     }
 
     public void Shutdown()
     {
         enabled = false;
+    }
+
+    void OnDisable()
+    {
+        _selectAction?.Disable();
+        _hasPendingPress = false;
+        ReleaseUnmergedEvents();
+    }
+
+    void OnDestroy()
+    {
+        ReleaseUnmergedEvents();
+        if (_selectAction == null) return;
+        _selectAction.performed -= CapturePress;
+        _selectAction.Dispose();
+    }
+
+    void AcquireUnmergedEvents()
+    {
+        if (_ownsUnmergedEvents) return;
+        _ownsUnmergedEvents = true;
+        if (_unmergedEventUsers++ != 0) return;
+        _mergeSettings = InputSystem.settings;
+        _previousMergingDisabled = _mergeSettings.disableRedundantEventsMerging;
+        // FastMouse can merge the first press with later movement before actions
+        // see it. Keep that event while PC input is active; leave XR's setting alone.
+        _mergeSettings.disableRedundantEventsMerging = true;
+    }
+
+    void ReleaseUnmergedEvents()
+    {
+        if (!_ownsUnmergedEvents) return;
+        _ownsUnmergedEvents = false;
+        if (--_unmergedEventUsers != 0) return;
+        if (_mergeSettings != null)
+            _mergeSettings.disableRedundantEventsMerging = _previousMergingDisabled;
+        _mergeSettings = null;
+    }
+
+    void CapturePress(InputAction.CallbackContext context)
+    {
+        if (!(context.control.device is Mouse mouse)) return;
+        // Input events can contain a press followed by a long move (and release)
+        // before Update. Preserve the position at the press, not the final position.
+        _pendingPressPosition = mouse.position.ReadValue();
+        _hasPendingPress = true;
     }
 
     void Update()
@@ -59,7 +121,10 @@ public class PCInputProvider : MonoBehaviour, IInputProvider
         PointerRay = _camera != null ? _camera.ScreenPointToRay(mousePos) : new Ray(Vector3.zero, Vector3.forward);
 
         bool left = mouse != null ? mouse.leftButton.isPressed : Input.GetMouseButton(0);
-        SelectPressed = mouse != null ? mouse.leftButton.wasPressedThisFrame : Input.GetMouseButtonDown(0);
+        SelectPressed = _hasPendingPress || (mouse != null ? mouse.leftButton.wasPressedThisFrame : Input.GetMouseButtonDown(0));
+        Vector2 pressPosition = _hasPendingPress ? _pendingPressPosition : mousePos;
+        PressRay = _camera != null ? _camera.ScreenPointToRay(pressPosition) : PointerRay;
+        _hasPendingPress = false;
         SelectHeld = left;
         SelectReleased = mouse != null ? mouse.leftButton.wasReleasedThisFrame : Input.GetMouseButtonUp(0);
         SecondaryHeld = mouse != null ? mouse.rightButton.isPressed : Input.GetMouseButton(1);
@@ -104,6 +169,7 @@ public class PCInputProvider : MonoBehaviour, IInputProvider
 
         MoveAxis = Vector2.ClampMagnitude(move, 1f);
         IsPointerOverUi = IsOverUi(mousePos);
+        PressStartedOverUi = SelectPressed && IsOverUi(pressPosition);
         var selected = EventSystem.current != null ? EventSystem.current.currentSelectedGameObject : null;
         var field = selected != null ? selected.GetComponentInParent<TMP_InputField>() : null;
         bool typing = field != null && field.isFocused;

@@ -55,6 +55,7 @@ public static class XRExperience
         var origin = XRRigBuilder.Build(parent, originPos);
         var station = parent.gameObject.AddComponent<XRDeskStation>();
         station.Configure(origin, tableSurface, deskDepth);
+        XRRealityModeButton.Attach(station, origin.Camera);
         if (input == null)
         {
             return origin;

@@ -36,6 +36,7 @@ static class OpenXRDeviceSetup
         }
 
         bool sawPico = false;
+        bool sawPassthrough = group != BuildTargetGroup.Android;
         bool changed = false;
         var features = settings.GetFeatures();
         for (int i = 0; i < features.Length; i++)
@@ -50,6 +51,10 @@ static class OpenXRDeviceSetup
             if (name == nameof(Pico4ControllerProfile))
             {
                 sawPico = true;
+            }
+            if (name == nameof(QuestPassthroughFeature))
+            {
+                sawPassthrough = true;
             }
 
             bool on = Wanted(name, group);
@@ -69,7 +74,7 @@ static class OpenXRDeviceSetup
             AssetDatabase.SaveAssets();
         }
 
-        return sawPico;
+        return sawPico && sawPassthrough;
     }
 
     static bool Wanted(string typeName, BuildTargetGroup group)
@@ -93,6 +98,7 @@ static class OpenXRDeviceSetup
             case "MetaHandTrackingAim":
                 return true;
             case "MetaQuestFeature":
+            case nameof(QuestPassthroughFeature):
                 return group == BuildTargetGroup.Android;
             default:
                 return false;

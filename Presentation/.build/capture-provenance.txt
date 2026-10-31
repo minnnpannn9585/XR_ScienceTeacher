@@ -1,0 +1,28 @@
+Unity screenshot provenance
+
+Date: 2026-10-31 (Asia/Shanghai)
+Project: C:\Users\minpa\Documents\GitHub\XR_ScienceTeacher
+Editor: Unity 2022.3.62f3
+Renderer: Direct3D 11, NVIDIA GeForce RTX 4090 Laptop GPU, project Universal Render Pipeline
+Resolution: 1920 x 1080 PNG
+
+Method: A temporary Editor-only script launched Unity in batchmode and entered Play Mode in the real project scenes. The script loaded scenes through SceneManager and called the public controller methods corresponding to existing UI operations. Each active runtime Camera rendered to a 1920x1080 RenderTexture. Screen-space overlay canvases were temporarily converted to screen-space-camera solely for inclusion in the render and immediately restored. Hero captures temporarily hid overlay UI. Camera positions and actual scene/material content were unchanged. No generative images, invented geometry, or presentation mockups were used. This is a desktop camera render, not a headset passthrough capture or physical-device validation.
+
+01_main_menu.png: MainMenu, normal Chinese menu, reflects existing local PlayerPrefs best scores (8/9 stars).
+02_netfold_cube.png: NetFoldFree, initial selected cube.
+03_netfold_hero.png: NetFoldFree, cube, overlay UI temporarily hidden.
+04_netfold_unfold.png: NetFoldFree, Unfold() completed.
+05_netfold_projection.png: NetFoldFree, Fold() and ToggleProjection(), three projection rays active.
+06_netfold_section.png: NetFoldFree, ToggleSection(), cutting plane visible.
+07_netfold_cylinder.png: NetFoldFree, ShowFreeShape(Cylinder) and Unfold().
+08_drift_lab.png: ParticleDriftFree, initial macro view, apparatus and controls visible.
+09_drift_micro.png: ParticleDriftFree, ToggleView(), micro particle display.
+10_drift_temperature.png: ParticleDrift, lesson beat 3/5, temperature comparison after two NextStep() calls.
+11_drift_diffusion.png: ParticleDrift, lesson beat 4/5, cold/hot dye diffusion after NextStep().
+12_lens_bench.png: LensCraftFree, ShowRays=true, ShowGuides=true, AutoScreen=true; object distance 40cm, focal length 15cm.
+13_lens_hero.png: Same optical state, overlay UI temporarily hidden.
+14_lens_magnification.png: LensCraftFree, locked object distance 22cm and focal length 15cm, auto screen, real magnified image state.
+15_lens_virtual.png: LensCraftFree, object distance 9cm and focal length 15cm, virtual image state.
+16_challenge.png: NetFoldChallenge, first three-view shape selection question.
+
+The temporary Assets/Editor/PresentationCapture.cs and its .meta were removed after capture. A reproducible source copy is retained as Presentation/.build/PresentationCapture.cs. Existing source files and scenes were not edited. Unity log: Presentation/.build/capture.log.

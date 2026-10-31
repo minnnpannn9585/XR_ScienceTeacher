@@ -35,6 +35,7 @@ public static class StudioSet
         BuildLights(environment);
         BuildVolume(environment);
         BuildProbe(environment, focus);
+        environment.gameObject.AddComponent<XRRealityPresentation>().Configure(null, environment);
     }
 
     public static bool MobileHeadset
@@ -78,6 +79,15 @@ public static class StudioSet
             data.renderPostProcessing = true;
             data.antialiasing = AntialiasingMode.SubpixelMorphologicalAntiAliasing;
             data.antialiasingQuality = AntialiasingQuality.High;
+        }
+
+        // MainMenu dresses its world after the XR camera has been constructed.
+        // Preserve an already selected MR mode when it reapplies the camera style.
+        var reality = cam.GetComponent<XRRealityPresentation>();
+        if (reality != null && XRRealityMode.Instance != null && XRRealityMode.Instance.IsMixedReality)
+        {
+            reality.Apply(false);
+            reality.Apply(true);
         }
     }
 

@@ -1,0 +1,1 @@
+Unity 2022.3.62f3 Play Mode. Real runtime scene cameras rendered at 1920x1080. UI overlay converted temporarily to camera canvas for capture. Hero images hide UI only. Source scenes unchanged.

@@ -1,0 +1,18 @@
+{
+  "mode": "built-in image_gen",
+  "logoPrompts": [
+    [
+      "A_展开立方",
+      "Use case: logo-brand. Design ONE professional minimalist symbol-only logo for XR ScienceTeacher, an interactive science education product. Concept A: an abstract isometric cube with ONE face opening outward like a folded page, expressing geometry becoming understandable. Extremely simple clean vector-like flat artwork with confident thick strokes, about 6 to 9 geometric segments total. Palette dark navy #173344 and teal #13A3A5 only. Strong recognizable silhouette at 32 pixels. Centered composition, lots of transparent margin. No wordmark, no text, no letters, no numbers, no gradients, no glow, no shadows, no 3D rendering, no border, no mockup. Fully transparent background. Make exactly one symbol, not a sheet of alternatives."
+    ],
+    [
+      "B_空间视窗",
+      "Use case: logo-brand. Design ONE professional minimalist symbol-only logo for XR ScienceTeacher, an AR interactive science education product. Concept B: a clean spatial window formed by two opposing angular corner brackets, framing a tiny tilted diamond/cube. The two open corners suggest see-through augmented reality while the center suggests a scientific object. Extremely simple, balanced distinctive logo, bold geometric flat vector-like artwork. Palette dark navy #173344 and bright teal #13A3A5 only. Strong silhouette and legible at 32 pixels. Centered on fully transparent background with generous margin. No text, no wordmark, no letters, no numbers, no gradients, no glow, no shadows, no 3D rendering, no border, no mockup. Exactly one logo symbol."
+    ],
+    [
+      "C_探索之书",
+      "Use case: logo-brand. Design ONE professional minimalist symbol-only logo for XR ScienceTeacher, a science education product. Concept C: a stylized open book made of two folded geometric page forms, crossed by one sparse diagonal orbital arc with ONE small dot. Fuse book and scientific exploration into one cohesive simple mark, not a collage. Clean flat vector-like artwork, bold solid strokes, geometric and sophisticated. Palette dark navy #173344 and teal #13A3A5 only. Maximum 4 graphic elements, strong recognition at 32 pixels. Centered on fully transparent background with generous margin. No text, no wordmark, no letters, no numbers, no gradients, no glows, no shadows, no 3D rendering, no border, no mockup. Exactly one logo symbol."
+    ]
+  ],
+  "accentPrompt": "Use case: productivity-visual. Create one small, refined ornamental science motif for a presentation, on a fully TRANSPARENT background. A sparse cluster of delicate cyan and desaturated teal optical orbit curves crossing a tiny wireframe geometric cube, with only three small solid nodes. Elegant editorial line artwork, subtle technical precision, generous transparent negative space. Landscape 3:2 composition, artwork occupies central 70 percent. Fine but visible strokes, flat solid color only. This is an isolated corner accent that will be shown at about 120 pixels wide, not a slide background. No gradients, no glows, no stars, no grids, no circuit boards, no border, no panels, no text, no letters, no numbers, no logo, no dark background."
+}

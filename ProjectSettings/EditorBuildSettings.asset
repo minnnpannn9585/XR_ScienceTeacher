@@ -35,6 +35,15 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/LensCraftChallenge.unity
     guid: a9c3e05f6d4b4a8c1e2f304152637485
+  - enabled: 1
+    path: Assets/Scenes/TriangleAngles.unity
+    guid: 5ca47d3221cc46f680698d31755ed48f
+  - enabled: 1
+    path: Assets/Scenes/LeverBalance.unity
+    guid: 35245d46a57c4f91a84bf0d6635c1bb4
+  - enabled: 1
+    path: Assets/Scenes/IndicatorLab.unity
+    guid: 9c779040dff74e7db20e76324227cfe3
   m_configObjects:
     com.unity.addressableassets: {fileID: 11400000, guid: 2c62b583b522d66488f2e5992bc26720,
       type: 2}

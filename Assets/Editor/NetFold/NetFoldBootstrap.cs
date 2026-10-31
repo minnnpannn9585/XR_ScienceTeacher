@@ -104,7 +104,10 @@ public static class NetFoldBootstrap
             new EditorBuildSettingsScene("Assets/Scenes/ParticleDriftChallenge.unity", true),
             new EditorBuildSettingsScene("Assets/Scenes/LensCraft.unity", true),
             new EditorBuildSettingsScene("Assets/Scenes/LensCraftFree.unity", true),
-            new EditorBuildSettingsScene("Assets/Scenes/LensCraftChallenge.unity", true)
+            new EditorBuildSettingsScene("Assets/Scenes/LensCraftChallenge.unity", true),
+            new EditorBuildSettingsScene("Assets/Scenes/TriangleAngles.unity", true),
+            new EditorBuildSettingsScene("Assets/Scenes/LeverBalance.unity", true),
+            new EditorBuildSettingsScene("Assets/Scenes/IndicatorLab.unity", true)
         };
         EditorBuildSettings.scenes = scenes;
     }

@@ -1,0 +1,11 @@
+{"kind":"deck","id":"pr/1gkaq4","name":"Deck"}
+{"kind":"layout","id":"ly/xk7q1kvu","editable":false,"name":"Master","type":"master"}
+{"kind":"layout","id":"ly/feh4fu18","editable":false,"name":"Title Slide","type":"title","placeholders":[{"name":"title","type":"title"},{"name":"subtitle","type":"subtitle"}]}
+{"kind":"layout","id":"ly/8redc3ul","editable":false,"name":"Section Header","type":"sectionHeader","placeholders":[{"name":"title","type":"title"}]}
+{"kind":"layout","id":"ly/4ba1w7ml","editable":false,"name":"Title and Body","type":"tx","placeholders":[{"name":"title","type":"title"},{"name":"body","type":"body"}]}
+{"kind":"layout","id":"ly/w36hgb21","editable":false,"name":"Title and Two Column","type":"twoColTx","placeholders":[{"name":"title","type":"title"},{"name":"Left column","type":"body"},{"name":"Right column","type":"body"}]}
+{"kind":"layout","id":"ly/5kf2tgv6","editable":false,"name":"Title and One Column","type":"tx","placeholders":[{"name":"title","type":"title"},{"name":"body","type":"body"}]}
+{"kind":"layout","id":"ly/velofqt8","editable":false,"name":"Blank","type":"blank"}
+{"kind":"slide","id":"sl/jjbmt6","slideIndex":0,"layout":{"id":"ly/velofqt8","name":"Blank"},"title":"XR 科学实验室","textShapes":1,"backgroundColor":"rgba(16,21,27,1)"}
+{"kind":"textbox","id":"sh/7y5k7ihs","slideIndex":0,"position":{"left":70,"top":100,"width":1100,"height":300},"text":"XR 科学实验室\n几何、分子与光学","geometry":"rect","lineWidth":0,"style":{"fontSize":60,"typeface":"Microsoft YaHei","color":"#F3EFE4","bold":true,"alignment":"left"}}
+{"kind":"notes","id":"nt/jjbmt6","slideIndex":0,"text":""}

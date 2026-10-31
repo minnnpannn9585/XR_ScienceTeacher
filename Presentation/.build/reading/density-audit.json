@@ -1,0 +1,50 @@
+{
+  "old": {
+    "slides": 25,
+    "visible_content_characters": 3184,
+    "average_characters": 127.4,
+    "images_per_page": [
+      1,
+      0,
+      0,
+      0,
+      0,
+      0,
+      1,
+      0,
+      1,
+      2,
+      1,
+      1,
+      0,
+      1,
+      0,
+      1,
+      1,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ]
+  },
+  "reading": {
+    "slides": 8,
+    "visible_content_characters": 4999,
+    "average_characters": 624.9,
+    "images_per_page": [
+      1,
+      1,
+      4,
+      3,
+      3,
+      1,
+      1,
+      1
+    ]
+  },
+  "average_density_ratio": 4.91
+}

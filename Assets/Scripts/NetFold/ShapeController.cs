@@ -21,6 +21,8 @@ public class ShapeController : MonoBehaviour, IInteractable
     Quaternion _baseRotation = Quaternion.identity;
     Vector3 _basePosition;
     bool _userOrbit;
+    Camera _dragCamera;
+    Vector2 _lastDragPosition;
     Material _shared;
     Color _baseColor;
 
@@ -69,10 +71,25 @@ public class ShapeController : MonoBehaviour, IInteractable
     public void OnDragStart(Vector3 worldPoint, Ray pointerRay)
     {
         _userOrbit = true;
+        var input = InputAdapter.Instance;
+        _dragCamera = input != null && !input.UseXR ? input.PcCamera : null;
+        if (_dragCamera != null)
+            _lastDragPosition = _dragCamera.WorldToScreenPoint(pointerRay.GetPoint(1f));
     }
 
     public void OnDrag(Vector3 worldPoint, Ray pointerRay)
     {
+        if (_dragCamera != null)
+        {
+            // Rotate by mouse movement, not the absolute pointing direction.
+            // A stationary hold must leave the solid still, regardless of frame rate.
+            Vector2 position = _dragCamera.WorldToScreenPoint(pointerRay.GetPoint(1f));
+            Vector2 movement = position - _lastDragPosition;
+            _lastDragPosition = position;
+            Rotate(movement * 0.18f);
+            return;
+        }
+
         Vector2 delta = Vector2.zero;
         if (InputAdapter.Instance != null && InputAdapter.Instance.Provider != null)
         {
@@ -89,6 +106,7 @@ public class ShapeController : MonoBehaviour, IInteractable
     public void OnDragEnd()
     {
         _userOrbit = false;
+        _dragCamera = null;
     }
 
     public void Rotate(Vector2 delta)

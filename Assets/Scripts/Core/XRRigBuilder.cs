@@ -26,6 +26,7 @@ public static class XRRigBuilder
         if (camera.GetComponent<UniversalAdditionalCameraData>() == null)
             camera.gameObject.AddComponent<UniversalAdditionalCameraData>();
         StudioSet.ApplyCamera(camera);
+        camera.gameObject.AddComponent<XRRealityPresentation>().Configure(camera, null);
 
         if (UnityEngine.Object.FindObjectOfType<XRInteractionManager>() == null)
         {

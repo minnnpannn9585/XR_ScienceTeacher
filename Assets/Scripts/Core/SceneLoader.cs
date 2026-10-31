@@ -13,6 +13,19 @@ public class SceneLoader : MonoBehaviour
     public const string LensCraftScene = "LensCraft";
     public const string LensCraftFreeScene = "LensCraftFree";
     public const string LensCraftChallengeScene = "LensCraftChallenge";
+    public const string TriangleAnglesScene = "TriangleAngles";
+    public const string LeverBalanceScene = "LeverBalance";
+    public const string IndicatorLabScene = "IndicatorLab";
+
+    public static void LoadTriangleAngles() => LoadMiniLab(TriangleAnglesScene);
+    public static void LoadLeverBalance() => LoadMiniLab(LeverBalanceScene);
+    public static void LoadIndicatorLab() => LoadMiniLab(IndicatorLabScene);
+
+    static void LoadMiniLab(string scene)
+    {
+        Time.timeScale = 1f;
+        SceneManager.LoadScene(scene);
+    }
 
     public static void LoadMainMenu()
     {

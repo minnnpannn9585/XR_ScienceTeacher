@@ -1,0 +1,12 @@
+Additional Unity screenshots captured on 2026-10-31 (Asia/Shanghai).
+Unity 2022.3.62f3, Direct3D 11, the existing project URP scenes in Play Mode.
+All images are 1920x1080 Camera RenderTexture exports. Overlay UI was temporarily converted to screen-space-camera for capture, then restored. No AI-generated scene images or mock visual replacements were used. These are PC runtime views, not headset captures.
+
+17_language_settings.png: MainMenu, existing Settings button invoked. Chinese selected before capture; no language preference changed.
+18_prism_hero.png: NetFoldFree, ShowFreeShape(TriangularPrism). UI hidden temporarily. Camera field of view multiplied by 0.82 for a closer composition and immediately restored.
+19_cone_hero.png: NetFoldFree, ShowFreeShape(Cone). Same temporary UI hiding and field-of-view adjustment as 18.
+20_particle_hero.png: ParticleDriftFree, ToggleView() to micro particle display, UI temporarily hidden. Actual default camera pose and materials.
+21_challenge_result.png: NetFoldChallenge, existing ResultPanel.Show(3, stars.3) invoked to illustrate the completion-feedback UI. This capture did not execute the three challenge answers. The pre-capture existence/value of ScienceStudio.BestStars.NetFold was preserved and restored immediately afterwards.
+22_lens_lesson.png: LensCraft lesson scene, one NextStep() call to the special-light-rays explanation. Existing full UI and runtime state captured.
+
+Temporary Assets/Editor/PresentationExtraCapture.cs and .meta removed after success. Reproducible source preserved here as PresentationExtraCapture.cs. No original scene/source files edited. The four pre-existing localization modifications were hash-checked and remain unchanged.

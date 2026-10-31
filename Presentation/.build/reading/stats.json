@@ -1,0 +1,74 @@
+[
+  {
+    "page": 1,
+    "title": "XR ScienceTeacher 科学实验教学项目",
+    "leftEnd": 624,
+    "rightEnd": 671.625,
+    "leadEnd": 111,
+    "images": 1,
+    "characters": 436
+  },
+  {
+    "page": 2,
+    "title": "产品结构与交互体验",
+    "leftEnd": 624,
+    "rightEnd": 671.625,
+    "leadEnd": 111,
+    "images": 1,
+    "characters": 460
+  },
+  {
+    "page": 3,
+    "title": "立体图形：关联结构、展开、投影与截面",
+    "leftEnd": 624,
+    "rightEnd": 617,
+    "leadEnd": 111,
+    "images": 4,
+    "characters": 402
+  },
+  {
+    "page": 4,
+    "title": "分子热运动：宏观现象与微观过程联动",
+    "leftEnd": 624,
+    "rightEnd": 606.375,
+    "leadEnd": 111,
+    "images": 3,
+    "characters": 412
+  },
+  {
+    "page": 5,
+    "title": "凸透镜成像：参数、光路与图像同步变化",
+    "leftEnd": 624,
+    "rightEnd": 627.375,
+    "leadEnd": 111,
+    "images": 3,
+    "characters": 420
+  },
+  {
+    "page": 6,
+    "title": "挑战设计、即时反馈与学习记录",
+    "leftEnd": 624,
+    "rightEnd": 648.625,
+    "leadEnd": 111,
+    "images": 1,
+    "characters": 422
+  },
+  {
+    "page": 7,
+    "title": "工程架构、复用方式与 XR 适配",
+    "leftEnd": 624,
+    "rightEnd": 648.625,
+    "leadEnd": 111,
+    "images": 1,
+    "characters": 515
+  },
+  {
+    "page": 8,
+    "title": "完成范围、项目价值与后续验证",
+    "leftEnd": 624,
+    "rightEnd": 648.625,
+    "leadEnd": 111,
+    "images": 1,
+    "characters": 433
+  }
+]

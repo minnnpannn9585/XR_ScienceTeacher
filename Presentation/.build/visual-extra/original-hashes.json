@@ -1,0 +1,22 @@
+[
+  {
+    "Algorithm": "SHA256",
+    "Hash": "66B86F370D368EFA5B6FA77046B2E92F88D3BD7DBDD2E40E2B33470AD7656BD5",
+    "Path": "C:\\Users\\minpa\\Documents\\GitHub\\XR_ScienceTeacher\\Assets\\Localization\\Localization Settings.asset"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "018868F08E44E50794F6597FAE96793EDB6AB2E023E58D838CBA40C10521C684",
+    "Path": "C:\\Users\\minpa\\Documents\\GitHub\\XR_ScienceTeacher\\Assets\\Localization\\Tables\\UI Shared Data.asset"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "A23F846E05432C92436E7B61F4CCF64F46D0EB047242708C6BC8B76D4AE26105",
+    "Path": "C:\\Users\\minpa\\Documents\\GitHub\\XR_ScienceTeacher\\Assets\\Localization\\Tables\\UI_en.asset"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "4EE2B30758B528741B4AC85DAC7C6858915635251770EEA3418D361BAEB8FB80",
+    "Path": "C:\\Users\\minpa\\Documents\\GitHub\\XR_ScienceTeacher\\Assets\\Localization\\Tables\\UI_zh-Hans.asset"
+  }
+]

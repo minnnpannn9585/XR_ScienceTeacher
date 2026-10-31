@@ -32,6 +32,13 @@ public class XRBuildValidation : IPreprocessBuildWithReport, IPostprocessBuildWi
 
         var settings = OpenXRSettings.GetSettingsForBuildTargetGroup(BuildTargetGroup.Android);
         Require(settings != null, "Android OpenXR settings are missing.");
+        var passthrough = settings.GetFeature<QuestPassthroughFeature>();
+        Require(passthrough != null && passthrough.enabled,
+            "Quest VR/MR switching requires Quest Passthrough. Run XR/Configure OpenXR Devices.");
+        Require(PlayerSettings.Android.targetArchitectures == AndroidArchitecture.ARM64,
+            "Quest passthrough requires an ARM64-only Android build.");
+        Require(PlayerSettings.GetScriptingBackend(BuildTargetGroup.Android) == ScriptingImplementation.IL2CPP,
+            "Quest ARM64 requires the IL2CPP scripting backend.");
         var types = new HashSet<Type>();
         foreach (var feature in settings.GetFeatures())
         {
@@ -57,7 +64,7 @@ public class XRBuildValidation : IPreprocessBuildWithReport, IPostprocessBuildWi
             Require(material != null && material.shader != null, "Runtime material/shader missing: " + name);
         }
 
-        Debug.Log("[XR Build] Android startup settings, feature scripts and runtime materials validated.");
+        Debug.Log("[XR Build] Android startup, Quest passthrough, ARM64, feature scripts and runtime materials validated.");
     }
 
     public void OnPostprocessBuild(BuildReport report)
@@ -97,6 +104,13 @@ public class XRBuildValidation : IPreprocessBuildWithReport, IPostprocessBuildWi
         OfficialXRSetup.Prepare();
         XRInteractionChecks.Run();
         BuildQuest("official-interactions");
+    }
+
+    [MenuItem("XR/Build Android VR MR Switch")]
+    public static void BuildRealityMode()
+    {
+        XRRealityModeChecks.Run();
+        BuildQuest("vr-mr-switch");
     }
 
     static void BuildQuest(string suffix)

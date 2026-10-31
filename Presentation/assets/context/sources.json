@@ -1,0 +1,35 @@
+[
+  {
+    "file": "classroom-empty.jpg",
+    "title": "An empty classroom with desks and windows",
+    "author": "Nguyen Phan Nam Anh",
+    "source": "https://unsplash.com/photos/an-empty-classroom-with-desks-and-windows-fKAUB1uYFcc",
+    "imageUrl": "https://images.unsplash.com/photo-1685159375749-04060db8cefb?auto=format&fit=crop&fm=jpg&q=85&w=2400",
+    "license": "Unsplash License",
+    "licenseUrl": "https://unsplash.com/license",
+    "use": "课堂场景参考；可作为 AR 概念合成底图，非项目实测",
+    "dimensions": "2400x1350"
+  },
+  {
+    "file": "students-computer.jpg",
+    "title": "Students using a computer",
+    "author": "Kwameghana (Bright Kwame Ayisi)",
+    "source": "https://commons.wikimedia.org/wiki/File:Students_using_a_computer.jpg",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e9/Students_using_a_computer.jpg/1280px-Students_using_a_computer.jpg",
+    "license": "CC0 1.0 Universal",
+    "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "use": "课堂电脑学习场景参考，非本项目使用照片",
+    "dimensions": "1280x852"
+  },
+  {
+    "file": "student-group-laptop.jpg",
+    "title": "A group of students using a computer laptop",
+    "author": "Kwameghana (Bright Kwame Ayisi)",
+    "source": "https://commons.wikimedia.org/wiki/File:A_group_of_students_using_a_computer_laptop.jpg",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a1/A_group_of_students_using_a_computer_laptop.jpg/1280px-A_group_of_students_using_a_computer_laptop.jpg",
+    "license": "CC0 1.0 Universal",
+    "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "use": "小组电脑探究场景参考，非本项目使用照片",
+    "dimensions": "1280x852"
+  }
+]
