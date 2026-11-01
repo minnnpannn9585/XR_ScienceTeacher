@@ -1,4 +1,5 @@
 using TMPro;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -16,39 +17,72 @@ public class TriangleAnglesLab : MiniLabBase
     readonly LineRenderer[] _arcs = new LineRenderer[3];
     readonly TMP_Text[] _labels = new TMP_Text[3];
     Slider _slider;
+    readonly List<Material> _visualMaterials = new List<Material>();
     bool _sawLeft, _sawRight;
     public Vector3 Angles { get; private set; }
     public float VertexX { get; private set; }
 
     protected override void BuildExperiment()
     {
-        Accent = new Color(0.41f, 0.78f, 0.81f);
+        Accent = MRVisualStyle.Cyan;
+        var backdrop = new GameObject("Geometry Backdrop").transform;
+        backdrop.SetParent(ExperimentRoot, false);
         var boardColor = new Color(0.075f, 0.13f, 0.16f);
-        var board = Part(PrimitiveType.Cube, "Geometry Board", ExperimentRoot, new Vector3(0f, 0.28f, 0.07f), new Vector3(1.12f, 0.55f, 0.025f), boardColor);
+        var board = Part(PrimitiveType.Cube, "Geometry Board", backdrop, new Vector3(0f, 0.28f, 0.07f), new Vector3(1.12f, 0.55f, 0.025f), boardColor);
         board.GetComponent<Renderer>().sharedMaterial = Unlit(boardColor);
         for (int i = 0; i < 10; i++)
         {
             float x = -0.45f + i * 0.1f;
-            Line("Grid", ExperimentRoot, new[] { new Vector3(x, 0.04f, 0.052f), new Vector3(x, 0.53f, 0.052f) }, new Color(0.16f, 0.23f, 0.25f), 0.0015f);
+            Line("Grid", backdrop, new[] { new Vector3(x, 0.04f, 0.052f), new Vector3(x, 0.53f, 0.052f) }, new Color(0.16f, 0.23f, 0.25f), 0.0015f);
         }
-        _outline = Line("Triangle", ExperimentRoot, new[] { A, B, Vector3.zero, A }, Accent, 0.01f);
-        Part(PrimitiveType.Sphere, "A", ExperimentRoot, A, Vector3.one * 0.025f, Accent);
-        Part(PrimitiveType.Sphere, "B", ExperimentRoot, B, Vector3.one * 0.025f, Accent);
-        _vertex = Part(PrimitiveType.Sphere, "Draggable Vertex C", ExperimentRoot, Vector3.zero, Vector3.one * 0.055f, new Color(0.96f, 0.74f, 0.36f)).transform;
+        MRVisualStyle.HideInMR(backdrop.gameObject);
+        _outline = Line("Triangle", ExperimentRoot, new[] { A, B, Vector3.zero, A }, Accent, 0.006f);
+        _outline.numCornerVertices = 5;
+        _outline.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+        _outline.receiveShadows = false;
+        Node("A", A, 0.025f, Accent);
+        Node("B", B, 0.025f, Accent);
+        _vertex = Node("Draggable Vertex C", Vector3.zero, 0.055f, MRVisualStyle.Gold);
         // The primitive's visual collider is removed by Part; a larger target is comfortable in XR.
         var hit = new GameObject("Vertex Target", typeof(SphereCollider), typeof(TriangleVertexHandle));
         hit.transform.SetParent(_vertex, false);
         hit.GetComponent<SphereCollider>().radius = 0.9f;
         hit.GetComponent<TriangleVertexHandle>().Lab = this;
-        var colors = new[] { Accent, new Color(0.75f, 0.57f, 0.94f), new Color(0.96f, 0.74f, 0.36f) };
+        var colors = new[] { Accent, new Color(0.75f, 0.67f, 0.98f), MRVisualStyle.Gold };
         for (int i = 0; i < 3; i++)
         {
-            _arcs[i] = Line("Angle Arc", ExperimentRoot, new Vector3[21], colors[i], 0.005f);
+            _arcs[i] = Line("Angle Arc", ExperimentRoot, new Vector3[21], colors[i], 0.003f);
+            _arcs[i].shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+            _arcs[i].receiveShadows = false;
             _labels[i] = WorldLabel("Angle Label", ExperimentRoot, Vector3.zero, "", 0.038f);
             _labels[i].color = colors[i];
         }
         _slider = AddSlider("顶点 C 的左右位置", "Vertex C: left / right", -0.48f, 0.48f, 0f, SetVertex);
         WorldLabel("Vertex Hint", ExperimentRoot, new Vector3(0f, 0.59f, 0f), "A + B + C = 180°", 0.045f);
+    }
+
+    Transform Node(string name, Vector3 position, float diameter, Color color)
+    {
+        var node = Part(PrimitiveType.Sphere, name, ExperimentRoot, position, Vector3.one * diameter, color);
+        var material = MRVisualStyle.Metal(Color.Lerp(color, MRVisualStyle.WarmWhite, 0.3f), 0.28f, 0.9f);
+        _visualMaterials.Add(material);
+        node.GetComponent<Renderer>().sharedMaterial = material;
+        var points = new Vector3[41];
+        for (int i = 0; i < points.Length; i++)
+        {
+            float angle = i * Mathf.PI * 2f / (points.Length - 1);
+            points[i] = new Vector3(Mathf.Cos(angle) * 0.56f, Mathf.Sin(angle) * 0.56f, 0f);
+        }
+        var ring = Line("Node Rim", node.transform, points, color, 0.002f);
+        ring.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+        ring.receiveShadows = false;
+        return node.transform;
+    }
+
+    protected override void OnDestroy()
+    {
+        foreach (var material in _visualMaterials) if (material != null) Destroy(material);
+        base.OnDestroy();
     }
 
     public void SetVertex(float x)

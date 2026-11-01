@@ -30,6 +30,20 @@ public class ShapeFace : MonoBehaviour, ISelectable
 
     Material _base;
     Material _highlight;
+    LineRenderer _edge;
+    MaterialPropertyBlock _edgeProperties;
+
+    public void SetEdgeHighlight(bool highlighted)
+    {
+        if (_edge == null) _edge = GetComponentInChildren<LineRenderer>();
+        if (_edge == null) return;
+        if (_edgeProperties == null) _edgeProperties = new MaterialPropertyBlock();
+        Color color = highlighted ? MRVisualStyle.Gold : MRVisualStyle.Cyan;
+        // URP Unlit does not multiply LineRenderer vertex colors.
+        _edgeProperties.SetColor("_BaseColor", color);
+        _edgeProperties.SetColor("_Color", color);
+        _edge.SetPropertyBlock(_edgeProperties);
+    }
 
     public void CaptureFolded()
     {
@@ -70,6 +84,7 @@ public class ShapeFace : MonoBehaviour, ISelectable
         }
 
         transform.localScale = Vector3.one * 1.03f;
+        SetEdgeHighlight(true);
     }
 
     public void OnDeselect()
@@ -81,5 +96,6 @@ public class ShapeFace : MonoBehaviour, ISelectable
         }
 
         transform.localScale = Vector3.one;
+        SetEdgeHighlight(false);
     }
 }

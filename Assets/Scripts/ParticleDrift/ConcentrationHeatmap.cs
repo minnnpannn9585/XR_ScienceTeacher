@@ -13,6 +13,7 @@ public class ConcentrationHeatmap : MonoBehaviour
     Renderer _renderer;
     Transform _quad;
     int _frame;
+    Material _material;
 
     public void Build(float radius)
     {
@@ -26,6 +27,7 @@ public class ConcentrationHeatmap : MonoBehaviour
         _weights = new float[Res * Res];
 
         var mat = RuntimeMaterials.Unlit(true);
+        _material = mat;
         if (mat.HasProperty("_BaseMap"))
         {
             mat.SetTexture("_BaseMap", _tex);
@@ -38,6 +40,7 @@ public class ConcentrationHeatmap : MonoBehaviour
 
         mat.mainTexture = _tex;
         UrpMaterialUtil.SetTransparent(mat);
+        if (mat.HasProperty("_Cull")) mat.SetFloat("_Cull", 0f);
         mat.renderQueue = 3160;
 
         var quad = LabFactory.Primitive(PrimitiveType.Quad, "Heatmap", transform, new Vector3(0f, 0.078f, 0f), new Vector3(radius * 2f, radius * 2f, 1f), mat, false);
@@ -77,7 +80,7 @@ public class ConcentrationHeatmap : MonoBehaviour
         var low = new Color(0.12f, 0.28f, 0.85f, 0.78f);
         for (int i = 0; i < _cols.Length; i++)
         {
-            _cols[i] = low;
+            _cols[i] = CircularColor(low, i);
             _weights[i] = 0f;
         }
 
@@ -139,7 +142,7 @@ public class ConcentrationHeatmap : MonoBehaviour
         var high = new Color(0.95f, 0.08f, 0.16f, 0.88f);
         for (int i = 0; i < _cols.Length; i++)
         {
-            _cols[i] = Color.Lerp(low, high, Mathf.Clamp01(_weights[i] / max));
+            _cols[i] = CircularColor(Color.Lerp(low, high, Mathf.Clamp01(_weights[i] / max)), i);
         }
 
         int mid = (Res / 2) * Res + Res / 2;
@@ -165,5 +168,21 @@ public class ConcentrationHeatmap : MonoBehaviour
         }
 
         return Loc.Format("drift.heat.describe", Mathf.RoundToInt(Center * 100f), Mathf.RoundToInt(Edge * 100f));
+    }
+
+    // Restrict the visualization to the round vessel. The concentration values
+    // remain unchanged; only pixels outside its silhouette become transparent.
+    static Color CircularColor(Color color, int index)
+    {
+        float x = (index % Res) * 2f / (Res - 1) - 1f;
+        float y = (index / Res) * 2f / (Res - 1) - 1f;
+        color.a *= Mathf.Clamp01((1f - Mathf.Sqrt(x * x + y * y)) * 12f);
+        return color;
+    }
+
+    void OnDestroy()
+    {
+        if (_material != null) Destroy(_material);
+        if (_tex != null) Destroy(_tex);
     }
 }

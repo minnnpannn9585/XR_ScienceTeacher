@@ -25,8 +25,10 @@ public class ShapeController : MonoBehaviour, IInteractable
     Vector2 _lastDragPosition;
     Material _shared;
     Color _baseColor;
+    readonly HashSet<Material> _ownedMaterials = new HashSet<Material>();
+    readonly HashSet<Mesh> _ownedMeshes = new HashSet<Mesh>();
 
-    public void Initialize(ShapeType type, Material shared, Material highlight)
+    public void Initialize(ShapeType type, Material shared, Material highlight, Material edge = null)
     {
         Type = type;
         ShapeCatalog.Stats(type, out int f, out int e, out int v);
@@ -40,6 +42,11 @@ public class ShapeController : MonoBehaviour, IInteractable
         _basePosition = transform.localPosition;
         FaceList.Clear();
         GetComponentsInChildren(true, FaceList);
+        _ownedMaterials.Add(shared);
+        _ownedMaterials.Add(highlight);
+        if (edge != null) _ownedMaterials.Add(edge);
+        foreach (var face in FaceList)
+            if (face != null && face.MeshFilter != null) _ownedMeshes.Add(face.MeshFilter.sharedMesh);
     }
 
     void Update()
@@ -179,8 +186,25 @@ public class ShapeController : MonoBehaviour, IInteractable
             return;
         }
 
-        Color e = on ? NetFoldTheme.Accent * 1.4f : NetFoldTheme.EdgeGlow * 0.35f;
+        Color e = on ? MRVisualStyle.Gold * 0.14f : MRVisualStyle.Cyan * 0.045f;
         UrpMaterialUtil.SetEmission(_shared, e);
-        UrpMaterialUtil.SetColor(_shared, on ? Color.Lerp(_baseColor, Color.white, 0.18f) : _baseColor);
+        Color tint = on ? Color.Lerp(_baseColor, MRVisualStyle.Gold, 0.48f) : _baseColor;
+        tint.a = _baseColor.a;
+        UrpMaterialUtil.SetColor(_shared, tint);
+        foreach (var face in FaceList)
+            if (face != null) face.SetEdgeHighlight(on || face.IsSelected);
+    }
+
+    void OnDestroy()
+    {
+        foreach (var material in _ownedMaterials) Release(material);
+        foreach (var mesh in _ownedMeshes) Release(mesh);
+    }
+
+    static void Release(Object resource)
+    {
+        if (resource == null) return;
+        if (Application.isPlaying) Destroy(resource);
+        else DestroyImmediate(resource);
     }
 }

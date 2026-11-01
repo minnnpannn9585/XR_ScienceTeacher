@@ -27,29 +27,49 @@ public class LeverBalanceLab : MiniLabBase
     TMP_Text _balanceLabel;
     Slider _slider;
     float _tilt;
+    Material _metal;
+    Material _gold;
+    Material _edge;
+    Material _glass;
 
     protected override void BuildExperiment()
     {
         Accent = MovingColor;
-        Part(PrimitiveType.Cube, "Pivot Base", ExperimentRoot, new Vector3(0f, 0.025f, 0.04f),
-            new Vector3(0.2f, 0.05f, 0.28f), NetFoldTheme.StoneDeep);
-        Part(PrimitiveType.Cube, "Pivot Stand", ExperimentRoot, new Vector3(0f, 0.18f, 0.04f),
-            new Vector3(0.048f, 0.3f, 0.06f), NetFoldTheme.BrassDeep);
-        var axle = Part(PrimitiveType.Cylinder, "Pivot Axle", ExperimentRoot, new Vector3(0f, 0.34f, 0f),
-            new Vector3(0.065f, 0.07f, 0.065f), NetFoldTheme.Brass);
+        _metal = OpticalVisuals.Own(transform, MRVisualStyle.Metal(MRVisualStyle.WarmWhite, 0.5f, 0.82f));
+        _gold = OpticalVisuals.Own(transform, MRVisualStyle.Metal(MRVisualStyle.Gold, 0.6f, 0.82f));
+        _edge = OpticalVisuals.Own(transform, MRVisualStyle.Edge(MRVisualStyle.Cyan));
+        _glass = OpticalVisuals.Own(transform, MRVisualStyle.Glass(MRVisualStyle.Cyan, 0.18f));
+        Visual(PrimitiveType.Cube, "Pivot Base", ExperimentRoot, new Vector3(0f, 0.025f, 0.04f),
+            new Vector3(0.2f, 0.05f, 0.28f), _metal);
+        Visual(PrimitiveType.Cube, "Pivot Stand", ExperimentRoot, new Vector3(0f, 0.18f, 0.04f),
+            new Vector3(0.048f, 0.3f, 0.06f), _metal);
+        var axle = Visual(PrimitiveType.Cylinder, "Pivot Axle", ExperimentRoot, new Vector3(0f, 0.34f, 0f),
+            new Vector3(0.065f, 0.07f, 0.065f), _gold);
         axle.transform.localRotation = Quaternion.Euler(90f, 0f, 0f);
+        var cap = Visual(PrimitiveType.Cylinder, "Axle Cap", ExperimentRoot, new Vector3(0f, 0.34f, -0.074f),
+            new Vector3(0.049f, 0.003f, 0.049f), _metal);
+        cap.transform.localRotation = Quaternion.Euler(90f, 0f, 0f);
+        OpticalVisuals.Line(ExperimentRoot, "Base Highlight", _edge, 0.0018f,
+            new Vector3(-0.1f, 0.051f, -0.1f), new Vector3(0.1f, 0.051f, -0.1f),
+            new Vector3(0.1f, 0.051f, 0.18f), new Vector3(-0.1f, 0.051f, 0.18f), new Vector3(-0.1f, 0.051f, -0.1f));
 
         _beam = new GameObject("Lever Beam").transform;
         _beam.SetParent(ExperimentRoot, false);
         _beam.localPosition = new Vector3(0f, 0.34f, 0f);
-        Part(PrimitiveType.Cube, "Ruler", _beam, Vector3.zero,
-            new Vector3(1.1f, 0.028f, 0.07f), new Color(0.23f, 0.31f, 0.35f));
+        Visual(PrimitiveType.Cube, "Ruler", _beam, Vector3.zero,
+            new Vector3(1.1f, 0.028f, 0.07f), _glass);
+        OpticalVisuals.Line(_beam, "Ruler Outline", _edge, 0.0018f,
+            new Vector3(-0.55f, -0.014f, -0.036f), new Vector3(-0.55f, 0.014f, -0.036f),
+            new Vector3(0.55f, 0.014f, -0.036f), new Vector3(0.55f, -0.014f, -0.036f), new Vector3(-0.55f, -0.014f, -0.036f));
+        var tickMaterial = OpticalVisuals.Own(transform, MRVisualStyle.Edge(new Color(0.8f, 0.89f, 0.91f)));
+        var targetMaterial = OpticalVisuals.Own(transform, MRVisualStyle.Edge(MovingColor));
+        OpticalVisuals.Ruler(_beam, "Centimetre Marks", 0.5f, 0.01f, 0.0145f, -0.035f, tickMaterial);
         // Marks are exactly 10 cm apart in the same world units as the torque calculation.
         for (int i = -5; i <= 5; i++)
         {
             float x = i * 0.1f;
-            Line("Distance Tick", _beam, new[] { new Vector3(x, 0.016f, -0.036f), new Vector3(x, -0.016f, -0.036f) },
-                i == 4 ? MovingColor : NetFoldTheme.Ivory, i == 4 ? 0.005f : 0.0025f);
+            OpticalVisuals.Line(_beam, "Distance Tick", i == 4 ? targetMaterial : tickMaterial, i == 4 ? 0.003f : 0.0018f,
+                new Vector3(x, 0.016f, -0.036f), new Vector3(x, -0.016f, -0.036f));
         }
         BuildLoad("Fixed 2 kg", -LeftDistance, FixedColor, 0.105f, "2 kg");
         _rightLoad = BuildLoad("Moving 1 kg", 0.2f, MovingColor, 0.072f, "1 kg");
@@ -69,14 +89,25 @@ public class LeverBalanceLab : MiniLabBase
         var load = new GameObject(name).transform;
         load.SetParent(_beam, false);
         load.localPosition = new Vector3(x, 0f, 0f);
-        Part(PrimitiveType.Cube, "Sliding Collar", load, Vector3.zero,
-            new Vector3(0.046f, 0.043f, 0.09f), color);
-        Line("Hanger", load, new[] { new Vector3(0f, -0.014f, 0f), new Vector3(0f, -0.064f, 0f) }, color, 0.006f);
-        Part(PrimitiveType.Cylinder, "Mass", load, new Vector3(0f, -0.064f - height * 0.5f, 0f),
-            new Vector3(0.09f, height * 0.5f, 0.09f), color);
+        var finish = OpticalVisuals.Own(transform, MRVisualStyle.Metal(Color.Lerp(color, MRVisualStyle.WarmWhite, 0.38f), 0.6f, 0.84f));
+        var edge = OpticalVisuals.Own(transform, MRVisualStyle.Edge(color));
+        Visual(PrimitiveType.Cube, "Sliding Collar", load, Vector3.zero,
+            new Vector3(0.046f, 0.043f, 0.09f), finish);
+        OpticalVisuals.Line(load, "Hanger", edge, 0.004f, new Vector3(0f, -0.014f, 0f), new Vector3(0f, -0.064f, 0f));
+        Visual(PrimitiveType.Cylinder, "Mass", load, new Vector3(0f, -0.064f - height * 0.5f, 0f),
+            new Vector3(0.09f, height * 0.5f, 0.09f), finish);
+        Visual(PrimitiveType.Cylinder, "Mass Top Rim", load, new Vector3(0f, -0.064f, 0f),
+            new Vector3(0.093f, 0.002f, 0.093f), _metal);
+        Visual(PrimitiveType.Cylinder, "Mass Bottom Rim", load, new Vector3(0f, -0.064f - height, 0f),
+            new Vector3(0.093f, 0.002f, 0.093f), _metal);
+        var dial = Visual(PrimitiveType.Cylinder, "Collar Dial", load, new Vector3(0f, 0f, -0.049f), new Vector3(0.018f, 0.004f, 0.018f), _gold);
+        dial.transform.localRotation = Quaternion.Euler(90f, 0f, 0f);
         WorldLabel("Mass Label", load, new Vector3(0f, 0.065f, -0.015f), mass, 0.033f);
         return load;
     }
+
+    static GameObject Visual(PrimitiveType type, string name, Transform parent, Vector3 position, Vector3 scale, Material material)
+        => OpticalVisuals.Part(parent, type, name, position, scale, material);
 
     /// <summary>Distance is in metres; the interactive ruler snaps to whole centimetres.</summary>
     public void SetDistance(float meters)

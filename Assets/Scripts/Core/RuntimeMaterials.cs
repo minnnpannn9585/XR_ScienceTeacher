@@ -24,6 +24,11 @@ public static class RuntimeMaterials
         return Create("ParticlesUnlit");
     }
 
+    public static Material Glass()
+    {
+        return Create("MRGlass");
+    }
+
     static Material Create(string name)
     {
         var template = Resources.Load<Material>(ResourceFolder + name);

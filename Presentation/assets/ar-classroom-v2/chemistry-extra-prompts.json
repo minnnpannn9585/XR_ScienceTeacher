@@ -1,0 +1,20 @@
+[
+  {
+    "key": "micro-detail",
+    "prompt": "Use case: compositing. Make a wide 16:9 AR teaching concept visual. Image 1 is the EDIT TARGET Unity molecular-motion screenshot. Image 2 is a real classroom background reference. Replace the entire black virtual room and UI with the bright classroom and real wooden student desk from image 2, preserving its green blackboard, wooden lectern, wall texture and warm daylight context. Feature ONE large transparent virtual glass beaker centrally, occupying about 65% of the image, with hundreds of small cyan molecular points and a clearly localized purple cluster diffusing into the water. Show this as a magnified educational visualization inside the beaker: the transparent outer glass lets the real classroom and wooden desk remain visible, while the particle detail is easy to see. Subtle cyan highlighted rim, restrained AR translucency, natural perspective, real photographic classroom texture, bright daylight exposure, close 3/4 view down toward the desk. The beaker itself is an AR overlay inspired by the teaching model, not a real molecular photograph. No other beakers, people, hands, headsets, lens frames, control panels, text, formulas, labels, logos or watermark. Not a black-background VR scene.",
+    "mode": "built-in image_gen",
+    "generatedFile": "C:/Users/minpa/.codex/generated_images/01a197b1-4197-7081-b6b7-659d62fa298e/exec-3a082554-33ab-4916-8e9c-5612bff62903.png",
+    "target": "Presentation/assets/ar-classroom-v2/micro-detail-ar.png",
+    "classroom": "Presentation/assets/ar-classroom-v2/sources/barry-zhou-classroom.jpg",
+    "disclosure": "AR课堂合成概念图，非设备实拍；科学模型为展示示意"
+  },
+  {
+    "key": "six-labs",
+    "prompt": "Use case: compositing. Create ONE polished wide 16:9 AR classroom overview concept for a science teaching product. Image 1 is the EDIT TARGET: a real empty classroom photograph with green chalkboard, wooden lectern and rows of desks. Preserve the recognizable classroom, surfaces, perspective and warm daylight. Extend the foreground naturally to show two staggered rows of real wooden student desks. Image 2 is a supporting reference for an ivory geometric cube. Image 3 is a supporting reference for a cyan triangle with three glowing vertices. Image 4 is supporting reference for transparent molecular beakers. Place exactly SIX distinct small virtual educational exhibits above the real desks, all clearly separated and visible, in two rows of three. Front row: an ivory translucent cube with fine cyan edge outlines; a cyan planar triangle with one golden vertex and small unlabeled angle arcs; a candle-convex-lens-screen optical bench with a few thin colored light rays. Back row: a level horizontal lever with a central fulcrum and unequal weights at compensating distances; a transparent beaker containing many cyan particles; a separate purple cabbage-indicator beaker with two small sample bottles. Keep every exhibit visually readable with no overlap, realistic desktop scale, and photographic classroom visible between exhibits and behind them. All six objects are understated semi-transparent AR overlays with fine cyan accents, not physical equipment. Bright airy natural daylight, warm wood, neutral cream, clean editorial product presentation, no theatrical darkness or giant science-fiction HUD. Do not add people, hands, headsets, text, numerals, labels, title, logo or watermark. This is a design composite, not a device screenshot.",
+    "mode": "built-in image_gen",
+    "generatedFile": "C:/Users/minpa/.codex/generated_images/01a197b1-4197-7081-b6b7-659d62fa298e/exec-336efc6f-7b28-47ea-91a3-96bd451d871a.png",
+    "target": "Presentation/assets/ar-classroom-v2/six-labs-ar.png",
+    "classroom": "Presentation/assets/ar-classroom-v2/sources/barry-zhou-classroom.jpg",
+    "disclosure": "AR课堂合成概念图，非设备实拍；科学模型为展示示意"
+  }
+]

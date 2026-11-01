@@ -21,6 +21,7 @@ public class SectionController : MonoBehaviour, IDraggable, ISelectable, IRotata
     Vector3 _grab;
     readonly List<Vector3> _points = new List<Vector3>(32);
     readonly Dictionary<Material, Color> _targetColors = new Dictionary<Material, Color>();
+    readonly List<Material> _materials = new List<Material>();
 
     public void SetAnchor(Transform anchor)
     {
@@ -91,7 +92,9 @@ public class SectionController : MonoBehaviour, IDraggable, ISelectable, IRotata
         UnityEngine.Object.Destroy(_planeVis.GetComponent<MeshCollider>());
         var box = _planeVis.gameObject.AddComponent<BoxCollider>();
         box.size = new Vector3(1f, 1f, 0.02f);
-        _planeVis.GetComponent<MeshRenderer>().sharedMaterial = UrpMaterialUtil.CreateLit(NetFoldTheme.Section, true, 0f, 0.25f, true, new Color(1f, 0.85f, 0.4f, 0.35f));
+        _planeVis.GetComponent<MeshRenderer>().sharedMaterial = Own(MRVisualStyle.Glass(MRVisualStyle.Gold, 0.1f));
+        _planeVis.GetComponent<MeshRenderer>().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+        _planeVis.GetComponent<MeshRenderer>().receiveShadows = false;
         _planeVis.gameObject.AddComponent<SectionPlaneProxy>().Bind(this);
 
         var loopGo = new GameObject("SectionLoop");
@@ -99,15 +102,40 @@ public class SectionController : MonoBehaviour, IDraggable, ISelectable, IRotata
         _loop = loopGo.AddComponent<LineRenderer>();
         _loop.useWorldSpace = true;
         _loop.loop = true;
-        _loop.widthMultiplier = 0.01f;
-        _loop.sharedMaterial = UrpMaterialUtil.CreateLit(NetFoldTheme.Success, true, 0f, 0.1f, true, NetFoldTheme.Success * 2f);
+        _loop.widthMultiplier = 0.0045f;
+        _loop.numCornerVertices = 4;
+        _loop.sharedMaterial = Own(MRVisualStyle.Edge(MRVisualStyle.Cyan));
         _loop.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+        _loop.receiveShadows = false;
 
         var polyGo = new GameObject("SectionPoly");
         polyGo.transform.SetParent(_root, false);
         _poly = polyGo.AddComponent<MeshFilter>();
-        polyGo.AddComponent<MeshRenderer>().sharedMaterial = UrpMaterialUtil.CreateLit(new Color(1f, 0.9f, 0.4f, 0.55f), true, 0f, 0.4f, true, new Color(1f, 0.85f, 0.3f, 0.8f));
+        var polygonRenderer = polyGo.AddComponent<MeshRenderer>();
+        polygonRenderer.sharedMaterial = Own(MRVisualStyle.Glass(MRVisualStyle.Gold, 0.3f));
+        polygonRenderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+        polygonRenderer.receiveShadows = false;
         _poly.mesh = new Mesh { name = "Section" };
+    }
+
+    Material Own(Material material)
+    {
+        _materials.Add(material);
+        return material;
+    }
+
+    void OnDestroy()
+    {
+        RestoreTargetMaterials();
+        foreach (var material in _materials) Release(material);
+        if (_poly != null) Release(_poly.sharedMesh);
+    }
+
+    static void Release(Object resource)
+    {
+        if (resource == null) return;
+        if (Application.isPlaying) Destroy(resource);
+        else DestroyImmediate(resource);
     }
 
     void LateUpdate()

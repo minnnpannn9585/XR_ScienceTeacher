@@ -1,0 +1,29 @@
+{
+  "verifiedOn": "2026-11-01",
+  "photos": [
+    {
+      "file": "barry-zhou-classroom.jpg",
+      "title": "empty classroom",
+      "author": "Barry Zhou",
+      "source": "https://unsplash.com/photos/empty-classroom-khjwIW9HH5s",
+      "imageUrl": "https://images.unsplash.com/photo-1565057748808-18c797216b0c?auto=format&fit=crop&fm=jpg&ixid=NHwxMjA3fDA%3D&ixlib=rb-4.1.0&q=90&w=3000",
+      "license": "Unsplash License",
+      "licenseUrl": "https://unsplash.com/license",
+      "usage": "Free download, commercial and noncommercial use, modification allowed; attribution appreciated.",
+      "visualInspection": "空教室，暖阳、绿色黑板、旧木桌，无人。东亚风格是视觉判断，来源页没有明确国家位置。",
+      "selectedFor": "hero-ar.png"
+    },
+    {
+      "file": "mikhail-nilov-classroom.jpg",
+      "title": "An Empty Classroom",
+      "author": "Mikhail Nilov",
+      "source": "https://www.pexels.com/photo/an-empty-classroom-6981007/",
+      "imageUrl": "https://images.pexels.com/photos/6981007/pexels-photo-6981007.jpeg?cs=srgb&dl=pexels-mikhail-nilov-6981007.jpg&fm=jpg",
+      "license": "Pexels License",
+      "licenseUrl": "https://www.pexels.com/license/",
+      "usage": "Free download and modification; presentations and product promotion allowed. Do not imply endorsement.",
+      "visualInspection": "明亮现代教室，白墙、书架、桌椅，无人；原图有美国旗帜，合成图已选择避开旗帜的构图，不作为中国课堂实拍使用。",
+      "selectedFor": "pc-classroom.png"
+    }
+  ]
+}

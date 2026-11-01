@@ -667,14 +667,17 @@ public class OpticalBenchController : MonoBehaviour
         transform.position = new Vector3(0f, XRDeskStation.SurfaceHeight + 0.02f - XRDeskStation.TopThickness * 0.5f, 0f);
         var desk = LabFactory.Primitive(PrimitiveType.Cube, "Desk", transform, new Vector3(0f, -0.02f, 0f), new Vector3(1.9f, 0.045f, 0.72f), StudioSet.Stone(), true);
         StudioSet.DressDesk(desk.transform);
-        LabFactory.Primitive(PrimitiveType.Cube, "Rail", transform, new Vector3(0f, 0.02f, 0f), new Vector3(1.7f, 0.012f, 0.028f), StudioSet.Brass(), false);
-        LabFactory.Primitive(PrimitiveType.Cylinder, "LampStem", transform, new Vector3(-0.78f, 0.04f, -0.14f), new Vector3(0.014f, 0.028f, 0.014f), StudioSet.Brass(), false);
-        LabFactory.Primitive(PrimitiveType.Sphere, "Lamp", transform, new Vector3(-0.78f, 0.08f, -0.14f), Vector3.one * 0.026f, LabFactory.Lit(new Color(1f, 0.9f, 0.72f), false, 0f, 0.45f, true, new Color(1f, 0.72f, 0.32f)), false);
-        for (int i = -8; i <= 8; i++)
-        {
-            float x = i * 0.1f;
-            LabFactory.Primitive(PrimitiveType.Cube, "Tick", transform, new Vector3(x, 0.03f, 0.08f), new Vector3(0.003f, 0.006f, i % 2 == 0 ? 0.028f : 0.016f), LabFactory.Lit(NetFoldTheme.Ivory, false, 0.05f, 0.35f), false);
-        }
+        var metal = OpticalVisuals.Own(transform, MRVisualStyle.Metal(MRVisualStyle.WarmWhite));
+        var glass = OpticalVisuals.Own(transform, MRVisualStyle.Glass(MRVisualStyle.Cyan, 0.13f));
+        var edge = OpticalVisuals.Own(transform, MRVisualStyle.Edge(MRVisualStyle.Cyan));
+        var marks = OpticalVisuals.Own(transform, MRVisualStyle.Edge(new Color(0.22f, 0.4f, 0.45f)));
+        OpticalVisuals.Part(transform, PrimitiveType.Cube, "Rail", new Vector3(0f, 0.02f, 0f), new Vector3(1.7f, 0.012f, 0.028f), metal);
+        OpticalVisuals.Part(transform, PrimitiveType.Cube, "Clear Rail Housing", new Vector3(0f, 0.016f, 0.018f), new Vector3(1.72f, 0.024f, 0.13f), glass);
+        OpticalVisuals.Line(transform, "Rail Front Edge", edge, 0.0016f, new Vector3(-0.86f, 0.029f, -0.047f), new Vector3(0.86f, 0.029f, -0.047f));
+        OpticalVisuals.Line(transform, "Rail Rear Edge", edge, 0.0016f, new Vector3(-0.86f, 0.029f, 0.083f), new Vector3(0.86f, 0.029f, 0.083f));
+        OpticalVisuals.Ruler(transform, "Centimetre Graduations", 0.8f, 0.01f, 0.0295f, 0.048f, marks);
+        foreach (float x in new[] { -0.86f, 0.86f })
+            OpticalVisuals.Part(transform, PrimitiveType.Cube, "Rail End Cap", new Vector3(x, 0.015f, 0.018f), new Vector3(0.012f, 0.03f, 0.13f), metal);
 
         var axis = new GameObject("Axis").AddComponent<LineRenderer>();
         axis.transform.SetParent(transform, false);
@@ -682,9 +685,10 @@ public class OpticalBenchController : MonoBehaviour
         axis.positionCount = 2;
         axis.SetPosition(0, new Vector3(-0.8f, AxisY, 0f));
         axis.SetPosition(1, new Vector3(0.82f, AxisY, 0f));
-        axis.widthMultiplier = 0.003f;
-        axis.material = LabFactory.ParticleMat(new Color(NetFoldTheme.Ivory.r, NetFoldTheme.Ivory.g, NetFoldTheme.Ivory.b, 0.7f));
-        axis.startColor = axis.endColor = new Color(NetFoldTheme.Ivory.r, NetFoldTheme.Ivory.g, NetFoldTheme.Ivory.b, 0.75f);
+        axis.widthMultiplier = 0.0014f;
+        axis.sharedMaterial = OpticalVisuals.Own(transform, MRVisualStyle.Edge(new Color(0.65f, 0.77f, 0.79f, 0.5f)));
+        axis.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+        axis.receiveShadows = false;
     }
 
     void BuildRigs()

@@ -228,7 +228,8 @@ public static class UiFactory
         img.type = Image.Type.Sliced;
         img.color = color;
         go.AddComponent<CanvasGroup>();
-        Hairline(go.transform);
+        var hairline = Hairline(go.transform);
+        go.AddComponent<MRPanelStyle>().Configure(img, hairline);
         return img;
     }
 
@@ -249,7 +250,7 @@ public static class UiFactory
         return img;
     }
 
-    static void Hairline(Transform parent)
+    static Image Hairline(Transform parent)
     {
         var go = new GameObject("Hairline", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
         var rt = go.GetComponent<RectTransform>();
@@ -263,6 +264,7 @@ public static class UiFactory
         img.sprite = WhiteSprite;
         img.color = NetFoldTheme.Hairline;
         img.raycastTarget = false;
+        return img;
     }
 
     public static TMP_Text Label(Transform parent, string name, string text, int size, TextAlignmentOptions align, Vector2 anchorMin, Vector2 anchorMax, Vector2 offsetMin, Vector2 offsetMax, Color? color = null)

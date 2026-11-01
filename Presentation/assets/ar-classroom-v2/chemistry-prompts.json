@@ -1,0 +1,24 @@
+[
+  {
+    "key": "particles",
+    "prompt": "Use case: compositing. Create ONE wide 16:9 photorealistic AR classroom concept image for a science teaching PPT. Image 1 is the EDIT TARGET Unity molecular motion screenshot. Image 2 is a real classroom BACKGROUND reference. Replace the dark VR room, opaque virtual table and all black UI panels with the daylight real classroom from image 2 and a real foreground wooden school desk. Preserve the identity of the experiment: three transparent beakers, visible stylized cyan particles, comparison of microscopic molecular motion and a localized purple dye diffusion cloud in water. The water and beakers should be transparent virtual AR objects with very restrained thin cyan highlighted edges, anchored just above the real desk. Preserve ordinary teaching-model geometry, not elaborate sci-fi devices. Make the beakers large and legible, occupying roughly 60 percent of the image. The real classroom desks and windows must remain visibly photographic behind and around them, neutral bright daylight (lift the dark warm exposure of reference classroom), natural wood tones, clean airy atmosphere. Slight downward desktop view, believable perspective and occlusion. Do not add people, hands, headsets, head-mounted display borders, floating HUDs, labels, letters, numbers, UI text, logos or watermarks. This is a conceptual composite, not an actual device recording.",
+    "mode": "built-in image_gen",
+    "outputHint": "Generated images are saved to C:\\Users\\minpa\\.codex\\generated_images\\01a197b1-4197-7081-b6b7-659d62fa298e as C:\\Users\\minpa\\.codex\\generated_images\\01a197b1-4197-7081-b6b7-659d62fa298e\\exec-eb402ca9-b104-45af-91d2-d413cacb44d3.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "sourceClassroom": "Presentation/assets/context/classroom-empty.jpg",
+    "sourceUrl": "https://unsplash.com/photos/an-empty-classroom-with-desks-and-windows-fKAUB1uYFcc",
+    "generatedFile": "C:/Users/minpa/.codex/generated_images/01a197b1-4197-7081-b6b7-659d62fa298e/exec-eb402ca9-b104-45af-91d2-d413cacb44d3.png",
+    "target": "Presentation/assets/ar-classroom-v2/particles-ar.png",
+    "disclosure": "AR课堂合成概念图，非设备实拍"
+  },
+  {
+    "key": "indicator",
+    "prompt": "Use case: compositing. Create ONE wide 16:9 photorealistic AR classroom concept image for a science teaching PPT. Image 1 is the EDIT TARGET Unity cabbage indicator experiment screenshot. Image 2 is a real classroom BACKGROUND reference. Replace the black VR environment, opaque virtual table and black UI panels with a bright real classroom and a real foreground wooden student desk inspired by image 2. Keep the central large transparent cylindrical beaker containing pale violet purple indicator, and two small sample bottles at its sides, faithful to the simple geometry and layout of the Unity experiment. Add only very restrained cyan AR edge highlights and slight translucency so the beaker feels virtually overlaid on the real desk; keep physical classroom daylight and room perspective believable. All sample containers are separate, no pouring, mixing, reaction smoke or titration. The central experiment should occupy about 60 percent of the frame, with photographic rows of desks and classroom windows visible in the background. Lift the dark warm exposure of image 2 into clean bright natural daylight, natural wood and cream tones. No people, hands, headsets, virtual goggle frames, big HUDs, floating buttons, Chinese labels, letters, numbers, any text, logos or watermarks. This is a conceptual AR composite, not a device recording.",
+    "mode": "built-in image_gen",
+    "outputHint": "Generated images are saved to C:\\Users\\minpa\\.codex\\generated_images\\01a197b1-4197-7081-b6b7-659d62fa298e as C:\\Users\\minpa\\.codex\\generated_images\\01a197b1-4197-7081-b6b7-659d62fa298e\\exec-04490dd3-12c4-46c3-9aa3-9c95fd99041a.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "sourceClassroom": "Presentation/assets/context/classroom-empty.jpg",
+    "sourceUrl": "https://unsplash.com/photos/an-empty-classroom-with-desks-and-windows-fKAUB1uYFcc",
+    "generatedFile": "C:/Users/minpa/.codex/generated_images/01a197b1-4197-7081-b6b7-659d62fa298e/exec-04490dd3-12c4-46c3-9aa3-9c95fd99041a.png",
+    "target": "Presentation/assets/ar-classroom-v2/indicator-ar.png",
+    "disclosure": "AR课堂合成概念图，非设备实拍"
+  }
+]

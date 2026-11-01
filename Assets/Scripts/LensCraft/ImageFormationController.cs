@@ -10,10 +10,10 @@ public class ImageFormationController : MonoBehaviour
         _bench = bench;
         _ghost = new GameObject("VirtualImage").transform;
         _ghost.SetParent(transform, false);
-        var body = LabFactory.Primitive(PrimitiveType.Cube, "Body", _ghost, new Vector3(0f, -0.02f, 0f), new Vector3(0.012f, 0.04f, 0.012f), LabFactory.Lit(new Color(0.7f, 0.85f, 1f, 0.45f), true, 0f, 0.2f, true, new Color(0.4f, 0.7f, 1f)), false);
-        var flame = LabFactory.Primitive(PrimitiveType.Sphere, "Flame", _ghost, new Vector3(0f, 0.02f, 0f), new Vector3(0.02f, 0.028f, 0.02f), LabFactory.Lit(new Color(0.75f, 0.9f, 1f, 0.4f), true, 0f, 0.15f, true, new Color(0.5f, 0.8f, 1f)), false);
-        body.GetComponent<MeshRenderer>().material = new Material(body.GetComponent<MeshRenderer>().sharedMaterial);
-        flame.GetComponent<MeshRenderer>().material = new Material(flame.GetComponent<MeshRenderer>().sharedMaterial);
+        var bodyMaterial = OpticalVisuals.Own(transform, LabFactory.Lit(new Color(0.7f, 0.85f, 1f, 0.45f), true, 0f, 0.2f, true, new Color(0.4f, 0.7f, 1f)));
+        var flameMaterial = OpticalVisuals.Own(transform, LabFactory.Lit(new Color(0.75f, 0.9f, 1f, 0.4f), true, 0f, 0.15f, true, new Color(0.5f, 0.8f, 1f)));
+        LabFactory.Primitive(PrimitiveType.Cylinder, "Body", _ghost, new Vector3(0f, -0.02f, 0f), new Vector3(0.012f, 0.02f, 0.012f), bodyMaterial, false);
+        LabFactory.Primitive(PrimitiveType.Sphere, "Flame", _ghost, new Vector3(0f, 0.02f, 0f), new Vector3(0.02f, 0.028f, 0.02f), flameMaterial, false);
         _ghost.gameObject.AddComponent<FaceCamera>();
         _ghost.gameObject.SetActive(false);
     }

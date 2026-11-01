@@ -32,14 +32,43 @@ public class LightRayController : MonoBehaviour
         main.playOnAwake = false;
         main.startSpeed = 0f;
         main.startLifetime = 1.2f;
-        main.startSize = 0.012f;
+        main.startSize = 0.006f;
         main.maxParticles = 72;
         main.simulationSpace = ParticleSystemSimulationSpace.World;
         var emission = _flow.emission;
         emission.rateOverTime = 0f;
-        go.GetComponent<ParticleSystemRenderer>().material = LabFactory.ParticleMat(Color.white);
+        var flowRenderer = go.GetComponent<ParticleSystemRenderer>();
+        flowRenderer.sharedMaterial = OpticalVisuals.Own(transform, LabFactory.ParticleMat(Color.white));
+        flowRenderer.renderMode = ParticleSystemRenderMode.Mesh;
+        flowRenderer.mesh = FlowMesh();
+        flowRenderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+        flowRenderer.receiveShadows = false;
         _particles = new ParticleSystem.Particle[72];
         _flow.Play();
+    }
+
+    Mesh FlowMesh()
+    {
+        const int sides = 12, rings = 6;
+        var vertices = new List<Vector3>();
+        var triangles = new List<int>();
+        for (int i = 0; i <= rings; i++)
+            for (int j = 0; j < sides; j++)
+            {
+                float latitude = i * Mathf.PI / rings;
+                float angle = j * Mathf.PI * 2f / sides;
+                vertices.Add(new Vector3(Mathf.Sin(latitude) * Mathf.Cos(angle), Mathf.Cos(latitude), Mathf.Sin(latitude) * Mathf.Sin(angle)) * 0.5f);
+                if (i == rings) continue;
+                int a = i * sides + j, b = (i + 1) * sides + j;
+                int c = i * sides + (j + 1) % sides, d = (i + 1) * sides + (j + 1) % sides;
+                triangles.AddRange(new[] { a, d, b, a, c, d });
+            }
+        var mesh = OpticalVisuals.Own(transform, new Mesh { name = "Ray Flow Bead" });
+        mesh.SetVertices(vertices);
+        mesh.SetTriangles(triangles, 0);
+        mesh.RecalculateNormals();
+        mesh.RecalculateBounds();
+        return mesh;
     }
 
     public void Redraw()
@@ -147,7 +176,7 @@ public class LightRayController : MonoBehaviour
                 float phase = Mathf.Repeat(Time.time * speed / length + i / (float)per, 1f);
                 _particles[count].position = Vector3.Lerp(a, b, phase);
                 _particles[count].startColor = _pathColor[s];
-                _particles[count].startSize = 0.012f;
+                _particles[count].startSize = 0.006f;
                 _particles[count].remainingLifetime = 1f;
                 _particles[count].startLifetime = 1f;
                 count++;
@@ -163,12 +192,12 @@ public class LightRayController : MonoBehaviour
         go.transform.SetParent(transform, false);
         var line = go.AddComponent<LineRenderer>();
         line.useWorldSpace = false;
-        line.widthMultiplier = 0.006f;
+        line.widthMultiplier = 0.0032f;
         line.positionCount = 0;
-        line.material = LabFactory.ParticleMat(color);
-        line.startColor = color;
-        line.endColor = color;
-        line.numCapVertices = 2;
+        line.sharedMaterial = OpticalVisuals.Own(transform, MRVisualStyle.Edge(color));
+        line.startColor = line.endColor = Color.white;
+        line.numCapVertices = 4;
+        line.numCornerVertices = 3;
         line.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
         line.alignment = LineAlignment.View;
         return line;
@@ -179,9 +208,10 @@ public class LightRayController : MonoBehaviour
         var go = new GameObject("Dash");
         go.transform.SetParent(transform, false);
         var filter = go.AddComponent<MeshFilter>();
-        filter.sharedMesh = new Mesh { name = "Dash" };
+        filter.sharedMesh = OpticalVisuals.Own(transform, new Mesh { name = "Dash" });
         var rend = go.AddComponent<MeshRenderer>();
-        rend.sharedMaterial = LabFactory.Lit(color, true, 0f, 0.1f, true, color);
+        rend.sharedMaterial = OpticalVisuals.Own(transform, MRVisualStyle.Edge(color));
+        if (rend.sharedMaterial.HasProperty("_Cull")) rend.sharedMaterial.SetFloat("_Cull", 0f);
         rend.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
         return filter;
     }
@@ -208,7 +238,7 @@ public class LightRayController : MonoBehaviour
         side.Normalize();
         const float dash = 0.028f;
         const float gap = 0.018f;
-        const float width = 0.0045f;
+        const float width = 0.0016f;
         for (float t = 0f; t < len; t += dash + gap)
         {
             float t1 = Mathf.Min(len, t + dash);

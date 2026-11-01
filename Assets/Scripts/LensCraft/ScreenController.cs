@@ -22,10 +22,19 @@ public class ScreenController : MonoBehaviour, IInteractable
     public void Build()
     {
         _plateColor = new Color(0.93f, 0.91f, 0.86f, 0.92f);
-        LabFactory.Primitive(PrimitiveType.Cube, "Frame", transform, new Vector3(0.012f, 0f, 0f), new Vector3(0.008f, 0.27f, 0.21f), LabFactory.Lit(NetFoldTheme.StoneDeep, false, 0.35f, 0.42f), false);
-        var plate = LabFactory.Primitive(PrimitiveType.Cube, "Plate", transform, Vector3.zero, new Vector3(0.016f, 0.24f, 0.18f), LabFactory.Lit(_plateColor, true, 0f, 0.18f), true);
+        var metal = OpticalVisuals.Own(transform, MRVisualStyle.Metal(MRVisualStyle.WarmWhite));
+        var gold = OpticalVisuals.Own(transform, MRVisualStyle.Metal(MRVisualStyle.Gold, 0.6f, 0.82f));
+        // Four narrow frame rails keep the receiving surface bright without a dark backing slab.
+        foreach (float y in new[] { -0.124f, 0.124f })
+            OpticalVisuals.Part(transform, PrimitiveType.Cube, "Frame Horizontal", new Vector3(0.006f, y, 0f), new Vector3(0.014f, 0.006f, 0.19f), gold);
+        foreach (float z in new[] { -0.094f, 0.094f })
+            OpticalVisuals.Part(transform, PrimitiveType.Cube, "Frame Vertical", new Vector3(0.006f, 0f, z), new Vector3(0.014f, 0.25f, 0.006f), gold);
+        OpticalVisuals.Part(transform, PrimitiveType.Cube, "Screen Carriage", new Vector3(0f, -OpticalBenchController.AxisY + 0.025f, 0f), new Vector3(0.06f, 0.026f, 0.1f), metal);
+        var knob = OpticalVisuals.Part(transform, PrimitiveType.Cylinder, "Screen Adjuster", new Vector3(0f, -OpticalBenchController.AxisY + 0.025f, -0.056f), new Vector3(0.016f, 0.006f, 0.016f), gold);
+        knob.transform.localRotation = Quaternion.Euler(90f, 0f, 0f);
+        var plate = LabFactory.Primitive(PrimitiveType.Cube, "Plate", transform, Vector3.zero, new Vector3(0.016f, 0.24f, 0.18f), OpticalVisuals.Own(transform, LabFactory.Lit(_plateColor, true, 0f, 0.18f)), true);
         _plate = plate.GetComponent<MeshRenderer>();
-        _plateMat = _plate.material;
+        _plateMat = _plate.sharedMaterial;
         _glyph = BuildGlyph("Image", out _glyphVisual);
         _blurA = BuildGlyph("BlurA", out _blurAVisual);
         _blurB = BuildGlyph("BlurB", out _blurBVisual);
@@ -122,15 +131,14 @@ public class ScreenController : MonoBehaviour, IInteractable
         root.gameObject.AddComponent<FaceCamera>();
         visual = new GameObject("Visual").transform;
         visual.SetParent(root, false);
-        LabFactory.Primitive(PrimitiveType.Cube, "Body", visual, new Vector3(0f, -0.02f, 0f), new Vector3(0.012f, 0.04f, 0.012f), LabFactory.Lit(new Color(0.95f, 0.55f, 0.15f), true, 0f, 0.2f, true, new Color(1f, 0.4f, 0.05f)), false);
-        LabFactory.Primitive(PrimitiveType.Sphere, "Flame", visual, new Vector3(0f, 0.02f, 0f), new Vector3(0.02f, 0.028f, 0.02f), LabFactory.Lit(new Color(1f, 0.85f, 0.2f, 0.9f), true, 0f, 0.15f, true, new Color(1f, 0.7f, 0.1f)), false);
+        LabFactory.Primitive(PrimitiveType.Cylinder, "Body", visual, new Vector3(0f, -0.02f, 0f), new Vector3(0.012f, 0.02f, 0.012f), OpticalVisuals.Own(transform, LabFactory.Lit(new Color(0.95f, 0.55f, 0.15f), true, 0f, 0.2f, true, new Color(1f, 0.4f, 0.05f))), false);
+        LabFactory.Primitive(PrimitiveType.Sphere, "Flame", visual, new Vector3(0f, 0.02f, 0f), new Vector3(0.02f, 0.028f, 0.02f), OpticalVisuals.Own(transform, LabFactory.Lit(new Color(1f, 0.85f, 0.2f, 0.9f), true, 0f, 0.15f, true, new Color(1f, 0.7f, 0.1f))), false);
         var renders = root.GetComponentsInChildren<MeshRenderer>(true);
         for (int i = 0; i < renders.Length; i++)
         {
-            renders[i].material = new Material(renders[i].sharedMaterial);
-            if (renders[i].material.HasProperty("_Cull"))
+            if (renders[i].sharedMaterial.HasProperty("_Cull"))
             {
-                renders[i].material.SetFloat("_Cull", 0f);
+                renders[i].sharedMaterial.SetFloat("_Cull", 0f);
             }
         }
 
@@ -142,7 +150,7 @@ public class ScreenController : MonoBehaviour, IInteractable
         var renders = glyph.GetComponentsInChildren<MeshRenderer>(true);
         for (int i = 0; i < renders.Length; i++)
         {
-            Material mat = renders[i].material;
+            Material mat = renders[i].sharedMaterial;
             Color c = mat.HasProperty("_BaseColor") ? mat.GetColor("_BaseColor") : mat.color;
             c.a = alpha;
             UrpMaterialUtil.SetColor(mat, c);

@@ -18,6 +18,7 @@ public class ProjectionController : MonoBehaviour
     readonly List<LineRenderer> _frontLines = new List<LineRenderer>();
     readonly List<LineRenderer> _topLines = new List<LineRenderer>();
     readonly List<LineRenderer> _sideLines = new List<LineRenderer>();
+    readonly List<Material> _rayMaterials = new List<Material>();
 
     public void SetAnchor(Transform anchor)
     {
@@ -102,18 +103,32 @@ public class ProjectionController : MonoBehaviour
 
     void CreateRayPool(List<LineRenderer> pool, Color color, int count)
     {
-        Material mat = UrpMaterialUtil.CreateLit(color, true, 0f, 0.1f, true, color * 1.6f);
+        color.a = 0.65f;
+        Material mat = MRVisualStyle.Edge(color);
+        _rayMaterials.Add(mat);
         for (int i = 0; i < count; i++)
         {
             var go = new GameObject("Ray");
             go.transform.SetParent(_root, false);
             var lr = go.AddComponent<LineRenderer>();
             lr.positionCount = 2;
-            lr.widthMultiplier = 0.006f;
+            lr.widthMultiplier = 0.0026f;
+            lr.numCapVertices = 3;
             lr.sharedMaterial = mat;
             lr.useWorldSpace = true;
             lr.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+            lr.receiveShadows = false;
             pool.Add(lr);
+        }
+    }
+
+    void OnDestroy()
+    {
+        foreach (var material in _rayMaterials)
+        {
+            if (material == null) continue;
+            if (Application.isPlaying) Destroy(material);
+            else DestroyImmediate(material);
         }
     }
 
@@ -226,24 +241,36 @@ public class ProjectionCard : MonoBehaviour, IDraggable, ISelectable
     public bool CanDrag => false;
     public bool IsSelected { get; private set; }
     MeshFilter _silhouette;
+    readonly List<Material> _materials = new List<Material>();
+    Color _color;
 
     public void Build(string title, Color color, bool flipX)
     {
-        var frame = GameObject.CreatePrimitive(PrimitiveType.Quad);
-        frame.name = "Frame";
+        _color = color;
+        var frame = new GameObject("Frame");
         frame.transform.SetParent(transform, false);
         frame.transform.localPosition = new Vector3(0f, 0f, -0.006f);
-        frame.transform.localScale = new Vector3(0.39f, 0.39f, 1f);
-        UnityEngine.Object.Destroy(frame.GetComponent<Collider>());
-        frame.GetComponent<MeshRenderer>().sharedMaterial = UrpMaterialUtil.CreateLit(NetFoldTheme.StoneDeep, false, 0.2f, 0.4f);
+        var border = frame.AddComponent<LineRenderer>();
+        border.useWorldSpace = false;
+        border.loop = true;
+        border.positionCount = 4;
+        border.SetPositions(new[] { new Vector3(-0.195f, -0.195f, 0f), new Vector3(0.195f, -0.195f, 0f),
+            new Vector3(0.195f, 0.195f, 0f), new Vector3(-0.195f, 0.195f, 0f) });
+        border.widthMultiplier = 0.0028f;
+        border.numCornerVertices = 5;
+        border.sharedMaterial = Own(MRVisualStyle.Edge(Color.Lerp(color, MRVisualStyle.WarmWhite, 0.35f)));
+        border.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+        border.receiveShadows = false;
 
         var plate = GameObject.CreatePrimitive(PrimitiveType.Quad);
         plate.name = "Plate";
         plate.transform.SetParent(transform, false);
         plate.transform.localScale = new Vector3(0.34f, 0.34f, 1f);
         UnityEngine.Object.Destroy(plate.GetComponent<Collider>());
-        var mat = UrpMaterialUtil.CreateLit(new Color(color.r, color.g, color.b, 0.16f), true, 0f, 0.3f);
+        var mat = Own(MRVisualStyle.Glass(color, 0.08f));
         plate.GetComponent<MeshRenderer>().sharedMaterial = mat;
+        plate.GetComponent<MeshRenderer>().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+        plate.GetComponent<MeshRenderer>().receiveShadows = false;
 
         var sil = new GameObject("Silhouette");
         sil.transform.SetParent(transform, false);
@@ -251,18 +278,41 @@ public class ProjectionCard : MonoBehaviour, IDraggable, ISelectable
         sil.transform.localScale = new Vector3(flipX ? -1f : 1f, 1f, 1f);
         _silhouette = sil.AddComponent<MeshFilter>();
         var rend = sil.AddComponent<MeshRenderer>();
-        rend.sharedMaterial = UrpMaterialUtil.CreateLit(color, true, 0f, 0.2f, true, color * 0.55f);
+        _color.a = 0.65f;
+        rend.sharedMaterial = Own(MRVisualStyle.Edge(_color));
+        rend.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+        rend.receiveShadows = false;
     }
 
     public void SetSilhouette(ShapeType type, ViewKind view)
     {
+        Release(_silhouette.sharedMesh);
         _silhouette.sharedMesh = ViewSilhouette.Create(type, view);
     }
 
     public void SetError(bool error)
     {
         var rend = _silhouette.GetComponent<MeshRenderer>();
-        UrpMaterialUtil.SetColor(rend.material, error ? NetFoldTheme.Error : rend.sharedMaterial.color);
+        UrpMaterialUtil.SetColor(rend.sharedMaterial, error ? NetFoldTheme.Error : _color);
+    }
+
+    Material Own(Material material)
+    {
+        _materials.Add(material);
+        return material;
+    }
+
+    void OnDestroy()
+    {
+        foreach (var material in _materials) Release(material);
+        if (_silhouette != null) Release(_silhouette.sharedMesh);
+    }
+
+    static void Release(Object resource)
+    {
+        if (resource == null) return;
+        if (Application.isPlaying) Destroy(resource);
+        else DestroyImmediate(resource);
     }
 
     public void OnSelect() => IsSelected = true;

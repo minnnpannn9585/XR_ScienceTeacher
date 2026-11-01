@@ -1,0 +1,72 @@
+{
+  "source": "C:\\Users\\minpa\\Documents\\GitHub\\XR_ScienceTeacher\\Presentation\\output\\XR_ScienceTeacher_Rokid参赛版_六关更新.pptx",
+  "sourceHash": "0e11c0040d77f26a2e26090d4a6e49a9bef82bd4ab0d111b169ebfee785bfd1a",
+  "slides": 9,
+  "changes": [
+    {
+      "slide": 1,
+      "file": "hero-ar.png",
+      "alt": "三学科AR课堂合成主视觉"
+    },
+    {
+      "slide": 2,
+      "file": "spatial-observation-ar.png",
+      "alt": "立体与正投影在真实课桌上的AR合成示意"
+    },
+    {
+      "slide": 2,
+      "file": "lens-observation-ar.png",
+      "alt": "光学实验叠加在真实课堂中的AR合成示意"
+    },
+    {
+      "slide": 2,
+      "file": "micro-detail-ar.png",
+      "alt": "微观粒子在真实教室中的AR合成示意"
+    },
+    {
+      "slide": 3,
+      "file": "six-labs-ar.png",
+      "alt": "六个实验主题在真实课堂中的概念总览"
+    },
+    {
+      "slide": 4,
+      "file": "netfold-ar.png",
+      "alt": "正方体六面展开，真实课桌上的透明AR教具合成示意"
+    },
+    {
+      "slide": 4,
+      "file": "triangle-ar.png",
+      "alt": "无黑色背板的三角形内角关系，AR课堂合成示意"
+    },
+    {
+      "slide": 5,
+      "file": "lens-ar.png",
+      "alt": "真实课堂中的透镜、蜡烛与光屏合成示意"
+    },
+    {
+      "slide": 5,
+      "file": "lever-ar.png",
+      "alt": "真实课桌上的虚拟杠杆，AR合成示意"
+    },
+    {
+      "slide": 6,
+      "file": "particles-ar.png",
+      "alt": "真实课桌上的透明烧杯与微观粒子合成示意"
+    },
+    {
+      "slide": 6,
+      "file": "indicator-ar.png",
+      "alt": "真实教室中的紫甘蓝指示剂虚拟实验合成示意"
+    },
+    {
+      "slide": 7,
+      "file": "lens-task-ar.png",
+      "alt": "凸透镜操作任务的AR课堂概念效果"
+    },
+    {
+      "slide": 8,
+      "file": "pc-classroom.png",
+      "alt": "教室中用笔记本备课的场景合成示意"
+    }
+  ]
+}

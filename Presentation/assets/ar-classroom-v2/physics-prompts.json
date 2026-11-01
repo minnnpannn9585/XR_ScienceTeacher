@@ -1,0 +1,22 @@
+{
+  "mode": "built-in imagegen",
+  "date": "2026-11-01",
+  "background": {
+    "file": "Presentation/assets/context/classroom-empty.jpg",
+    "photographer": "Nguyen Phan Nam Anh",
+    "source": "https://unsplash.com/photos/an-empty-classroom-with-desks-and-windows-fKAUB1uYFcc"
+  },
+  "lens": "Use case: compositing. Produce one finished landscape 16:9 AR classroom concept image for a Chinese science education presentation. Image 1 is the EDIT TARGET, a Unity convex lens experiment screenshot; image 2 is the real classroom background/compositing reference. Replace the black virtual room, huge virtual desk, and opaque HUD panels with a naturally bright real classroom and a close wooden school desktop inspired by image 2. Keep the core experiment recognizable: a small lit candle on the left, round convex lens in the middle, upright rectangular image screen on the right, all aligned on a straight optical rail at a slight three-quarter angle. Preserve the scientifically meaningful candle–lens–screen order; show a few fine colored rays from the candle tip passing through the lens, converging to a smaller inverted candle image on the screen. Make this virtual experiment occupy around 60% of the frame, large and crisp. The rail and glass lens should look like elegant AR overlays, mildly translucent ivory and silver with restrained cyan edge highlights, while the real wooden tabletop remains visible beneath. Classroom windows, pale walls and further school desks visible behind, soft natural daylight, neutral bright white balance rather than dark amber. Photo-real classroom textures and perspective with virtual educational graphics integrated above the desk, see-through spatial experience. Remove ALL in-game UI text, labels, numbers, menus and large panels. No people, hands, headset frame, device, black background, sci-fi room, full-screen HUD, watermark or logo. This is an illustrative AR composite, not a purported device capture.",
+  "lever": "Use case: compositing. Produce one finished landscape 16:9 AR classroom concept image for a Chinese science education presentation. Image 1 is the EDIT TARGET, a Unity lever balance screenshot; image 2 is the real classroom background/compositing reference. Replace the dark virtual room, large virtual tabletop, opaque HUD panels and all text with a naturally bright real classroom and a close wooden student desk inspired by image 2. Preserve the central lever apparatus: horizontal straight graduated beam balanced on a single central upright fulcrum, left hanging weight visibly larger and about twice the mass/volume of the right hanging weight, left hanger at half the distance from the pivot compared with the right hanger. Keep a clearly HORIZONTAL beam, scientifically correct visual left mass 2 to right mass 1 and left distance 1 to right distance 2. Both weights hang freely above the tabletop, no contact with desk. The apparatus should occupy around 60% of the wide frame with enough margins, eye-level three-quarter classroom view. Make it an AR virtual model with mildly translucent silver/ivory materials and subtle cyan edge highlights, visibly integrated over the real wooden desk. Real classroom windows, pale walls and rows of desks visible behind with neutral bright daylight, realistic perspective and surface texture. No words, numbers or readable labels anywhere, no large UI panels, people, hands, headset frame, device, black void, neon fantasy, watermark or logo. This is a product concept composite, not a device recording.",
+  "outputs": [
+    {
+      "file": "lens-ar.png",
+      "original": "C:/Users/minpa/.codex/generated_images/01a197b0-ff5f-7960-b29b-f034cfd69fd0/exec-2e211c6c-f682-4225-8af9-4c8d049272bb.png"
+    },
+    {
+      "file": "lever-ar.png",
+      "original": "C:/Users/minpa/.codex/generated_images/01a197b0-ff5f-7960-b29b-f034cfd69fd0/exec-80bb5aa9-a4fa-440b-ab07-0f1fe136d0f6.png"
+    }
+  ],
+  "disclosure": "AR课堂合成概念图，非设备实拍。光路与材质为示意，不用于精密测量。"
+}

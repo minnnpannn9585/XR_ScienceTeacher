@@ -14,9 +14,10 @@ public static class GeometryFactory
         root.layer = 0;
 
         var controller = root.AddComponent<ShapeController>();
-        Material faceMat = UrpMaterialUtil.CreateLit(NetFoldTheme.Shape, true, 0.02f, 0.92f, true, new Color(0.55f, 0.68f, 0.78f, 0.1f));
-        Material hiMat = UrpMaterialUtil.CreateLit(NetFoldTheme.ShapeAlt, true, 0.04f, 0.96f, true, NetFoldTheme.Hairline * 0.25f);
-        Material edgeMat = UrpMaterialUtil.CreateLit(NetFoldTheme.EdgeGlow, true, 0.72f, 0.55f, true, NetFoldTheme.EdgeGlow * 0.4f);
+        Material faceMat = MRVisualStyle.Glass(new Color(0.73f, 0.94f, 0.96f), 0.16f);
+        Material hiMat = MRVisualStyle.Glass(MRVisualStyle.Gold, 0.3f);
+        // Each face overrides this tint through a property block on selection.
+        Material edgeMat = MRVisualStyle.Edge(MRVisualStyle.Cyan);
 
         switch (type)
         {
@@ -35,7 +36,7 @@ public static class GeometryFactory
         }
 
         CenterPivotAndRaise(root.transform);
-        controller.Initialize(type, faceMat, hiMat);
+        controller.Initialize(type, faceMat, hiMat, edgeMat);
         return controller;
     }
 
@@ -94,9 +95,12 @@ public static class GeometryFactory
         go.transform.localPosition = foldedPos;
         go.transform.localRotation = foldedRot;
         var filter = go.AddComponent<MeshFilter>();
+        SetPlanarNormals(mesh);
         filter.sharedMesh = mesh;
         var rend = go.AddComponent<MeshRenderer>();
         rend.sharedMaterial = faceMat;
+        rend.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+        rend.receiveShadows = false;
         if (withCollider)
         {
             var col = go.AddComponent<MeshCollider>();
@@ -123,9 +127,13 @@ public static class GeometryFactory
         lr.sharedMaterial = edgeMat;
         lr.loop = true;
         lr.useWorldSpace = false;
-        lr.widthMultiplier = 0.0055f;
+        lr.widthMultiplier = 0.0032f;
+        lr.numCornerVertices = 4;
+        lr.numCapVertices = 4;
+        lr.startColor = lr.endColor = MRVisualStyle.Cyan;
         lr.positionCount = 0;
         lr.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+        lr.receiveShadows = false;
         Vector3[] verts = mesh.vertices;
         int[] tris = mesh.triangles;
         if (verts.Length >= 4)
@@ -139,6 +147,21 @@ public static class GeometryFactory
             lr.positionCount = verts.Length;
             lr.SetPositions(verts);
         }
+    }
+
+    static void SetPlanarNormals(Mesh mesh)
+    {
+        // These educational panels intentionally contain both triangle windings.
+        // RecalculateNormals cancels their shared vertex normals; supply the
+        // planar normal for the glass highlight without changing the geometry.
+        var vertices = mesh.vertices;
+        var triangles = mesh.triangles;
+        if (triangles.Length < 3) return;
+        Vector3 normal = Vector3.Cross(vertices[triangles[1]] - vertices[triangles[0]],
+            vertices[triangles[2]] - vertices[triangles[0]]).normalized;
+        var normals = new Vector3[vertices.Length];
+        for (int i = 0; i < normals.Length; i++) normals[i] = normal;
+        mesh.normals = normals;
     }
 
     static Vector3[] GuessOutline(Vector3[] verts, int[] tris)

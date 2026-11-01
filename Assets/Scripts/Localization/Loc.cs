@@ -7,7 +7,8 @@ using UnityEngine.ResourceManagement.AsyncOperations;
 
 /// <summary>
 /// Reads the Unity Localization "UI" string table and falls back to <see cref="UiCopy"/>
-/// until that table is available. The saved language is the source of truth.
+/// until that table is available. Restores the saved language at startup and
+/// keeps it synchronized with Unity's locale selector during play.
 /// </summary>
 public static class Loc
 {
@@ -18,6 +19,8 @@ public static class Loc
 
     static bool _tablesUnavailable;
     static bool _tableRequested;
+    static bool _initialized;
+    static int _tableRequestVersion;
     static StringTable _table;
     static string _tableLocale;
 
@@ -33,28 +36,67 @@ public static class Loc
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
     static void Boot()
     {
+        _initialized = false;
+        InvalidateTable();
         try
         {
-            LocalizationSettings.SelectedLocaleChanged += _ => Changed?.Invoke();
+            // A named, idempotent subscription also supports disabled domain reload.
+            LocalizationSettings.SelectedLocaleChanged -= OnSelectedLocaleChanged;
+            LocalizationSettings.SelectedLocaleChanged += OnSelectedLocaleChanged;
             var op = LocalizationSettings.InitializationOperation;
             if (op.IsDone)
             {
-                ApplyPreferred();
+                FinishInitialization(op);
             }
             else
             {
-                op.Completed += _ =>
-                {
-                    _tablesUnavailable = false;
-                    _table = null;
-                    ApplyPreferred();
-                };
+                op.Completed -= FinishInitialization;
+                op.Completed += FinishInitialization;
             }
         }
         catch (Exception)
         {
             // String tables are optional until the editor import has run.
         }
+    }
+
+    static void FinishInitialization(AsyncOperationHandle<LocalizationSettings> operation)
+    {
+        // Do not let the startup selector overwrite the user's saved choice.
+        InvalidateTable();
+        ApplyPreferred();
+        _initialized = true;
+        Changed?.Invoke();
+    }
+
+    static void OnSelectedLocaleChanged(Locale locale)
+    {
+        if (!_initialized || locale == null) return;
+
+        // Unity can deliver this event after async table preloading. Ignore an
+        // earlier selection if another language has already been chosen.
+        var current = LocalizationSettings.SelectedLocaleAsync;
+        if (!current.IsValid() || !current.IsDone || current.Result != locale) return;
+
+        string code = locale.Identifier.Code;
+        if (code != Chinese && code != English) return;
+        if (PreferredCode() != code)
+        {
+            PlayerPrefs.SetString(PrefKey, code);
+            PlayerPrefs.Save();
+        }
+
+        InvalidateTable();
+        Changed?.Invoke();
+    }
+
+    static void InvalidateTable()
+    {
+        _tablesUnavailable = false;
+        _tableRequested = false;
+        _table = null;
+        _tableLocale = null;
+        ++_tableRequestVersion;
     }
 
     public static void SetLocale(string code)
@@ -66,9 +108,7 @@ public static class Loc
 
         PlayerPrefs.SetString(PrefKey, code);
         PlayerPrefs.Save();
-        _tablesUnavailable = false;
-        _table = null;
-        _tableLocale = null;
+        InvalidateTable();
         ApplyPreferred();
         Changed?.Invoke();
     }
@@ -215,8 +255,9 @@ public static class Loc
                 {
                     _tableRequested = true;
                     string requested = code;
-                    var handle = LocalizationSettings.StringDatabase.GetTableAsync(Table);
-                    handle.Completed += operation => FinishTableLoad(operation, requested);
+                    int version = _tableRequestVersion;
+                    var handle = LocalizationSettings.StringDatabase.GetTableAsync(Table, locale);
+                    handle.Completed += operation => FinishTableLoad(operation, requested, version);
                 }
 
                 if (_table == null || _tableLocale != code)
@@ -241,8 +282,9 @@ public static class Loc
         }
     }
 
-    static void FinishTableLoad(AsyncOperationHandle<StringTable> operation, string requested)
+    static void FinishTableLoad(AsyncOperationHandle<StringTable> operation, string requested, int version)
     {
+        if (version != _tableRequestVersion) return;
         _tableRequested = false;
         try
         {

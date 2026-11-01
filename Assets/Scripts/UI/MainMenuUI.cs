@@ -18,7 +18,6 @@ public class MainMenuUI : MonoBehaviour
     static readonly Color LanguageOn = new Color(0.55f, 0.46f, 0.28f, 1f);
     static readonly Color LanguageOff = new Color(0.12f, 0.13f, 0.15f, 0.92f);
     static readonly string[] ExistingTitleKeys = { "menu.netfold", "menu.lens", "menu.drift" };
-    static readonly string[] ExistingBlurbKeys = { "menu.netfold.blurb", "menu.lens.blurb", "menu.drift.blurb" };
     static readonly string[] ExistingIds = { "NetFold", "LensCraft", "ParticleDrift" };
 
     void OnEnable()
@@ -98,14 +97,10 @@ public class MainMenuUI : MonoBehaviour
         title.alignment = TextAlignmentOptions.Left;
         title.fontSizeMax = 30f;
         title.fontSizeMin = 24f;
-        title.rectTransform.anchorMin = new Vector2(0f, 0.5f);
+        title.rectTransform.anchorMin = Vector2.zero;
         title.rectTransform.anchorMax = Vector2.one;
-        title.rectTransform.offsetMin = new Vector2(24f, 0f);
+        title.rectTransform.offsetMin = new Vector2(24f, 8f);
         title.rectTransform.offsetMax = new Vector2(-48f, -8f);
-        var description = UiFactory.Label(button.transform, "Description", "", 21, TextAlignmentOptions.TopLeft, Vector2.zero, new Vector2(1f, 0.5f), new Vector2(24f, 10f), new Vector2(-48f, 0f), NetFoldTheme.TextDim);
-        description.enableAutoSizing = true;
-        description.fontSizeMin = 18f;
-        description.fontSizeMax = 23f;
         UiFactory.Label(button.transform, "Arrow", ">", 30, TextAlignmentOptions.Right, new Vector2(1f, 0f), Vector2.one, new Vector2(-42f, 0f), new Vector2(-16f, 0f), NetFoldTheme.Hairline);
         return button;
     }
@@ -175,10 +170,9 @@ public class MainMenuUI : MonoBehaviour
     static string SubjectName(int index) => index == 0 ? Copy("数学", "Mathematics") : index == 1 ? Copy("物理", "Physics") : Copy("化学", "Chemistry");
     static string NewTitle(int index) => index == 0 ? Copy("三角形内角和", "Triangle Angles") : index == 1 ? Copy("杠杆平衡", "Lever Balance") : Copy("酸碱探色", "Acid-base Colors");
 
-    static void SetCard(Button card, string title, string description)
+    static void SetCard(Button card, string title)
     {
         card.transform.Find("Label").GetComponent<TMP_Text>().text = title;
-        card.transform.Find("Description").GetComponent<TMP_Text>().text = description;
     }
 
     void Refresh()
@@ -194,16 +188,15 @@ public class MainMenuUI : MonoBehaviour
         _subtitle.text = home ? Copy("选择学科，开始探索 · 6 个关卡", "Choose a subject · 6 experiments") : SubjectName(CurrentSubjectIndex) + (ShowingModes ? " / " + Loc.Get(ExistingTitleKeys[CurrentSubjectIndex]) : Copy(" / 选择关卡", " / Choose an experiment"));
         _back.GetComponentInChildren<TMP_Text>().text = ShowingModes ? Copy("< 返回关卡", "< Experiments") : Copy("< 返回学科", "< Subjects");
         for (int i = 0; i < 3; i++)
-            SetCard(_subjects[i], SubjectName(i), Loc.Get(ExistingTitleKeys[i]) + " · " + NewTitle(i));
+            SetCard(_subjects[i], SubjectName(i));
         if (!home)
         {
-            SetCard(_existingLesson, "01  " + Loc.Get(ExistingTitleKeys[CurrentSubjectIndex]), Loc.Get(ExistingBlurbKeys[CurrentSubjectIndex]) + Copy("\n讲解 / 自由实验 / 挑战", "\nLesson / Free Lab / Challenge"));
-            string action = CurrentSubjectIndex == 0 ? Copy("拖动顶点，观察三个内角的变化。", "Move a vertex and watch the three angles.") : CurrentSubjectIndex == 1 ? Copy("移动砝码，让两侧力矩相等。", "Move the weight to balance the torques.") : Copy("切换样品，观察指示剂的颜色。", "Switch samples and observe the indicator colors.");
-            SetCard(_newLesson, "02  " + NewTitle(CurrentSubjectIndex), Copy("轻量实验 · 一个操作发现规律\n", "Quick experiment · Discover by doing\n") + action);
+            SetCard(_existingLesson, "01  " + Loc.Get(ExistingTitleKeys[CurrentSubjectIndex]));
+            SetCard(_newLesson, "02  " + NewTitle(CurrentSubjectIndex));
             _modeHeading.text = Copy("选择体验方式", "Choose how to explore");
-            SetCard(_modes[0], Loc.Get("common.lesson"), Copy("跟随讲解，理解原理", "A guided introduction to the idea"));
-            SetCard(_modes[1], Loc.Get("common.free"), Copy("自由调整，观察变化", "Adjust the experiment at your own pace"));
-            SetCard(_modes[2], Loc.Get("common.challenge"), Copy("运用所学，挑战三星", "Apply what you learned and earn stars"));
+            SetCard(_modes[0], Loc.Get("common.lesson"));
+            SetCard(_modes[1], Loc.Get("common.free"));
+            SetCard(_modes[2], Loc.Get("common.challenge"));
         }
         int stars = home ? ChallengeProgress.BestStars("NetFold") + ChallengeProgress.BestStars("LensCraft") + ChallengeProgress.BestStars("ParticleDrift") : ChallengeProgress.BestStars(ExistingIds[CurrentSubjectIndex]);
         _progress.text = home ? Copy("挑战记录  ", "Challenge progress  ") + stars + " / 9 ★" : Copy("挑战最佳成绩  ", "Best challenge score  ") + ChallengeProgress.StarsText(stars);

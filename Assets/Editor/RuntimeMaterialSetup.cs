@@ -39,6 +39,7 @@ public class RuntimeMaterialSetup : IPreprocessBuildWithReport
         }
 
         Ensure("ParticlesUnlit", "Universal Render Pipeline/Particles/Unlit", false, false);
+        Ensure("MRGlass", "ScienceTeacher/MRGlass", false, false);
         AssetDatabase.SaveAssets();
     }
 

@@ -35,6 +35,7 @@ public static class StudioSet
         BuildLights(environment);
         BuildVolume(environment);
         BuildProbe(environment, focus);
+        environment.gameObject.AddComponent<MRStudioLighting>().Configure();
         environment.gameObject.AddComponent<XRRealityPresentation>().Configure(null, environment);
     }
 
@@ -120,6 +121,7 @@ public static class StudioSet
         float columnH = Mathf.Max(0.06f, columnTop - columnBottom);
         Place(parent, "Pedestal", new Vector3(world.x, columnBottom + columnH * 0.5f, world.z), new Vector3(scale.x * 0.58f, columnH, scale.z * 0.58f), StoneDeep());
         Place(parent, "PedestalFoot", new Vector3(world.x, footH * 0.5f, world.z), new Vector3(scale.x * 0.74f, footH, scale.z * 0.74f), Brass());
+        MRVisualStyle.HideInMR(desk.gameObject);
     }
 
     static void ApplyAtmosphere()
@@ -185,6 +187,7 @@ public static class StudioSet
         var rend = go.GetComponent<MeshRenderer>();
         rend.shadowCastingMode = ShadowCastingMode.On;
         rend.receiveShadows = true;
+        MRVisualStyle.HideInMR(go);
     }
 
     static void BuildLights(Transform root)

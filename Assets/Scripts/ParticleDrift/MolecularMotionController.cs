@@ -31,6 +31,8 @@ public class MolecularMotionController : MonoBehaviour
     float _fieldTime;
     float _flash;
     bool _rendered;
+    Material _particleMaterial;
+    Mesh _particleMesh;
 
     public void Build(float radius, float height)
     {
@@ -63,8 +65,13 @@ public class MolecularMotionController : MonoBehaviour
         var shape = _ps.shape;
         shape.enabled = false;
         _renderer = host.GetComponent<ParticleSystemRenderer>();
-        _renderer.material = LabFactory.ParticleMat(Color.white);
-        _renderer.renderMode = ParticleSystemRenderMode.Billboard;
+        _particleMaterial = LabFactory.ParticleMat(Color.white);
+        _renderer.sharedMaterial = _particleMaterial;
+        // Actual round silhouettes instead of untextured billboard squares.
+        // 120 triangles per molecule, no transparent sprite overdraw or bloom.
+        _particleMesh = BuildMoleculeMesh();
+        _renderer.renderMode = ParticleSystemRenderMode.Mesh;
+        _renderer.mesh = _particleMesh;
         _renderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
         _renderer.receiveShadows = false;
         _ps.Play();
@@ -208,7 +215,8 @@ public class MolecularMotionController : MonoBehaviour
                 var particle = new ParticleSystem.Particle();
                 particle.position = transform.TransformPoint(pos);
                 particle.startColor = ColorOf(mol.Kind);
-                particle.startSize = _rendered ? 0.012f + 0.004f * Mathf.Clamp01(scale / 2.4f) : 0.008f;
+                float size = mol.Kind == 1 ? 0.008f : 0.0068f;
+                particle.startSize = _rendered ? size * (1f + 0.12f * Mathf.Clamp01(scale / 2.4f)) : size;
                 particle.remainingLifetime = 8f;
                 particle.startLifetime = 8f;
                 _buf[i] = particle;
@@ -288,12 +296,12 @@ public class MolecularMotionController : MonoBehaviour
     {
         if (_flash > 0f)
         {
-            return Color.Lerp(kind == 1 ? new Color(0.95f, 0.1f, 0.22f) : new Color(0.65f, 0.86f, 1f), NetFoldTheme.Success, Mathf.Clamp01(_flash));
+            return Color.Lerp(kind == 1 ? new Color(0.92f, 0.09f, 0.48f) : new Color(0.40f, 0.83f, 0.96f), NetFoldTheme.Success, Mathf.Clamp01(_flash));
         }
 
         if (kind == 1)
         {
-            return new Color(0.96f, 0.08f, 0.22f, 1f);
+            return new Color(0.92f, 0.09f, 0.48f, 1f);
         }
 
         if (kind == 2)
@@ -301,7 +309,7 @@ public class MolecularMotionController : MonoBehaviour
             return new Color(0.98f, 0.84f, 0.22f, 1f);
         }
 
-        return new Color(0.62f, 0.86f, 1f, 0.95f);
+        return new Color(0.40f, 0.83f, 0.96f, 1f);
     }
 
     void ClearKind(int kind)
@@ -313,5 +321,40 @@ public class MolecularMotionController : MonoBehaviour
                 _mols.RemoveAt(i);
             }
         }
+    }
+
+    static Mesh BuildMoleculeMesh()
+    {
+        const int longitude = 12, latitude = 6;
+        var vertices = new Vector3[(longitude + 1) * (latitude + 1)];
+        var normals = new Vector3[vertices.Length];
+        var uv = new Vector2[vertices.Length];
+        var triangles = new List<int>(longitude * (latitude - 1) * 6);
+        for (int y = 0; y <= latitude; y++)
+        {
+            float theta = y * Mathf.PI / latitude;
+            for (int x = 0; x <= longitude; x++)
+            {
+                float phi = x * Mathf.PI * 2f / longitude;
+                int v = y * (longitude + 1) + x;
+                normals[v] = new Vector3(Mathf.Sin(theta) * Mathf.Cos(phi), Mathf.Cos(theta), Mathf.Sin(theta) * Mathf.Sin(phi));
+                vertices[v] = normals[v] * 0.5f;
+                uv[v] = new Vector2((float)x / longitude, (float)y / latitude);
+                if (y == latitude || x == longitude) continue;
+                int next = v + longitude + 1;
+                if (y > 0) { triangles.Add(v); triangles.Add(v + 1); triangles.Add(next); }
+                if (y < latitude - 1) { triangles.Add(v + 1); triangles.Add(next + 1); triangles.Add(next); }
+            }
+        }
+        var mesh = new Mesh { name = "Molecule Sphere 120", vertices = vertices, normals = normals, uv = uv };
+        mesh.SetTriangles(triangles, 0);
+        mesh.RecalculateBounds();
+        return mesh;
+    }
+
+    void OnDestroy()
+    {
+        if (_particleMaterial != null) Destroy(_particleMaterial);
+        if (_particleMesh != null) Destroy(_particleMesh);
     }
 }

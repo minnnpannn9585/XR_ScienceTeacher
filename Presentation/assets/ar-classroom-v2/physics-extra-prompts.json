@@ -1,0 +1,22 @@
+{
+  "mode": "built-in imagegen",
+  "date": "2026-11-01",
+  "background": {
+    "file": "Presentation/assets/ar-classroom-v2/sources/barry-zhou-classroom.jpg",
+    "photographer": "Barry Zhou",
+    "sourceRecord": "Shared source manifest maintained by classroom_source agent"
+  },
+  "lensTask": "Use case: compositing. Edit image 1, the project's Unity convex lens lesson screenshot, using image 2, a real classroom photograph by Barry Zhou, as the classroom background reference. Create a finished landscape 16:9 AR concept image. Remove the black virtual room, giant virtual table, all opaque panels, all text and numbers. Preserve the recognizable candle–round convex lens–movable rectangular screen experiment. Reframe as a natural first-person close view across a real wooden school desk toward the classroom chalkboard and pale walls from image 2. The lens sits left of center, the movable screen is prominent on the right, candle farther left, all aligned on the same straight optical rail. A crisp small inverted candle image appears on the screen. Show two or three very fine light paths that correctly converge toward that inverted image, restrained colored lines with no text labels. Make the virtual rail and lens mildly translucent ivory/glass with subtle cyan outlines and a small cyan outlined adjustment handle on the screen base, visually suggesting that the screen can slide along the rail. Real wood texture and classroom remain clearly visible around and through virtual parts. Bright natural daylight, warm wood but neutral pale walls, realistic perspective and contact placement. The objects fill about 65% of the frame, leave breathing room above. No humans, hands, headset frame, black void, giant HUD, words, logos, watermark, or invented interface text. This is a classroom AR task visualization, not an authentic device recording.",
+  "spatialObservation": "Use case: compositing. Edit image 1, the project's Unity cube three-view projection screenshot, using image 2, a real classroom photograph by Barry Zhou, as the supporting background reference. Produce a finished landscape 16:9 AR concept image. Replace all black virtual space, oversized virtual desk and opaque text interfaces with a real wooden student desktop in the bright classroom from image 2. Keep the central cube geometry and the teaching idea of three orthogonal projections. Main composition: one large semi-transparent ivory cube, clear straight edges highlighted in subtle cyan, hovering a few centimeters over the wooden desk. Place exactly three separate thin translucent square projection planes around it: a vertical frontal plane, a perpendicular vertical side plane, and one horizontal top-view plane slightly above. Each plane carries a plain square outline representing the cube's corresponding orthographic projection, no perspective cube drawn on the projection planes. Use just a few thin dotted guide lines to make correspondence visually understandable. Keep planes slightly spaced away from the cube so faces and silhouette are easy to distinguish. Natural three-quarter viewpoint so all three planes and the cube read clearly; entire diagram occupies about 60% of wide frame. Visible real classroom green chalkboard, pale walls, desks, bright natural light and warm wood texture. Gentle AR translucency and crisp restrained edge highlights, no heavy neon. No words, labels, letters, numbers, people, hands, device, headset edge, large HUD panels, dark VR room, logo or watermark. A product concept composite, not a real headset capture.",
+  "outputs": [
+    {
+      "file": "lens-task-ar.png",
+      "original": "C:/Users/minpa/.codex/generated_images/01a197b0-ff5f-7960-b29b-f034cfd69fd0/exec-58fe6c86-9371-479b-b1de-2632c2b10a10.png"
+    },
+    {
+      "file": "spatial-observation-ar.png",
+      "original": "C:/Users/minpa/.codex/generated_images/01a197b0-ff5f-7960-b29b-f034cfd69fd0/exec-eba64bc8-2a44-4478-85d8-9601d0862dea.png"
+    }
+  ],
+  "disclosure": "AR课堂合成概念图，非设备实拍。光路及几何投影为视觉示意，非精密仿真证据。"
+}

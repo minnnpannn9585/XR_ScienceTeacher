@@ -1,5 +1,7 @@
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Rendering;
 using UnityEngine.UI;
 
 /// <summary>
@@ -37,14 +39,24 @@ public class IndicatorLab : MiniLabBase
     readonly TMP_Text[] _bottleLabels = new TMP_Text[3];
     readonly Renderer[] _markers = new Renderer[3];
     Material _liquid;
+    Material _liquidSurface;
+    Mesh _glassMesh;
+    readonly List<Material> _visualMaterials = new List<Material>();
     TMP_Text _sampleLabel;
     Color _targetColor;
 
     protected override void BuildExperiment()
     {
-        var slate = new Color(0.12f, 0.17f, 0.22f);
-        Part(PrimitiveType.Cube, "Sample Tray", ExperimentRoot,
+        var slate = new Color(0.72f, 0.79f, 0.80f);
+        var tray = Part(PrimitiveType.Cube, "Sample Tray", ExperimentRoot,
             new Vector3(0f, 0.012f, 0.18f), new Vector3(1.02f, 0.024f, 0.24f), slate);
+        MRVisualStyle.HideInMR(tray);
+        var glassMaterial = Own(MRVisualStyle.Glass(new Color(0.76f, 0.93f, 0.96f), 0.12f));
+        glassMaterial.SetFloat("_Cull", 0f);
+        glassMaterial.renderQueue = 3140;
+        var capMaterial = Own(MRVisualStyle.Metal(MRVisualStyle.WarmWhite, 0.12f, 0.72f));
+        var sampleMaterial = Own(LabFactory.Lit(new Color(0.82f, 0.92f, 0.93f, 0.2f), true, 0f, 0.88f));
+        sampleMaterial.renderQueue = 3100;
 
         for (int i = 0; i < 3; i++)
         {
@@ -55,12 +67,18 @@ public class IndicatorLab : MiniLabBase
             bottle.localPosition = new Vector3((i - 1) * 0.36f, 0.024f, 0.19f);
             _bottles[i] = bottle;
             // Capped samples remain separate, making the replacement operation explicit.
-            Part(PrimitiveType.Cylinder, "Bottle", bottle, new Vector3(0f, 0.082f, 0f),
-                new Vector3(0.12f, 0.082f, 0.12f), new Color(0.75f, 0.84f, 0.88f, 0.32f));
-            Part(PrimitiveType.Cylinder, "Cap", bottle, new Vector3(0f, 0.178f, 0f),
-                new Vector3(0.086f, 0.018f, 0.086f), slate);
+            var bottleBody = LabFactory.Primitive(PrimitiveType.Cylinder, "Bottle", bottle, new Vector3(0f, 0.082f, 0f),
+                new Vector3(0.12f, 0.082f, 0.12f), glassMaterial, false);
+            bottleBody.GetComponent<Renderer>().shadowCastingMode = ShadowCastingMode.Off;
+            var sampleFill = LabFactory.Primitive(PrimitiveType.Cylinder, "Sample Liquid", bottle,
+                new Vector3(0f, 0.064f, 0f), new Vector3(0.105f, 0.056f, 0.105f), sampleMaterial, false);
+            sampleFill.GetComponent<Renderer>().shadowCastingMode = ShadowCastingMode.Off;
+            LabFactory.Primitive(PrimitiveType.Cylinder, "Cap", bottle, new Vector3(0f, 0.178f, 0f),
+                new Vector3(0.086f, 0.018f, 0.086f), capMaterial, false);
+            Ring("Bottle Foot Ring", bottle, 0.008f, 0.06f, new Color(0.65f, 0.89f, 0.92f), 0.0017f);
+            Ring("Bottle Shoulder Ring", bottle, 0.156f, 0.058f, new Color(0.75f, 0.90f, 0.92f), 0.0015f);
             Part(PrimitiveType.Cube, "Bottle Label", bottle, new Vector3(0f, 0.083f, -0.058f),
-                new Vector3(0.09f, 0.072f, 0.012f), new Color(0.88f, 0.85f, 0.76f));
+                new Vector3(0.075f, 0.052f, 0.003f), new Color(0.88f, 0.91f, 0.89f));
             _bottleLabels[i] = WorldLabel("Sample Name", bottle, new Vector3(0f, 0.232f, 0f), "", 0.035f);
             var marker = Part(PrimitiveType.Cylinder, "Observed Marker", bottle, new Vector3(0f, 0.006f, 0f),
                 new Vector3(0.164f, 0.006f, 0.164f), slate);
@@ -70,26 +88,42 @@ public class IndicatorLab : MiniLabBase
         var vessel = new GameObject("Indicator Vessel").transform;
         vessel.SetParent(ExperimentRoot, false);
         vessel.localPosition = new Vector3(0f, 0f, -0.135f);
-        Part(PrimitiveType.Cylinder, "Beaker Foot", vessel, new Vector3(0f, 0.014f, 0f),
-            new Vector3(0.33f, 0.014f, 0.33f), slate);
-        Part(PrimitiveType.Cylinder, "Beaker Glass", vessel, new Vector3(0f, 0.164f, 0f),
-            new Vector3(0.304f, 0.14f, 0.304f), new Color(0.79f, 0.9f, 0.94f, 0.1f));
+        var bottom = LabFactory.Primitive(PrimitiveType.Cylinder, "Beaker Foot", vessel, new Vector3(0f, 0.024f, 0f),
+            new Vector3(0.304f, 0.005f, 0.304f), glassMaterial, false);
+        bottom.GetComponent<Renderer>().shadowCastingMode = ShadowCastingMode.Off;
+        var wall = new GameObject("Beaker Glass", typeof(MeshFilter), typeof(MeshRenderer));
+        wall.transform.SetParent(vessel, false);
+        wall.transform.localPosition = Vector3.up * 0.024f;
+        _glassMesh = ChemistryVesselGeometry.OpenWall(0.152f, 0.28f);
+        wall.GetComponent<MeshFilter>().sharedMesh = _glassMesh;
+        var wallRenderer = wall.GetComponent<MeshRenderer>();
+        wallRenderer.sharedMaterial = glassMaterial;
+        wallRenderer.shadowCastingMode = ShadowCastingMode.Off;
+        wallRenderer.receiveShadows = false;
         var liquid = Part(PrimitiveType.Cylinder, "Indicator Liquid", vessel, new Vector3(0f, 0.127f, 0f),
             new Vector3(0.286f, 0.098f, 0.286f), SampleColors[1]);
-        _liquid = Unlit(SampleColors[1]);
+        // Unlit color keeps the lesson's pink/purple/green stable. Moderate alpha
+        // reveals the vessel while preserving saturated color on bright passthrough.
+        _liquid = Own(RuntimeMaterials.Unlit(true));
+        UrpMaterialUtil.SetTransparent(_liquid);
+        UrpMaterialUtil.SetColor(_liquid, LiquidColor(SampleColors[1]));
+        _liquid.renderQueue = 3100;
         liquid.GetComponent<Renderer>().sharedMaterial = _liquid;
-        Ring("Beaker Rim", vessel, 0.305f, 0.153f, new Color(0.68f, 0.8f, 0.86f));
-        Ring("Liquid Surface", vessel, 0.226f, 0.141f, new Color(0.85f, 0.83f, 0.92f));
+        liquid.GetComponent<Renderer>().shadowCastingMode = ShadowCastingMode.Off;
+        Ring("Beaker Rim", vessel, 0.305f, 0.153f, new Color(0.70f, 0.94f, 0.97f), 0.0026f);
+        Ring("Beaker Base Ring", vessel, 0.025f, 0.153f, new Color(0.68f, 0.91f, 0.94f), 0.0024f);
+        var surface = Ring("Liquid Surface", vessel, 0.226f, 0.141f, new Color(0.85f, 0.83f, 0.92f), 0.002f);
+        _liquidSurface = surface.sharedMaterial;
         for (int i = 0; i < 4; i++)
         {
             float y = 0.075f + i * 0.05f;
             Line("Volume Tick", vessel, new[] { new Vector3(-0.04f, y, -0.151f), new Vector3(0.025f, y, -0.151f) },
-                new Color(0.85f, 0.89f, 0.92f), 0.003f);
+                new Color(0.78f, 0.87f, 0.90f), 0.0018f);
         }
         _sampleLabel = WorldLabel("Current Sample", vessel, new Vector3(0f, 0.382f, 0f), "", 0.046f);
     }
 
-    void Ring(string name, Transform parent, float height, float radius, Color color)
+    LineRenderer Ring(string name, Transform parent, float height, float radius, Color color, float width = 0.004f)
     {
         var points = new Vector3[49];
         for (int i = 0; i < points.Length; i++)
@@ -97,7 +131,11 @@ public class IndicatorLab : MiniLabBase
             float angle = i * Mathf.PI * 2f / (points.Length - 1);
             points[i] = new Vector3(Mathf.Cos(angle) * radius, height, Mathf.Sin(angle) * radius);
         }
-        Line(name, parent, points, color, 0.004f);
+        var line = Line(name, parent, points, color, width);
+        line.numCornerVertices = 2;
+        line.shadowCastingMode = ShadowCastingMode.Off;
+        line.receiveShadows = false;
+        return line;
     }
 
     public void SelectSample(int index)
@@ -105,7 +143,7 @@ public class IndicatorLab : MiniLabBase
         if (index < 0 || index >= _observed.Length || _liquid == null) return;
         SelectedSample = index;
         _observed[index] = true;
-        _targetColor = SampleColors[index];
+        _targetColor = LiquidColor(SampleColors[index]);
         RefreshExperimentText();
         PaintSelections();
     }
@@ -114,7 +152,7 @@ public class IndicatorLab : MiniLabBase
     {
         SelectedSample = -1;
         for (int i = 0; i < _observed.Length; i++) _observed[i] = false;
-        _targetColor = SampleColors[1];
+        _targetColor = LiquidColor(SampleColors[1]);
         if (_liquid != null) UrpMaterialUtil.SetColor(_liquid, _targetColor);
         RefreshExperimentText();
         PaintSelections();
@@ -126,6 +164,12 @@ public class IndicatorLab : MiniLabBase
         // A short visible change connects the sample selection to its color response.
         Color current = Color.Lerp(_liquid.color, _targetColor, 1f - Mathf.Exp(-5f * Time.deltaTime));
         UrpMaterialUtil.SetColor(_liquid, current);
+        if (_liquidSurface != null)
+        {
+            var surfaceColor = Color.Lerp(current, Color.white, 0.62f);
+            surfaceColor.a = 1f;
+            UrpMaterialUtil.SetColor(_liquidSurface, surfaceColor);
+        }
     }
 
     void PaintSelections()
@@ -167,5 +211,15 @@ public class IndicatorLab : MiniLabBase
             "试试其余样品，寻找颜色与酸碱性的联系。\n颜色为示意，不能据此精确测定 pH。",
             complete ? "Complete! Indicators help identify acids and bases.\nThese schematic colors do not measure exact pH." :
             "Try the remaining samples and compare.\nThese schematic colors do not measure exact pH.", complete);
+    }
+
+    static Color LiquidColor(Color color) { color.a = 0.78f; return color; }
+    Material Own(Material material) { _visualMaterials.Add(material); return material; }
+
+    protected override void OnDestroy()
+    {
+        base.OnDestroy();
+        foreach (var material in _visualMaterials) if (material != null) Destroy(material);
+        if (_glassMesh != null) Destroy(_glassMesh);
     }
 }

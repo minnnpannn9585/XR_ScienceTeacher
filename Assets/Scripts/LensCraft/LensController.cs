@@ -4,9 +4,9 @@ using UnityEngine;
 public class LensController : MonoBehaviour
 {
     const float Aperture = 0.105f;
-    const float RimInner = 0.1f;
-    const float RimOuter = 0.118f;
-    const int Segments = 48;
+    const float RimInner = 0.104f;
+    const float RimOuter = 0.112f;
+    const int Segments = 64;
     const int Rings = 12;
 
     Transform _glass;
@@ -15,6 +15,7 @@ public class LensController : MonoBehaviour
     Transform _focusFar;
     Transform _twiceNear;
     Transform _twiceFar;
+    float _builtCenterThickness = -1f;
 
     public void Build(OpticalBenchController bench)
     {
@@ -22,22 +23,32 @@ public class LensController : MonoBehaviour
         _glass.SetParent(transform, false);
         _glass.localPosition = new Vector3(0f, OpticalBenchController.AxisY, 0f);
 
-        _lensMesh = new Mesh { name = "ConvexLens" };
+        _lensMesh = OpticalVisuals.Own(transform, new Mesh { name = "ConvexLens" });
+        _builtCenterThickness = -1f;
         var body = new GameObject("Body");
         body.transform.SetParent(_glass, false);
         body.AddComponent<MeshFilter>().sharedMesh = _lensMesh;
-        var glassMat = LabFactory.Lit(new Color(0.78f, 0.9f, 0.96f, 0.34f), true, 0.02f, 0.96f, true, new Color(0.45f, 0.62f, 0.75f, 0.12f));
+        var glassMat = OpticalVisuals.Own(transform, MRVisualStyle.Glass(new Color(0.75f, 0.93f, 1f), 0.12f));
         SetCullOff(glassMat);
-        body.AddComponent<MeshRenderer>().sharedMaterial = glassMat;
+        var glassRenderer = body.AddComponent<MeshRenderer>();
+        glassRenderer.sharedMaterial = glassMat;
+        glassRenderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+        glassRenderer.receiveShadows = false;
 
-        var rimMesh = new Mesh { name = "LensRim" };
+        var rimMesh = OpticalVisuals.Own(transform, new Mesh { name = "LensRim" });
         var rim = new GameObject("Rim");
         rim.transform.SetParent(_glass, false);
         rim.AddComponent<MeshFilter>().sharedMesh = rimMesh;
-        var rimMat = LabFactory.Lit(NetFoldTheme.Brass, false, 0.9f, 0.62f);
+        var rimMat = OpticalVisuals.Own(transform, MRVisualStyle.Metal(MRVisualStyle.Gold, 0.62f, 0.86f));
         SetCullOff(rimMat);
         rim.AddComponent<MeshRenderer>().sharedMaterial = rimMat;
         FillRing(rimMesh, RimInner, RimOuter, 0.006f);
+
+        var silver = OpticalVisuals.Own(transform, MRVisualStyle.Metal(MRVisualStyle.WarmWhite));
+        OpticalVisuals.Part(transform, PrimitiveType.Cube, "Lens Foot", new Vector3(0f, 0.035f, 0f), new Vector3(0.062f, 0.022f, 0.09f), silver);
+        OpticalVisuals.Part(transform, PrimitiveType.Cylinder, "Lens Collar", new Vector3(0f, 0.048f, 0f), new Vector3(0.022f, 0.018f, 0.022f), silver);
+        var knob = OpticalVisuals.Part(transform, PrimitiveType.Cylinder, "Lens Adjuster", new Vector3(0f, 0.037f, -0.05f), new Vector3(0.014f, 0.005f, 0.014f), rimMat);
+        knob.transform.localRotation = Quaternion.Euler(90f, 0f, 0f);
 
         _focusNear = Mark(bench, "F");
         _focusFar = Mark(bench, "F'");
@@ -49,7 +60,13 @@ public class LensController : MonoBehaviour
     public void Apply(float focal, bool guides)
     {
         float center = Mathf.Lerp(0.052f, 0.022f, Mathf.InverseLerp(0.1f, 0.28f, focal));
-        FillConvex(_lensMesh, center, 0.008f);
+        // Placement updates run every frame, but the glass topology only changes
+        // when the focal-length control changes its thickness.
+        if (!Mathf.Approximately(center, _builtCenterThickness))
+        {
+            FillConvex(_lensMesh, center, 0.008f);
+            _builtCenterThickness = center;
+        }
         Place(_focusNear, -focal, guides);
         Place(_focusFar, focal, guides);
         Place(_twiceNear, -2f * focal, guides);
@@ -58,7 +75,8 @@ public class LensController : MonoBehaviour
 
     static Transform Mark(OpticalBenchController bench, string caption)
     {
-        var go = LabFactory.Primitive(PrimitiveType.Sphere, caption, bench.transform, Vector3.zero, Vector3.one * 0.014f, LabFactory.Lit(NetFoldTheme.Brass, false, 0.4f, 0.45f, true, NetFoldTheme.Brass * 0.35f), false);
+        var material = OpticalVisuals.Own(bench.transform, MRVisualStyle.Edge(MRVisualStyle.Gold));
+        var go = LabFactory.Primitive(PrimitiveType.Sphere, caption, bench.transform, Vector3.zero, Vector3.one * 0.012f, material, false);
         Object.Destroy(go.GetComponent<Collider>());
         LabFactory.WorldLabel(go.transform, caption, new Vector3(0f, 0.04f, 0f));
         return go.transform;

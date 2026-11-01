@@ -1,0 +1,29 @@
+{
+  "mode": "built-in image_gen",
+  "generatedOn": "2026-11-01",
+  "assets": [
+    {
+      "file": "hero-ar.png",
+      "prompt": "Use case: compositing. Asset type: wide 16:9 cover image for an AR science teaching product presentation. Input image 1 is the real empty classroom photograph and the EDIT TARGET; preserve its authentic wooden school desks, green chalkboard, sunlit wall and warm daylight, but reframe naturally toward a broad foreground student desktop. Input images 2, 3 and 4 are supporting insert references for the actual Unity teaching objects, NOT backgrounds. Composite three compact virtual teaching objects above the foreground real wooden desk: one ivory semi-transparent cube with clean cyan edge accents at left, one circular convex lens with a candle and a small screen in a coherent miniature optical bench at center-right, and one translucent beaker containing pale cyan microscopic particles at far right. Keep them recognizable from the source project, with correct simple geometry and plausible optical arrangement, not futuristic machinery. Show the real desktop visibly through the translucent portions; bright natural light, subtle virtual outlines only, restrained shadows. Camera is seated student's eye perspective, realistic photo compositing, generous clear classroom context, strong readable objects in the foreground. No people, no glasses frame, no headset, no opaque black panels, no digital grid, no UI, no labels, no numbers, no text, no watermark. Result must feel like looking through see-through AR glasses at educational objects in a real classroom, not a dark VR room. Deliver a crisp professional landscape 16:9 image.",
+      "refinement": "Use case: precise-object-edit. Edit this AR classroom concept photo. Keep the entire classroom, desk, translucent cube, beaker, candle, convex lens, composition, lighting and proportions unchanged. Correct only the projected candle image on the small white screen to the right of the lens: a convex lens forms an INVERTED real image, so the candle image on that screen must be upside down, with the flame clearly pointing downward at the bottom of the image and the candle body extending upward above it. Make it a small softly luminous inverted candle image, not an upright flame. Do not change the physical candle to the left of the lens; that real candle stays upright with the flame pointing upward. No new text or labels. Preserve landscape 16:9.",
+      "classroom": "sources/barry-zhou-classroom.jpg",
+      "supportingReferences": [
+        "Presentation/.build/screenshots/02_netfold_cube.png",
+        "Presentation/.build/screenshots/12_lens_bench.png",
+        "Presentation/.build/screenshots/09_drift_micro.png"
+      ],
+      "disclosure": "AR概念合成图，非实机截图或课堂部署记录。",
+      "checks": "真实课堂与半透明立方体相融；光屏像已修正为倒立实像；无人、无额外HUD文字。"
+    },
+    {
+      "file": "pc-classroom.png",
+      "prompt": "Use case: compositing. Asset type: 16:9 product scenario image for a presentation. Input image 1 is a real bright modern classroom photo and the EDIT TARGET. Keep the white walls, bookcases, daylight, light-colored tables and real classroom character; reframe naturally closer to a foreground table. Avoid the flag areas entirely and do not include flags in the composition. Input image 2 is the exact supporting screenshot to display on a laptop screen. Place a realistic unbranded open laptop on the foreground desk in a believable teacher-preparation setting. Its screen must clearly show the source project's ivory geometry cube on the dark Unity science table, with the overall actual screenshot composition and interface retained as a screen insert. Do not invent extra software text, charts or UI. Place a simple closed notebook beside it. Natural editorial photography, bright and clean, gentle depth of field, the laptop display is the central focus, background classroom remains recognizable. No people, no watermarks, no brand logos, no AR holograms, no added text on the photo. This is a PC lesson-preparation concept photo, not a classroom deployment record. Wide landscape 16:9, professional realistic compositing.",
+      "classroom": "sources/mikhail-nilov-classroom.jpg",
+      "supportingReferences": [
+        "Presentation/.build/screenshots/02_netfold_cube.png"
+      ],
+      "disclosure": "PC备课场景合成示意，非课堂部署记录。",
+      "checks": "显示器呈现项目立体几何画面；原背景旗帜区域未出现在输出。"
+    }
+  ]
+}
